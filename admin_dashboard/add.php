@@ -44,11 +44,17 @@ if (!isset($_SESSION['logged_in'])) {
 ?>
 
 <form action="add.php" method="post" style="text-align: center;">
-    <input type="text" name="car_name" placeholder="Car Name">
-    <input type="text" name="car_price" placeholder="Car Price">
-    <input type="text" name="car_desc" placeholder="Car Description">
-    <input type="text" name="car_availability" placeholder="Car Availability">
-    <input type="text" name="car_transmission" placeholder="Car Transmission">
+    <input type="text" name="car_name" placeholder="Emri">
+    <input type="text" name="car_price" placeholder="Cmimi">
+    <input type="text" name="car_desc" placeholder="Pershkrim">
+    <select id='car_availability' name='car_availability'>
+        <option value='0'> Jo Disponible </option>
+        <option value='1'> Disponible </option>
+    </select>
+    <select id='car_transmission' name='car_transmission'>
+        <option value='0'> Manuale </option>
+        <option value='1'> Automatike </option>
+    </select>
     <input type="submit" value="Submit">
 </form>
 <?php

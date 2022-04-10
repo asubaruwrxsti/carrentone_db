@@ -70,7 +70,7 @@
         foreach ($result as $k => $v) {
         ?>
             <tr>
-                <td><?php echo $v['name']; ?></td>
+                <td><?php echo "<a href='../assets/car_pages/".$v['name']."/index.html'>".$v['name']."</a>" ?></td>
                 <td><?php echo $v['price']; ?> Euro</td>
                 <td><?php echo $v['description']; ?></td>
                 <td><?php if ($v['available'] == 1) {
