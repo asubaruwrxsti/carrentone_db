@@ -1,33 +1,21 @@
-
 <?php
 
-session_start();
-if (!isset($_SESSION['logged_in'])) {
-    header('Location: login.php');
-}
-
-class Database
-{
-
-    public function __construct()
-    {
-        $this->connection = new mysqli("localhost", "root", "", "carrentone");
-        if ($this->connection->connect_error) {
-            echo("Error: " . $this->connection->connect_error);
-            exit();
+    class DB {
+        function __construct($hostname, $username, $password, $database) {
+            $this->create_db_conn($hostname, $username, $password, $database);
         }
-        $_SESSION['db_connection'] = true;
+
+        function create_db_conn($hostname, $username, $password, $database) {
+            $conn = mysqli_connect($hostname, $username, $password, $database);
+            if (!$conn) {
+                die("Connection failed: " . mysqli_connect_error());
+            }
+            return $conn;
+        }
+
+        function close_connection($conn) {
+            mysqli_close($conn);
+        }
     }
 
-    public function query($sql)
-    {
-        $result = $this->connection->query($sql);
-        return $result;
-    }
-
-    public function close()
-    {
-        $this->connection->close();
-    }
-
-}
+?>
