@@ -1,4 +1,5 @@
 <?php
+    session_start();
     require_once 'vendor/autoload.php';
     include_once 'Database.php';
     $db = new DB('localhost', 'root', '', 'carrentone');
@@ -15,7 +16,7 @@
             setcookie('username', $username, time() + 3600, '/');
             header("Location: admin_dashboard.php");
         } else {
-            echo "Invalid username or password";
+            echo "failed";
         }
     }
 
@@ -27,13 +28,23 @@
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        $loader = new Twig_Loader_Filesystem('views');
-        $twig = new Twig_Environment($loader, array());
-    
-        echo $twig->render('base.twig', [
+        $loader = new \Twig\Loader\FilesystemLoader('views');
+        $twig = new \Twig\Environment($loader);
+
+        if (isset($_SESSION['username'])) {
+            header("Location: index.php");
+            die();
+        }
+
+        $header = $twig->load('/assets/header.twig');
+        $template = $twig->load('/login/login.twig');
+
+        echo $header->render(array());
+        echo $template->render(array(
+            'window_title' => 'Login',
             'title' => 'Login',
-            'content' => 'hello world'
-        ]);
+            'content' => 'Login'
+        ));
     }
 
 ?>
