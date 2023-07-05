@@ -30,51 +30,68 @@
         }
 
         time_teller();
-    }
 
-    window.addEventListener("submit", function(e) {
-        console.log("submit");
-        e.preventDefault();
-        var url = "/admin_dashboard/Login.php";
-        var data = {
-            Username: document.getElementById("typeEmailX-2").value,
-            Password: document.getElementById("typePasswordX-2").value,
-        };
+        document.getElementById("login_form").addEventListener("submit", function(e) {
+            e.preventDefault();
 
-        fetch("POST", url, data, function(response) {
-            if (response == "success") {
-                window.location.href = "/admin_dashboard/views/dashboard.php";
-            } else {
-                alert(response);
-            }
+            let button = document.getElementById("login_button");
+            button.innerHTML = "<i class='fa fa-circle-o-notch fa-spin'></i> Logging in...";
+
+            var username = document.getElementById("typeEmailX-2").value;
+            var password = document.getElementById("typePasswordX-2").value;
+            var formData = new FormData();
+            formData.append("username", username);
+            formData.append("password", password);
+
+            fetch("/admin_dashboard/Login.php", {
+                    method: "POST",
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                  console.log(data);
+                    if (data.status == "success") {
+                        window.location.href = "/admin_dashboard/index.php";
+                    } else {
+                      setTimeout(function() {
+                        button.innerHTML = "Login";
+                        alert(data.message);
+                      }, 700);
+                    }
+                })
+                .catch(error => {
+                    setTimeout(function() {
+                        button.innerHTML = "Login";
+                    }, 700);
+                    console.error("Error:", error);
+                });
         });
-    });
+    }
 </script>
-
-<section class="vh-100 spacer">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-        <div class="card shadow-2-strong tween" style="border-radius: 1rem; background-color: rgba(255, 255, 255, 0.5); effect: webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
-          <div class="card-body p-5 text-center">
-            <div class="mb-5">
-                <i id="time_teller_icon"/>
-                <span id="time_teller"></span>
+<form id='login_form'>
+  <section class="vh-100 spacer">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card shadow-2-strong tween" style="border-radius: 1rem; background-color: rgba(255, 255, 255, 0.5); effect: webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
+            <div class="card-body p-5 text-center">
+              <div class="mb-5">
+                  <i id="time_teller_icon"/>
+                  <span id="time_teller"></span>
+              </div>
+              <div class="form-outline mb-4">
+                <input id="typeEmailX-2" class="form-control form-control-lg" placeholder="Username" required/>
+              </div>
+              <div class="form-outline mb-4">
+                <input type="password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="Password" required/>
+              </div>
+              <div>
+                <button class="btn btn-primary btn-lg btn-block" id="login_button" type="submit" style='background-color: #0263b3;'>Login</button>
+              </div>
             </div>
-
-            <div class="form-outline mb-4">
-              <input type="email" id="typeEmailX-2" class="form-control form-control-lg" placeholder="Username" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
-            </div>
-
-            <div class="form-outline mb-4">
-              <input type="password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="Password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"/>
-            </div>
-
-            <button class="btn btn-primary btn-lg btn-block" type="submit" style='background-color: #0263b3;'>Login</button>
-
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</form>
