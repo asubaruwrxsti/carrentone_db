@@ -38,7 +38,12 @@
         $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
         $result = $db->execute_query($sql);
         if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+
+            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['user_role'] = $row['role'] == 1 ? 'admin' : 'user';
             $_SESSION['username'] = $username;
+            
             setcookie('username', $username, time() + 3600, '/');
             echo json_encode(array(
                 'status' => 'success',

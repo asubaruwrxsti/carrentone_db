@@ -1,6 +1,7 @@
 {
     "require": {
         "twig/twig": "^3.6",
-        "ezyang/htmlpurifier": "^4.16"
+        "ezyang/htmlpurifier": "^4.16",
+        "nikic/fast-route": "^1.3"
     }
 }
