@@ -51,11 +51,11 @@
                 .then(data => {
                   console.log(data);
                     if (data.status == "success") {
-                        window.location.href = "/admin_dashboard/index.php";
+                        window.location.href = "/admin_dashboard/index.php/";   
                     } else {
                       setTimeout(function() {
                         button.innerHTML = "Login";
-                        alert(data.message);
+                        alertify.warning(data.message)
                       }, 700);
                     }
                 })
@@ -63,7 +63,6 @@
                     setTimeout(function() {
                         button.innerHTML = "Login";
                     }, 700);
-                    console.error("Error:", error);
                 });
         });
     }

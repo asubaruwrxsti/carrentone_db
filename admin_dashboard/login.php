@@ -11,8 +11,8 @@
         $loader = new \Twig\Loader\FilesystemLoader('views');
         $twig = new \Twig\Environment($loader);
 
-        if (isset($_SESSION['username'])) {
-            header("Location: index.php");
+        if (isset($_SESSION['is_loggedin'])) {
+            header("Location: /admin_dasboard/index.php");
             die();
         }
 
@@ -41,8 +41,9 @@
             $row = mysqli_fetch_assoc($result);
 
             $_SESSION['user_id'] = $row['id'];
-            $_SESSION['user_role'] = $row['role'] == 1 ? 'admin' : 'user';
+            $_SESSION['user_role'] = $row['is_admin'] == 1 ? 'admin' : 'user';
             $_SESSION['username'] = $username;
+            $_SESSION['is_loggedin'] = true;
             
             setcookie('username', $username, time() + 3600, '/');
             echo json_encode(array(
@@ -52,7 +53,7 @@
         } else {
             echo json_encode(array(
                 'status' => 'error',
-                'message' => 'Login failed'
+                'message' => 'Wrong Credentials'
             ));
         }
     }

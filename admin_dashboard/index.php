@@ -1,7 +1,7 @@
 <?php
     session_start();
-    if (!isset($_SESSION['username'])) {
-        header("Location: Login.php");
+    if (!isset($_SESSION['is_loggedin'])) {
+        header("Location: /admin_dashboard/Login.php");
     }
 
     require_once 'vendor/autoload.php';
@@ -13,6 +13,7 @@
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addGroup('/admin_dashboard/index.php', function ($r) {
             $r->addRoute('GET', '/', 'index');
+            $r->addRoute('GET', '/logout', 'logout');
             $r->addRoute('GET', '/cars', 'cars');
             $r->addRoute('GET', '/reports', 'reports');
             $r->addRoute('GET', '/messages', 'messages');
@@ -50,29 +51,20 @@
             }
 
             switch ($handler) {
+                case 'logout':
+                    session_destroy();
+                    header("Location: /admin_dashboard/Login.php");
+                    break;
 
                 case 'index':
                     echo $header->render(array(
-                        'title' => 'Dashboard',
-                        'user_logged_in' => true,
+                        'window_title' => 'Dashboard',
+                        'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => 'admin',
                         'username' => strtoupper($_SESSION['username'])
                     ));
                     echo $base->render(array(
                         'window_title' => 'Dashboard',
-                        'content' => "hello world"
-                    ));
-                    break;
-
-                case 'home':
-                    echo $header->render(array(
-                        'title' => 'Home',
-                        'user_logged_in' => true,
-                        'user_role' => 'admin',
-                        'username' => strtoupper($_SESSION['username'])
-                    ));
-                    echo $base->render(array(
-                        'window_title' => 'Home',
                         'content' => "hello world"
                     ));
                     break;
