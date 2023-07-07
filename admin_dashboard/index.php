@@ -61,11 +61,11 @@
                         'window_title' => 'Dashboard',
                         'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => 'admin',
-                        'username' => strtoupper($_SESSION['username'])
+                        'user_name' => strtoupper($_SESSION['username'])
                     ));
                     echo $base->render(array(
                         'window_title' => 'Dashboard',
-                        'content' => "hello world"
+                        'content' => $twig->display('/dashboard/dashboard.twig')
                     ));
                     break;
             }
