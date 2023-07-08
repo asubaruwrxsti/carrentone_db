@@ -16,13 +16,13 @@
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addGroup('/admin_dashboard/index.php', function ($r) {
             $r->addRoute('GET', '/', 'Dashboard');
-            $r->addRoute('GET', '/logout', 'logout');
             $r->addRoute('GET', '/cars', 'Cars');
             $r->addRoute('GET', '/reports', 'Reports');
             $r->addRoute('GET', '/messages', 'Messages');
             $r->addRoute('GET', '/orders', 'Orders');
             $r->addRoute('GET', '/users', 'Users');
-            $r->addRoute(['GET', 'POST'], '/api/[/{property}]/{id:\d+}', 'api');
+            $r->addRoute(['GET', 'POST'], '/api//{property}[/{id:\d+}]', 'api');
+            $r->addRoute('GET', '/logout', 'logout');
         });
     });
 
