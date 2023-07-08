@@ -1,26 +1,30 @@
-<div>
-  <canvas id="myChart"></canvas>
+<div class="row">
+  <div class="col">
+    <h3>hello world</h3>
+    <p>Lorem ipsum</p>
+  </div>
+  <div class="col">
+    <canvas id="myChart"></canvas>
+  </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
   const ctx = document.getElementById('myChart');
 
   new Chart(ctx, {
-    type: 'bar',
+    type: '{{vars.type}}',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      labels: [{% for label in vars.data['labels'] %}'{{label}}',{% endfor %}],
       datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
+        label: '{{vars.data.datasets["label"]}}',
+        data: [{% for data in vars.data.datasets["data"] %}'{{data}}',{% endfor %}],
+        borderWidth: {{vars.data.datasets["borderWidth"]}},
       }]
     },
     options: {
       scales: {
         y: {
-          beginAtZero: true
+          beginAtZero: {{vars.data.options.scales.y['beginAtZero']}},
         }
       }
     }

@@ -10,15 +10,19 @@
     $loader = new \Twig\Loader\FilesystemLoader('views');
     $twig = new \Twig\Environment($loader);
 
+    $purifier_config = HTMLPurifier_Config::createDefault();
+    $purifier = new HTMLPurifier($purifier_config);
+
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addGroup('/admin_dashboard/index.php', function ($r) {
-            $r->addRoute('GET', '/', 'index');
+            $r->addRoute('GET', '/', 'Dashboard');
             $r->addRoute('GET', '/logout', 'logout');
-            $r->addRoute('GET', '/cars', 'cars');
-            $r->addRoute('GET', '/reports', 'reports');
-            $r->addRoute('GET', '/messages', 'messages');
-            $r->addRoute('GET', '/orders', 'orders');
-            $r->addRoute('GET', '/users', 'users');
+            $r->addRoute('GET', '/cars', 'Cars');
+            $r->addRoute('GET', '/reports', 'Reports');
+            $r->addRoute('GET', '/messages', 'Messages');
+            $r->addRoute('GET', '/orders', 'Orders');
+            $r->addRoute('GET', '/users', 'Users');
+            $r->addRoute(['GET', 'POST'], '/api/[/{property}]/{id:\d+}', 'api');
         });
     });
 
@@ -55,18 +59,45 @@
                     session_destroy();
                     header("Location: /admin_dashboard/Login.php");
                     break;
+                
+                case 'api':
+                    $api = new API(new DB('localhost', 'root', '', 'carrentone'));
+                    $property = $purifier->purify($vars['property']);
+                    $id = $purifier->purify($vars['id']);
 
-                case 'index':
+                    $api->fetch_data([$property, $id]);
+                    break;
+
+                case 'Dashboard':
                     echo $header->render(array(
-                        'window_title' => 'Dashboard',
+                        'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
-                        'user_role' => 'admin',
+                        'user_role' => $_SESSION['user_role'],
                         'user_name' => strtoupper($_SESSION['username'])
                     ));
                     echo $base->render(array(
-                        'window_title' => 'Dashboard',
-                        'content' => $twig->display('/dashboard/dashboard.twig')
-                    ));
+                        'window_title' => $handler,
+                        'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                        'vars' =>   [
+                                'type' => 'bar',
+                                'data' => [
+                                    'labels' => ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                                    'datasets' => [
+                                        'label' => '# of Votes',
+                                        'data' => [12, 19, 3, 5, 2, 3],
+                                        'borderWidth' => 1
+                                    ],
+                                    'options' => [
+                                        'scales' => [
+                                            'y' => [
+                                                'beginAtZero' => true
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        )
+                    );
                     break;
             }
             break;
