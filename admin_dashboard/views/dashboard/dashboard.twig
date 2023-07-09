@@ -1,45 +1,47 @@
 <div class="row">
   <div class="col">
-    <h3>hello world</h3>
-    <p>Lorem ipsum</p>
+
+    <div class="row">
+
+      <div class="col mt-3">
+        <div class="card" style="height: 10rem; width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Revenue</h5>
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col mt-3">
+        <div class="card" style="height: 10rem; width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Revenue</h5>
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col mt-3">
+        <div class="card" style="height: 10rem; width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Revenue</h5>
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
   <div class="col">
     <canvas id="myChart"></canvas>
+    <div id="loading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
   </div>
 </div>
 
-<script>
-  fetch('/admin_dashboard/index.php/api/cars/', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-  }).catch((error) => {
-    console.error('Error:', error);
-  });
-
-  const ctx = document.getElementById('myChart');
-
-  {# new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: [{% for label in vars.data['labels'] %}'{{label}}',{% endfor %}],
-      datasets: [{
-        label: '{{vars.data.datasets["label"]}}',
-        data: [{% for data in vars.data.datasets["data"] %}'{{data}}',{% endfor %}],
-        borderWidth: {{vars.data.datasets["borderWidth"]}},
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-        }
-      }
-    }
-  }); #}
-</script>
+<script src = "/admin_dashboard/views/dashboard/fetchCarData.js"></script>
+<script src = "/admin_dashboard/views/dashboard/fetchRevenueData.js"></script>

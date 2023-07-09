@@ -22,7 +22,7 @@
             if (!$this->checkSid()) {
                 echo json_encode(array(
                     'status' => 'error',
-                    'message' => 'Session expired'
+                    'message' => 'Not permitted'
                 ));
             }
 
