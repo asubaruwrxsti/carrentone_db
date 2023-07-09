@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let map = [{'revenueTotal': 'chart', 'revenueMonth': 'chart', 'uniqueCustomersMonth': 'int', 'uniqueCustomers': 'int'}];
 
     for (let card_id of card_ids) {
-      let canvas = document.getElementById(card_id);
-      const ctx = canvas.getContext('2d');
+      let element = document.getElementById(card_id);
+      const ctx = element.getContext('2d');
       let data = revenue[card_id]();
       
       if (map[0][card_id] == 'chart') {
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
           },
         });
       } else {
-        console.log(canvas);
+        element.innerHTML = data;
       }
     }
   }
