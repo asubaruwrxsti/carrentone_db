@@ -21,6 +21,9 @@ class Revenue {
     
         revenuePerMonth[monthKey] += parseInt(price);
       }
+      revenuePerMonth = Object.fromEntries(
+        Object.entries(revenuePerMonth).sort()
+      );
       return revenuePerMonth;
     }
   
