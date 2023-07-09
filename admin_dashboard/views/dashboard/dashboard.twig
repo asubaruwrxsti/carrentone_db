@@ -9,10 +9,23 @@
 </div>
 
 <script>
+  fetch('/admin_dashboard/index.php/api/cars/', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  }).catch((error) => {
+    console.error('Error:', error);
+  });
+
   const ctx = document.getElementById('myChart');
 
-  new Chart(ctx, {
-    type: '{{vars.type}}',
+  {# new Chart(ctx, {
+    type: 'bar',
     data: {
       labels: [{% for label in vars.data['labels'] %}'{{label}}',{% endfor %}],
       datasets: [{
@@ -24,9 +37,9 @@
     options: {
       scales: {
         y: {
-          beginAtZero: {{vars.data.options.scales.y['beginAtZero']}},
+          beginAtZero: true,
         }
       }
     }
-  });
+  }); #}
 </script>

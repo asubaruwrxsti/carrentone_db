@@ -77,7 +77,7 @@
                     $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
 
                     $res = $api->fetch_data([$property, $id]);
-                    var_dump($res);
+                    echo json_encode($res);
                     break;
 
                 case 'Dashboard':
@@ -88,26 +88,9 @@
                         'user_name' => strtoupper($_SESSION['username'])
                     ));
                     echo $base->render(array(
-                        'window_title' => $handler,
-                        'content' => sprintf('/%s/%s.twig', $handler, $handler),
-                        'vars' =>   [
-                                'type' => 'bar',
-                                'data' => [
-                                    'labels' => ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                                    'datasets' => [
-                                        'label' => '# of Votes',
-                                        'data' => [12, 19, 3, 5, 2, 3],
-                                        'borderWidth' => 1
-                                    ],
-                                    'options' => [
-                                        'scales' => [
-                                            'y' => [
-                                                'beginAtZero' => true
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
+                            'window_title' => $handler,
+                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'vars' => []
                         )
                     );
                     break;

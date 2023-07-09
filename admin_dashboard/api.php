@@ -24,7 +24,6 @@
                     'status' => 'error',
                     'message' => 'Session expired'
                 ));
-                die();
             }
 
             $property_name = $property[0];
@@ -37,6 +36,6 @@
 
             $result = $this->db->execute_query($sql);
             $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            return json_encode($data);
+            return $data;
         }
     }
