@@ -38,18 +38,26 @@
         $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
         $result = $db->execute_query($sql);
         if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
+            try {
+                $row = mysqli_fetch_assoc($result);
 
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['user_role'] = $row['is_admin'] == 1 ? 'admin' : 'user';
-            $_SESSION['username'] = $username;
-            $_SESSION['is_loggedin'] = true;
-            
-            setcookie('username', $username, time() + 3600, '/');
-            echo json_encode(array(
-                'status' => 'success',
-                'message' => 'Login successful'
-            ));
+                $_SESSION['user_id'] = $row['id'];
+                $_SESSION['user_role'] = $row['is_admin'] == 1 ? 'admin' : 'user';
+                $_SESSION['username'] = $username;
+                $_SESSION['is_loggedin'] = true;
+                $db->create_session_id($row['id']);
+                
+                setcookie('username', $username, time() + 3600, '/');
+                echo json_encode(array(
+                    'status' => 'success',
+                    'message' => 'Login successful'
+                ));
+            } catch (Exception $e) {
+                echo json_encode(array(
+                    'status' => 'error',
+                    'message' => 'Something went wrong'
+                ));
+            }
         } else {
             echo json_encode(array(
                 'status' => 'error',

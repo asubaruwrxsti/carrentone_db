@@ -6,6 +6,7 @@
 
     require_once 'vendor/autoload.php';
     require_once 'Database.php';
+    $db = new DB('localhost', 'root', '', 'carrentone');
 
     $loader = new \Twig\Loader\FilesystemLoader('views');
     $twig = new \Twig\Environment($loader);
@@ -15,13 +16,20 @@
 
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addGroup('/admin_dashboard/index.php', function ($r) {
+
+            // Pages
             $r->addRoute('GET', '/', 'Dashboard');
             $r->addRoute('GET', '/cars', 'Cars');
             $r->addRoute('GET', '/reports', 'Reports');
             $r->addRoute('GET', '/messages', 'Messages');
             $r->addRoute('GET', '/orders', 'Orders');
             $r->addRoute('GET', '/users', 'Users');
-            $r->addRoute(['GET', 'POST'], '/api//{property}[/{id:\d+}]', 'api');
+
+            // API
+            $r->addRoute(['GET', 'POST'], '/api/{property}/', 'api');
+            $r->addRoute(['GET', 'POST'], '/api/{property}/{id:\d+}', 'api');
+
+            // Logout
             $r->addRoute('GET', '/logout', 'logout');
         });
     });
@@ -57,15 +65,19 @@
             switch ($handler) {
                 case 'logout':
                     session_destroy();
+                    $db->destroy_session_id($_SESSION['user_id']);
+                    $db->close_connection();
                     header("Location: /admin_dashboard/Login.php");
                     break;
                 
                 case 'api':
-                    $api = new API(new DB('localhost', 'root', '', 'carrentone'));
+                    require_once 'api.php';
+                    $api = new API($db);
                     $property = $purifier->purify($vars['property']);
-                    $id = $purifier->purify($vars['id']);
+                    $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
 
-                    $api->fetch_data([$property, $id]);
+                    $res = $api->fetch_data([$property, $id]);
+                    var_dump($res);
                     break;
 
                 case 'Dashboard':
