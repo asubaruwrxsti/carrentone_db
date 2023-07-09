@@ -90,7 +90,9 @@
                     echo $base->render(array(
                             'window_title' => $handler,
                             'content' => sprintf('/%s/%s.twig', $handler, $handler),
-                            'vars' => []
+                            'vars' => [
+                                'currency' => $_SESSION['currency']
+                            ]
                         )
                     );
                     break;

@@ -17,9 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     await new Promise(r => setTimeout(r, 1000));
-    let loading = document.getElementById('loading');
-    loading.style.display = 'none';
-
     enumerateCards();
     populateCards();
   }
@@ -33,19 +30,24 @@ document.addEventListener('DOMContentLoaded', function() {
       if (canvas) {
         card_ids.push(canvas.id);
       }
+
+      let h3 = card.querySelector('h3');
+      if (h3) {
+        card_ids.push(h3.id);
+      }
     }
   }
 
   function populateCards() {
     var revenue = new Revenue(base_card_data);
-    let map = [{'revenueTotal': 'chart', 'revenueMonth': 'chart', 'uniqueCustomersMonth': 'int', 'uniqueCustomers': 'int'}];
+    let map = [{'revenueTotal': 'int', 'revenueMonth': 'chart', 'uniqueCustomersMonth': 'int', 'uniqueCustomers': 'int'}];
 
     for (let card_id of card_ids) {
       let element = document.getElementById(card_id);
-      const ctx = element.getContext('2d');
       let data = revenue[card_id]();
       
       if (map[0][card_id] == 'chart') {
+        const ctx = element.getContext('2d');
         new Chart(ctx, {
           type: 'line',
           data: {
@@ -57,11 +59,25 @@ document.addEventListener('DOMContentLoaded', function() {
               borderWidth: 1,
             }]
           },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
         });
       } else {
         element.innerHTML = data;
       }
     }
+
+    revenue.revenueGrowth();
+    revenue.customerGrowth();
+    revenue.uniqueCustomersGrowth();
   }
 
   fetchData();

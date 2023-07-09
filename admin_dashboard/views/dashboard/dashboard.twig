@@ -8,6 +8,11 @@
         <div class="card" style="height: 13rem; width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">Revenue / Month</h5>
+            <div id="loading">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+              </div>
+            </div>
             <canvas id="revenueMonth"></canvas>
           </div>
         </div>
@@ -15,10 +20,19 @@
 
       <!-- Total / Revenue -->
       <div class="col mt-3">
-        <div class="card" style="height: 13rem; width: 18rem;">
+        <div class="card" style="height: 6rem; width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">Total Revenue</h5>
-            <canvas id="revenueTotal"></canvas>
+            <div id="loading">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+              </div>
+            </div>
+            <div id="revenueDependencies" style="display: none; align-items: center;">
+              <h3 id="revenueTotal"></h3>
+              <h5 style="margin-left: 10px">{{currency}}</h5>
+              <h5 id="revenueGrowth" style="margin-left: auto; color: lightgreen"></h5>
+            </div>
           </div>
         </div>
       </div>
@@ -28,17 +42,33 @@
         <div class="card" style="height: 8rem; width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">Unique customers this month</h5>
-            <h3 id="uniqueCustomersThisMonth"></h3>
+            <div style="display: flex; align-items: center;">
+              <h3 id="uniqueCustomersThisMonth"></h3>
+              <h5 id="customerGrowth" style="margin-left: auto; color: lightgreen"></h5>
+            </div>
+            <div id="loading">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Unique Customers all time -->
       <div class="col mt-3">
-        <div class="card" style="height: 8rem; width: 18rem;">
+        <div class="card" style="height: 7rem; width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">Unique customers</h5>
-            <h3 id="uniqueCustomers"></h3>
+            <div style="display: flex; align-items: center;">
+              <h3 id="uniqueCustomers"></h3>
+              <h5 id="uniqueCustomerGrowth" style="margin-left: auto; color: lightgreen"></h5>
+            </div>
+            <div id="loading">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -45,6 +45,7 @@
                 $_SESSION['user_role'] = $row['is_admin'] == 1 ? 'admin' : 'user';
                 $_SESSION['username'] = $username;
                 $_SESSION['is_loggedin'] = true;
+                $_SESSION['currency'] = $row['currency'];
                 $db->create_session_id($row['id']);
                 
                 setcookie('username', $username, time() + 3600, '/');

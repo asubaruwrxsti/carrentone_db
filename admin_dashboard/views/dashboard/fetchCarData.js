@@ -20,8 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     await new Promise(r => setTimeout(r, 1000));
-    let loading = document.getElementById('loading');
-    loading.style.display = 'none';
+    const loadingElements = document.querySelectorAll("#loading");
+    loadingElements.forEach(element => {
+      element.remove();
+    });
+
+    let revenueDependencies = document.getElementById('revenueDependencies');
+    revenueDependencies.style.display = 'flex';
 
     initializeChart();
   }
@@ -42,8 +47,11 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       options: {
         scales: {
-          y: {
+          x: {
             beginAtZero: true,
+            grid: {
+              display: false
+            }
           }
         }
       }
