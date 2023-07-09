@@ -1,38 +1,53 @@
 <div class="row">
   <div class="col">
-
+    <!-- Column -->
     <div id="cards" class="row">
-
+      <!-- Row -->
+      <!-- Revenue / Month -->
       <div class="col mt-3">
-        <div class="card" style="height: 10rem; width: 18rem;">
+        <div class="card" style="height: 13rem; width: 18rem;">
           <div class="card-body">
-            <h5 class="card-title">Revenue</h5>
+            <h5 class="card-title">Revenue / Month</h5>
             <canvas id="revenueMonth"></canvas>
           </div>
         </div>
       </div>
 
+      <!-- Total / Revenue -->
       <div class="col mt-3">
-        <div class="card" style="height: 10rem; width: 18rem;">
+        <div class="card" style="height: 13rem; width: 18rem;">
           <div class="card-body">
-            <h5 class="card-title">Revenue</h5>
+            <h5 class="card-title">Total Revenue</h5>
             <canvas id="revenueTotal"></canvas>
           </div>
         </div>
       </div>
 
+      <!-- Unique Customers this month -->
       <div class="col mt-3">
-        <div class="card" style="height: 10rem; width: 18rem;">
+        <div class="card" style="height: 8rem; width: 18rem;">
           <div class="card-body">
-            <h5 class="card-title">Revenue</h5>
-            <canvas id="uniqueCustomers"></canvas>
+            <h5 class="card-title">Unique customers this month</h5>
+            <h3 id="uniqueCustomersThisMonth"></h3>
           </div>
         </div>
       </div>
 
-    </div>
+      <!-- Unique Customers all time -->
+      <div class="col mt-3">
+        <div class="card" style="height: 8rem; width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Unique customers</h5>
+            <h3 id="uniqueCustomers"></h3>
+          </div>
+        </div>
+      </div>
 
+      <!-- /Row -->
+    </div>
+    <!-- /Column -->
   </div>
+  <!-- /Row -->
   <div class="col">
     <canvas id="myChart"></canvas>
     <div id="loading">
@@ -43,5 +58,6 @@
   </div>
 </div>
 
+<script src="/admin_dashboard/views/dashboard/revenue.js"></script>
 <script src="/admin_dashboard/views/dashboard/fetchCarData.js"></script>
 <script src="/admin_dashboard/views/dashboard/fetchCardData.js"></script>
