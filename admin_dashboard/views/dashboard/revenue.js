@@ -48,6 +48,12 @@ class Revenue {
       growth.innerHTML = Math.round((revenueGrowth[Object.keys(revenueGrowth)[Object.keys(revenueGrowth).length - 1]] / previousRevenue) * 100) + '%';
       if (growth.innerHTML.includes('-')) {
         growth.style.color = 'lightcoral';
+        growth.innerHTML = '&#9660;' + growth.innerHTML;
+      } else if (growth.innerHTML === '0%') {
+        growth.style.color = 'gold';
+        growth.innerHTML = '&#61; ' + growth.innerHTML;
+      } else {
+        growth.innerHTML = '&#9650;' + growth.innerHTML;
       }
     }
   
@@ -75,10 +81,14 @@ class Revenue {
       growth.innerHTML = Math.round(((uniqueCustomers - previousCustomers) / previousCustomers) * 100) + '%';
       if (growth.innerHTML.includes('-')) {
         growth.style.color = 'lightcoral';
-      }
-      if (growth.innerHTML == '0%') {
+        growth.innerHTML = '&#9660;' + growth.innerHTML;
+      } else if (growth.innerHTML === '0%') {
         growth.style.color = 'gold';
+        growth.innerHTML = '&#61; ' + growth.innerHTML;
+      } else {
+        growth.innerHTML = '&#9650;' + growth.innerHTML;
       }
+      
     }
   
     uniqueCustomers() {
@@ -97,9 +107,12 @@ class Revenue {
       growth.innerHTML = Math.round(((uniqueCustomers - previousCustomers) / previousCustomers) * 100) + '%';
       if (growth.innerHTML.includes('-')) {
         growth.style.color = 'lightcoral';
-      }
-      if (growth.innerHTML == '0%') {
+        growth.innerHTML = '&#9660;' + growth.innerHTML;
+      } else if (growth.innerHTML === '0%') {
         growth.style.color = 'gold';
+        growth.innerHTML = '&#61; ' + growth.innerHTML;
+      } else {
+        growth.innerHTML = '&#9650;' + growth.innerHTML;
       }
     }
   }
