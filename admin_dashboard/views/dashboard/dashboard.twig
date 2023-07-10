@@ -20,7 +20,7 @@
 
       <!-- Total / Revenue -->
       <div class="col mt-3">
-        <div class="card" style="height: 6rem; width: 18rem;">
+        <div class="card" style="height: 8rem; width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">Total Revenue</h5>
             <div id="loading">
@@ -31,7 +31,7 @@
             <div id="revenueDependencies" style="display: none; align-items: center;">
               <h3 id="revenueTotal"></h3>
               <h5 style="margin-left: 10px">{{currency}}</h5>
-              <h5 id="revenueGrowth" style="margin-left: auto; color: lightgreen"></h5>
+              <span id="revenueGrowth" class="text-sm font-weight-bolder" style="margin-left: auto; color: lightgreen"></span>
             </div>
           </div>
         </div>
@@ -39,12 +39,12 @@
 
       <!-- Unique Customers this month -->
       <div class="col mt-3">
-        <div class="card" style="height: 8rem; width: 18rem;">
+        <div class="card" style="height: 9rem; width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">Unique customers this month</h5>
             <div style="display: flex; align-items: center;">
               <h3 id="uniqueCustomersThisMonth"></h3>
-              <h5 id="customerGrowth" style="margin-left: auto; color: lightgreen"></h5>
+              <span id="customerGrowth" class="text-sm font-weight-bolder" style="margin-left: auto; color: lightgreen"></span>
             </div>
             <div id="loading">
               <div class="spinner-border text-primary" role="status">
@@ -62,7 +62,7 @@
             <h5 class="card-title">Unique customers</h5>
             <div style="display: flex; align-items: center;">
               <h3 id="uniqueCustomers"></h3>
-              <h5 id="uniqueCustomerGrowth" style="margin-left: auto; color: lightgreen"></h5>
+              <span id="uniqueCustomerGrowth" class="text-sm font-weight-bolder" style="margin-left: auto; color: lightgreen"></span>
             </div>
             <div id="loading">
               <div class="spinner-border text-primary" role="status">
@@ -79,6 +79,7 @@
   </div>
   <!-- /Row -->
   <div class="col">
+    <h3>Car Orders</h3>
     <canvas id="myChart"></canvas>
     <div id="loading">
       <div class="spinner-border text-primary" role="status">

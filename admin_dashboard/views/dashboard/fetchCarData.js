@@ -33,14 +33,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* Initialize chart */
   function initializeChart() {
-    const ctx = document.getElementById('myChart');
+    const chart = document.getElementById('myChart');
+    const ctx = chart.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+    gradient.addColorStop(0, 'rgba(250,174,50,1)');   
+    gradient.addColorStop(1, 'rgba(250,174,50,0)');
 
     new Chart(ctx, {
       type: 'bar',
       data: {
         labels: car_labels,
         datasets: [{
-          label: 'Perfomance of order/car',
+          backgroundColor: gradient,
+          fill: "start",
           data: order_count,
           borderWidth: 1,
         }]
@@ -48,10 +53,14 @@ document.addEventListener('DOMContentLoaded', function() {
       options: {
         scales: {
           x: {
-            beginAtZero: true,
             grid: {
               display: false
             }
+          },
+        },
+        plugins: {
+          legend: {
+            display: false
           }
         }
       }

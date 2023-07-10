@@ -48,12 +48,18 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (map[0][card_id] == 'chart') {
         const ctx = element.getContext('2d');
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 100);
+        gradient.addColorStop(0, 'rgba(250,174,50,1)');   
+        gradient.addColorStop(1, 'rgba(250,174,50,0)');
+
         new Chart(ctx, {
           type: 'line',
           data: {
             labels: Object.keys(data),
             datasets: [{
-              label: 'Revenue',
+              backgroundColor: gradient,
+              fill: "start",
               data: Object.values(data),
               tension: 0.4,
               borderWidth: 1,
@@ -66,6 +72,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid: {
                   display: false
                 }
+              },
+              y: {
+                grid: {
+                  display: false
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
               }
             }
           }
