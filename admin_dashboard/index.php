@@ -81,6 +81,15 @@
                     break;
 
                 case 'Dashboard':
+                    $recentOrders = "SELECT customers.firstname, customers.lastname, customers.phone_number, cars.name, cars.id, revenue.rental_date, revenue.rental_duration
+                        FROM revenue 
+                        JOIN customers 
+                        ON customers.id = revenue.customer_id 
+                        JOIN cars ON cars.id = revenue.car_id
+                        ORDER BY revenue.rental_date DESC LIMIT 5;";
+                    $recentOrders = $db->execute_query($recentOrders);
+                    $recentOrders = $recentOrders->fetch_all(MYSQLI_ASSOC);
+
                     echo $header->render(array(
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
@@ -91,7 +100,8 @@
                             'window_title' => $handler,
                             'content' => sprintf('/%s/%s.twig', $handler, $handler),
                             'vars' => [
-                                'currency' => $_SESSION['currency']
+                                'currency' => $_SESSION['currency'],
+                                'recent_orders' => $recentOrders
                             ]
                         )
                     );
