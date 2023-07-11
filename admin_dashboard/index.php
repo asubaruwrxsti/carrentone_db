@@ -106,6 +106,37 @@
                         )
                     );
                     break;
+                
+                case 'Cars':
+                    $cars = "SELECT * FROM cars;";
+                    $cars = $db->execute_query($cars);
+                    $cars = $cars->fetch_all(MYSQLI_ASSOC);
+
+                    $imagePath = "/admin_dashboard/views/cars/images/";
+                    foreach ($cars as $key => $car) {
+                        $car_id = $car['id'];
+                        $car_images = glob($_SERVER['DOCUMENT_ROOT'] . $imagePath . $car_id . ".*");
+                        var_dump($car_images);
+                        $cars[$key]['image'] = $car_images[0];
+                    }
+
+                    var_dump(json_encode($cars));
+
+                    echo $header->render(array(
+                        'window_title' => $handler,
+                        'user_logged_in' => $_SESSION['is_loggedin'],
+                        'user_role' => $_SESSION['user_role'],
+                        'user_name' => strtoupper($_SESSION['username'])
+                    ));
+                    echo $base->render(array(
+                            'window_title' => $handler,
+                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'vars' => [
+                                'currency' => $_SESSION['currency'],
+                                'cars' => $cars
+                            ]
+                        )
+                    );
             }
             break;
     }
