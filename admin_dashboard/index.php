@@ -113,14 +113,15 @@
                     $cars = $cars->fetch_all(MYSQLI_ASSOC);
 
                     $imagePath = "/admin_dashboard/views/cars/images/";
+                    $rootPath = $_SERVER['DOCUMENT_ROOT'];
                     foreach ($cars as $key => $car) {
                         $car_id = $car['id'];
-                        $car_images = glob($_SERVER['DOCUMENT_ROOT'] . $imagePath . $car_id . ".*");
-                        var_dump($car_images);
+                        $car_images = glob($rootPath . $imagePath . $car_id . "/{*.jpg,*.jpeg,*.png}", GLOB_BRACE);
+                        $car_images = array_map(function($image) use ($rootPath) {
+                            return str_replace($rootPath, '', $image);
+                        }, $car_images);
                         $cars[$key]['image'] = $car_images[0];
                     }
-
-                    var_dump(json_encode($cars));
 
                     echo $header->render(array(
                         'window_title' => $handler,
