@@ -3,12 +3,12 @@
     {% for car in cars %}
         <div class="col-lg-5 mt-3">
             <div class="card h-100 p-3">
-                <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100" style="background-image: linear-gradient(to bottom left, rgba(0,0,0,0), rgba(0,0,0,1)), url('{{car.image}}'); background-position: center bottom;');">
+                <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100 car-image" style="background-image: linear-gradient(to bottom left, rgba(0,0,0,0), rgba(0,0,0,1)), url('{{car.image}}'); background-position: center bottom ;">
                     <span class="mask bg-gradient-dark"></span>
                     <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
                     <h5 class="text-white font-weight-bolder mb-4 pt-2">{{car.name}}</h5>
                     <p class="text-white">{{car.description}}</p>
-                        <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto view-link" href="#" data-bs-toggle="modal" data-bs-target="#popupModal">
+                        <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto view-link" href="#">
                         View
                         <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                         </a>
@@ -20,18 +20,44 @@
     </div>
 </div>
 
-<!-- Modal Popup -->
-<div class="modal fade" id="popupModal" tabindex="-1" aria-labelledby="popupModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="popupModalLabel">Popup Content</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Popup content goes here -->
-      </div>
-    </div>
-  </div>
-</div>
+<style>
+    .restrict-height {
+        height: 30%;
+        transition: height 0.3s ease-in-out;
+    }
 
+    .car-image {
+        .mask {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        &:hover {
+            .mask {
+                opacity: 0.4;
+            }
+            animation: expandBackgroundSize 0.3s ease-in-out forwards;
+        }
+
+        &:not(:hover) {
+            animation: shrinkBackgroundSize 0.3s ease-in-out forwards;
+        }
+    }
+
+    @keyframes expandBackgroundSize {
+        0% {
+            background-size: 100% auto;
+        }
+        100% {
+            background-size: 105% auto;
+        }
+    }
+
+    @keyframes shrinkBackgroundSize {
+        0% {
+            background-size: 105% auto;
+        }
+        100% {
+            background-size: 100% auto;
+        }
+    }
+</style>
