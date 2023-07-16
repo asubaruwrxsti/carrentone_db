@@ -41,7 +41,6 @@
 </style>
 
 <div class="container">
-    <button onclick="changeLayout()" class="btn btn-primary">Change Layout</button>
     <div class="row">
         <div class="row mt-4 restrict-height" id="main-car-container">
             {% for car in cars %}
@@ -52,7 +51,7 @@
                             <div class="card-body position-relative z-index-0 d-flex flex-column h-100 p-3">
                                 <h5 class="text-white font-weight-bolder mb-4 pt-2">{{car.name}}</h5>
                                 <p class="text-white">{{car.description}}</p>
-                                <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto view-link" href="#" onclick="showDetails('{{car.id}}')">
+                                <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto view-link" href="#" onclick="showDetails({{car.id}})">
                                     View
                                 <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                                 </a>
@@ -63,23 +62,20 @@
             {% endfor %}
         </div>
         <div id="details" style="display: none;">
-            <div class="card" style="width: 900px; height: 500px; transform: translateX(-200px); position: fixed;">
+            <div id="mainDetailCard" class="card" style="width: 900px; height: 500px; transform: translateX(-200px); position: fixed;">
                 <div class="card-body p-3">
-                    <div class="row">
+                    <div id="loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                    <div class="row" id="details" style="display: none;">
                         <div class="col-lg-6">
                             <div class="d-flex flex-column h-100">
                                 <p class="mb-1 pt-2 text-bold" id="carTitle">Title</p>
                                 <h5 class="font-weight-bolder" id="carSubtitle">Subtitle</h5>
                                 <p class="mb-5" id="carDescription">Body</p>
                                 </a>
-                            </div>
-                        </div>
-                        <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
-                            <div class="bg-gradient-primary border-radius-lg h-100">
-                                <img src="" class="position-absolute h-100 w-50 top-0 d-lg-block d-none">
-                                <div class="position-relative d-flex align-items-center justify-content-center h-100">
-                                <img class="w-100 position-relative z-index-2 pt-4" src="">
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -89,58 +85,89 @@
     </div>
 </div>
 
-<script src="/admin_dashboard/views/cars/cars.js"/>
+<script src="/admin_dashboard/views/cars/jquery.gradientify.min.js"></script>
+<script src="/admin_dashboard/views/cars/cars.js"></script>
 <script>
-    window.onload = function () {
-        let Car = new Cars();
-        
-        const carCards = document.querySelectorAll('.car-cards');
-        const mainCarContainer = document.getElementById('main-car-container');
-        const details = document.getElementById('details');
+    let Car = new Cars();
+    let currentLayout = "row";
+    
+    const carCards = document.querySelectorAll('.car-cards');
+    const mainCarContainer = document.getElementById('main-car-container');
+    const detailsCard = document.querySelectorAll('#details')[0];
+    const detailsBody = document.querySelectorAll('#details')[1];
+    const loading = document.getElementById('loading');
 
-        function changeLayout() {
+    function changeLayout() {
+        if (currentLayout == "col") return;
+        else currentLayout = "col";
+
+        var fadeEffect = setInterval(function () {
+            if (!mainCarContainer.style.opacity) {
+                mainCarContainer.style.opacity = 1;
+            }
+            if (mainCarContainer.style.opacity > 0) {
+                mainCarContainer.style.opacity -= 0.1;
+            } else {
+                clearInterval(fadeEffect);
+            }
+        }, 10);
+
+        setTimeout(function () {
+            mainCarContainer.classList.remove('row');
+            mainCarContainer.classList.add('col');
+            mainCarContainer.classList.add('restrict-height');
+
+            if (!mainCarContainer.style.opacity) {
+                mainCarContainer.style.opacity = 0;
+            }
             var fadeEffect = setInterval(function () {
-                if (!mainCarContainer.style.opacity) {
-                    mainCarContainer.style.opacity = 1;
-                }
-                if (mainCarContainer.style.opacity > 0) {
-                    mainCarContainer.style.opacity -= 0.1;
+                if (mainCarContainer.style.opacity < 1) {
+                    mainCarContainer.style.opacity = parseFloat(mainCarContainer.style.opacity) + 0.1;
                 } else {
                     clearInterval(fadeEffect);
                 }
             }, 10);
 
-            setTimeout(function () {
-                mainCarContainer.classList.remove('row');
-                mainCarContainer.classList.add('col');
-                mainCarContainer.classList.add('restrict-height');
-
-                if (!mainCarContainer.style.opacity) {
-                    mainCarContainer.style.opacity = 0;
-                }
-                var fadeEffect = setInterval(function () {
-                    if (mainCarContainer.style.opacity < 1) {
-                        mainCarContainer.style.opacity = parseFloat(mainCarContainer.style.opacity) + 0.1;
-                    } else {
-                        clearInterval(fadeEffect);
-                    }
-                }, 10);
-
-                carCards.forEach(function (card) {
-                    card.classList.remove('col-lg-5');
-                    card.classList.add('col-lg-7');
-                });
-                details.classList.add('col-lg-4');
-                details.style.display = 'block';
-            }, 200);
-        }
-
-        function showDetails(id) {
-            changeLayout();
-
-            Car.getCarById(id).then(function (car) {
-                console.log(car);
+            carCards.forEach(function (card) {
+                card.classList.remove('col-lg-5');
+                card.classList.add('col-lg-7');
             });
-        }
+            detailsCard.classList.add('col-lg-4');
+            detailsCard.classList.add('mt-5');
+            detailsCard.style.display = 'block';
+        }, 200);
+    }
+
+    function showDetails(id) {
+        changeLayout();
+        event.preventDefault();
+
+        let mainDetailCard = document.getElementById('mainDetailCard');
+        mainDetailCard.style.backgroundImage = 'none';
+
+        Car.getCarById(id).then(function (car) {
+            if (loading.style.display == 'none') {
+                loading.style.display = 'block';
+                detailsBody.style.display = 'none';
+            }
+            setTimeout(function () {
+                loading.style.display = 'none';
+                detailsBody.style.display = 'block';
+
+                document.getElementById('carTitle').innerHTML = car[0].name;
+                document.getElementById('carSubtitle').innerHTML = car[0].id;
+                document.getElementById('carDescription').innerHTML = car[0].description;
+
+                var bg = document.getElementsByClassName('car-image')[id - 1].style.backgroundImage;
+                bg = bg.split('url(')[1];
+                bg = bg.slice(0, -1);
+
+                mainDetailCard.style.backgroundImage = bg;
+                mainDetailCard.style.backgroundSize = 'cover';
+                mainDetailCard.style.backgroundRepeat = 'no-repeat';
+                mainDetailCard.style.backgroundImage = 'linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,1)), url(' + bg + ')';
+
+            }, 1000);
+        });
     }
 </script>
