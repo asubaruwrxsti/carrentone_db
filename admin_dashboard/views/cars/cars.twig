@@ -38,6 +38,29 @@
             background-size: 100% auto;
         }
     }
+
+    .detail-container {
+        background-color: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    @keyframes fadeSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateX(0px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(-200px);
+        }
+    }
+
+    .fade-slide-in {
+        animation: fadeSlideIn 0.3s ease-out;
+    }
+
 </style>
 
 <div class="container">
@@ -62,20 +85,46 @@
             {% endfor %}
         </div>
         <div id="details" style="display: none;">
-            <div id="mainDetailCard" class="card" style="width: 900px; height: 500px; transform: translateX(-200px); position: fixed;">
+            <div id="mainDetailCard" class="card detail-container fade-slide-in" style="height: 50%; transform: translateX(-200px); position: fixed;">
                 <div class="card-body p-3">
-                    <div id="loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="sr-only"></span>
-                        </div>
-                    </div>
                     <div class="row" id="details" style="display: none;">
-                        <div class="col-lg-6">
-                            <div class="d-flex flex-column h-100">
-                                <p class="mb-1 pt-2 text-bold" id="carTitle">Title</p>
-                                <h5 class="font-weight-bolder" id="carSubtitle">Subtitle</h5>
-                                <p class="mb-5" id="carDescription">Body</p>
-                                </a>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-lg-6 col-12">
+                                    <img class="w-100 border-radius-lg" id="car-image">
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                <table class="table">
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <h6 class="mb-1 font-weight-bold text-sm">Name: <span id="carTitle"></span></h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <h6 class="mb-1 font-weight-bold text-sm">Price: <span id="carPrice"></span></h6>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="d-flex flex-column">
+                                                <label class="mb-1 font-weight-bold text-sm" for="carDescription">Description: </label>
+                                                <span class="text-xs" id="carDescription"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="d-flex flex-column">
+                                                <label class="mb-1 font-weight-bold text-sm" for="carCount">Order Count: </label>
+                                                <span class="text-xs" id="carCount"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -95,7 +144,7 @@
     const mainCarContainer = document.getElementById('main-car-container');
     const detailsCard = document.querySelectorAll('#details')[0];
     const detailsBody = document.querySelectorAll('#details')[1];
-    const loading = document.getElementById('loading');
+    const carImage = document.getElementById('car-image');
 
     function changeLayout() {
         if (currentLayout == "col") return;
@@ -146,28 +195,19 @@
         mainDetailCard.style.backgroundImage = 'none';
 
         Car.getCarById(id).then(function (car) {
-            if (loading.style.display == 'none') {
-                loading.style.display = 'block';
-                detailsBody.style.display = 'none';
-            }
-            setTimeout(function () {
-                loading.style.display = 'none';
-                detailsBody.style.display = 'block';
+            if (detailsBody.style.display != 'block') detailsBody.style.display = 'block';
 
-                document.getElementById('carTitle').innerHTML = car[0].name;
-                document.getElementById('carSubtitle').innerHTML = car[0].id;
-                document.getElementById('carDescription').innerHTML = car[0].description;
+            document.getElementById('carTitle').innerHTML = car[0].name;
+            document.getElementById('carDescription').innerHTML = car[0].description;
+            document.getElementById('carPrice').innerHTML = car[0].price + " {{currency}}";
+            document.getElementById('carCount').innerHTML = car[0].order_count + " time (s)";
 
-                var bg = document.getElementsByClassName('car-image')[id - 1].style.backgroundImage;
-                bg = bg.split('url(')[1];
-                bg = bg.slice(0, -1);
+            var bg = document.getElementsByClassName('car-image')[id - 1].style.backgroundImage;
+            bg = bg.split('url(')[1];
+            bg = bg.slice(0, -1);
+            bg = bg.replace(/['"]+/g, '');
 
-                mainDetailCard.style.backgroundImage = bg;
-                mainDetailCard.style.backgroundSize = 'cover';
-                mainDetailCard.style.backgroundRepeat = 'no-repeat';
-                mainDetailCard.style.backgroundImage = 'linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,1)), url(' + bg + ')';
-
-            }, 1000);
+            carImage.src = bg;
         });
     }
 </script>

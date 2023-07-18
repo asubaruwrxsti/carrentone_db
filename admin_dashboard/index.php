@@ -121,7 +121,7 @@
                             return str_replace($rootPath, '', $image);
                         }, $car_images);
                         if (count($car_images) == 0) {
-                            $car_images = array('/admin_dashboard/views/assets/img/noImg.png');
+                            $car_images = array('/admin_dashboard/views/assets/img/noImg.jpg');
                         }
                         $cars[$key]['image'] = $car_images[0];
                     }
