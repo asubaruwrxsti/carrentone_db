@@ -126,6 +126,28 @@
                                 </table>
                                 </div>
                             </div>
+                            <div class="row mt-5">
+                                <div class="col mt-3">
+                                    <div class="card" style="height: 8rem; width: 18rem;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Total Revenue</h5>
+                                            <div id="loading">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only"></span>
+                                                </div>
+                                            </div>
+                                            <div id="revenueDependencies" style="display: none; align-items: center;">
+                                                <h3 id="revenueTotal"></h3>
+                                                <h5 style="margin-left: 10px">{{currency}}</h5>
+                                                <span id="revenueGrowth" class="text-sm font-weight-bolder" style="margin-left: auto; color: lightgreen"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col mt-3">
+                                    <span id="isAvailable" class="badge badge-sm bg-gradient-primary"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -208,6 +230,33 @@
             bg = bg.replace(/['"]+/g, '');
 
             carImage.src = bg;
+        });
+
+        Car.getRevenueById(id).then(function (revenue) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('revenueDependencies').style.display = 'flex';
+            document.getElementById('revenueTotal').innerHTML = revenue.revenue;
+        
+            if (parseFloat(revenue.growRate) > 0) {
+                document.getElementById('revenueGrowth').innerHTML = '&#9650;' + revenue.growRate + '%';
+                document.getElementById('revenueGrowth').style.color = 'lightgreen';
+            } else if (parseFloat(revenue.growRate) == 0) {
+                document.getElementById('revenueGrowth').innerHTML = '&#61; ' + revenue.growRate + '%';
+                document.getElementById('revenueGrowth').style.color = 'gold';
+            } else {
+                document.getElementById('revenueGrowth').innerHTML = '&#9660;' + revenue.growRate + '%';
+                document.getElementById('revenueGrowth').style.color = 'lightcoral';
+            }
+        });
+
+        Car.calculateIsAvailable(id).then(function (availability) {
+            if (availability.isAvailable) {
+                document.getElementById('isAvailable').innerHTML = 'Available';
+                document.getElementById('isAvailable').classList.add('bg-gradient-success');
+            } else {
+                document.getElementById('isAvailable').innerHTML = 'Not Available';
+                document.getElementById('isAvailable').classList.add('bg-gradient-danger');
+            }
         });
     }
 </script>
