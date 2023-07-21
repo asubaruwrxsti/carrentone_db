@@ -1,28 +1,41 @@
-  <table class="table">
-    <tr>
-      <th>Sender</th>
-      <th>Message</th>
-      <th>Timestamp</th>
-    </tr>
-    <tr class="user-message">
-      <td>User</td>
-      <td>Hello, how can I help you?</td>
-      <td class="timestamp">2023-07-20 10:30 AM</td>
-    </tr>
-    <tr class="bot-message">
-      <td>Chatbot</td>
-      <td>Hi! I'm the chatbot. What can I assist you with today?</td>
-      <td class="timestamp">2023-07-20 10:31 AM</td>
-    </tr>
-    <tr class="user-message">
-      <td>User</td>
-      <td>I have a question about my order status.</td>
-      <td class="timestamp">2023-07-20 10:32 AM</td>
-    </tr>
-    <tr class="bot-message">
-      <td>Chatbot</td>
-      <td>Sure! Please provide me with your order number.</td>
-      <td class="timestamp">2023-07-20 10:33 AM</td>
-    </tr>
-    <!-- Add more messages here... -->
-  </table>
+<div class="container">
+    <table class="table" id="message-container">
+        <thead>
+            <tr>
+                <th>Message</th>
+                <th>Time</th>
+                <th>Sender</th>
+                <th>Contact</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="messages">
+        </tbody>
+    </table>
+</div>
+
+<script src="/admin_dashboard/views/messages/messages.js"></script>
+<script>
+    let messages = new Messages();
+    messages.fetchMessages().then(function(messages) {
+        Object.keys(messages).forEach(function(key) {
+            let message = JSON.parse(messages[key].data);
+            let data = message.data[0];
+            let sender = message.senders[0];
+
+            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+            const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
+
+            let tableRow = document.createElement('tr');
+            tableRow.innerHTML = `
+                <td>${data.content}</td>
+                <td>${formattedDate}</td>
+                <td>${sender.name} (${sender.lastname})</td>
+                <td><a href="mailto:${sender.email}">${sender.email}</a> <br> <a href="tel:${sender.phone}">${sender.phone}</a></td>
+                <td><button class="btn btn-primary">View</button></td>
+            `;
+
+            document.getElementById('messages').appendChild(tableRow);
+        });
+    });
+</script>

@@ -144,9 +144,6 @@
                     break;
 
                 case 'Messages':
-                    $messages = "SELECT * FROM messages;";
-                    $messages = $db->execute_query($messages);
-                    $messages = $messages->fetch_all(MYSQLI_ASSOC);
 
                     echo $header->render(array(
                         'window_title' => $handler,
@@ -159,7 +156,6 @@
                             'content' => sprintf('/%s/%s.twig', $handler, $handler),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
-                                'messages' => $messages
                             ]
                         )
                     );

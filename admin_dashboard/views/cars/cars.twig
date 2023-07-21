@@ -4,6 +4,21 @@
         transition: height 0.3s ease-in-out;
     }
 
+        /* Add media queries for different screen sizes */
+    @media screen and (max-width: 768px) {
+        /* For screens with a maximum width of 768px (e.g., tablets and smaller devices) */
+        .restrict-height {
+            height: 40%;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        /* For screens with a maximum width of 480px (e.g., mobile phones) */
+        .restrict-height {
+            height: 40%;
+        }
+    }
+
     .car-image {
         .mask {
             transition: opacity 0.3s ease-in-out;
@@ -89,7 +104,7 @@
             {% endfor %}
         </div>
         <div id="details" style="display: none;">
-            <div id="mainDetailCard" class="card detail-container fade-slide-in" style="height: 50%; transform: translateX(-200px); position: fixed;">
+            <div id="mainDetailCard" class="card detail-container fade-slide-in" style="height: 55%; transform: translateX(-200px); position: fixed;">
                 <div class="card-body p-3">
                     <div class="row" id="details" style="display: none;">
                         <div class="col">
