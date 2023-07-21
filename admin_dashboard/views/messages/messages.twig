@@ -1,3 +1,33 @@
+<style>
+.modal-content {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal.fade .modal-dialog {
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-open .modal-backdrop {
+    backdrop-filter: blur(0px);
+    opacity: 0;
+    transition: backdrop-filter 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-open .modal-backdrop.show {
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 1;
+}
+</style>
+
 <div class="container">
     <table class="table" id="message-container">
         <thead>
@@ -14,12 +44,35 @@
     </table>
 </div>
 
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="loading" class="modal-body text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
+            <div class="modal-body" id="modalBody"style="display: none"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Mark as Read</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="/admin_dashboard/views/messages/messages.js"></script>
 <script>
     let messages = new Messages();
     messages.fetchMessages().then(function(messages) {
         Object.keys(messages).forEach(function(key) {
             let message = JSON.parse(messages[key].data);
+            let messageID = messages[key].id;
             let data = message.data[0];
             let sender = message.senders[0];
 
@@ -32,10 +85,35 @@
                 <td>${formattedDate}</td>
                 <td>${sender.name} (${sender.lastname})</td>
                 <td><a href="mailto:${sender.email}">${sender.email}</a> <br> <a href="tel:${sender.phone}">${sender.phone}</a></td>
-                <td><button class="btn btn-primary">View</button></td>
+                <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" onclick="loadMessage('${messageID}')">View</button></td>
             `;
 
             document.getElementById('messages').appendChild(tableRow);
         });
     });
+
+    function loadMessage(id){
+        messages.fetchMessage(id).then(function(m) {
+            let message = JSON.parse(m[0].data);
+            let data = message.data[0];
+            let sender = message.senders[0];
+
+            console.log(data);
+
+            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+            const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
+
+            document.getElementById('modalLabel').innerHTML = sender.name + ' ' + sender.lastname;
+            document.getElementById('modalBody').innerHTML = `
+                <p><b>Sender:</b> ${sender.name} (${sender.lastname})</p>
+                <p><b>Email:</b> <a href="mailto:${sender.email}">${sender.email}</a></p>
+                <p><b>Phone:</b> <a href="tel:${sender.phone}">${sender.phone}</a></p>
+                <p><b>Time:</b> ${formattedDate}</p>
+                <p><b>Message:</b> ${data.content}</p>
+            `;
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('modalBody').style.display = 'block';
+        });
+    }
 </script>
