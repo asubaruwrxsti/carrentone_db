@@ -22,4 +22,21 @@ class Messages {
         const data = await response.json();
         return data;
     }
+
+    async isPreviousCustomer(sender) {
+        const response = await fetch(`/admin_dashboard/index.php/api/customers/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        const result = await response.json();
+    
+        for (const key of Object.keys(result)) {
+            if (result[key].firstname === sender.name && result[key].lastname === sender.lastname) {
+                return true;
+            }
+        }
+        return false;
+    }    
 }

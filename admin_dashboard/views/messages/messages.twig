@@ -29,19 +29,17 @@
 </style>
 
 <div class="container">
-    <table class="table" id="message-container">
-        <thead>
-            <tr>
-                <th>Message</th>
-                <th>Time</th>
-                <th>Sender</th>
-                <th>Contact</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="messages">
-        </tbody>
-    </table>
+
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body pt-4 p-3">
+          <ul class="list-group" id="list-group">
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -59,7 +57,7 @@
             <div class="modal-body" id="modalBody"style="display: none"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Mark as Read</button>
+                <button type="button" class="btn btn-primary" id="isPrevious"></button>
             </div>
         </div>
     </div>
@@ -68,52 +66,75 @@
 
 <script src="/admin_dashboard/views/messages/messages.js"></script>
 <script>
-    let messages = new Messages();
-    messages.fetchMessages().then(function(messages) {
-        Object.keys(messages).forEach(function(key) {
-            let message = JSON.parse(messages[key].data);
-            let messageID = messages[key].id;
-            let data = message.data[0];
-            let sender = message.senders[0];
+  let messages = new Messages();
+  messages.fetchMessages().then(function(messages) {
+      Object.keys(messages).forEach(function(key) {
+          let message = JSON.parse(messages[key].data);
+          let messageID = messages[key].id;
+          let data = message.data[0];
+          let sender = message.senders[0];
 
-            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-            const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
+          const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+          const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
 
-            let tableRow = document.createElement('tr');
-            tableRow.innerHTML = `
-                <td>${data.content}</td>
-                <td>${formattedDate}</td>
-                <td>${sender.name} (${sender.lastname})</td>
-                <td><a href="mailto:${sender.email}">${sender.email}</a> <br> <a href="tel:${sender.phone}">${sender.phone}</a></td>
-                <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" onclick="loadMessage('${messageID}')">View</button></td>
-            `;
+          let listGroup = document.getElementById('list-group');
 
-            document.getElementById('messages').appendChild(tableRow);
-        });
+          let li = document.createElement('li');
+          li.className = 'list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg';
+          li.innerHTML = `
+              <div class="d-flex flex-column">
+                  <h6 class="mb-3 text-sm">${sender.name} ${sender.lastname}</h6>
+                  <span class="mb-2 text-xs">Phone Number: <a href="tel:${sender.phone}" class="text-dark font-weight-bold ms-sm-2">${sender.phone}</a></span>  
+                  <span class="mb-2 text-xs">Email Address: <a href="mailto:${sender.email}" class="text-dark ms-sm-2 font-weight-bold">${sender.email}</a></span>
+                  <span class="text-xs">Sent at: <span class="text-dark ms-sm-2 font-weight-bold">${formattedDate}</span></span>
+              </div>
+              <div class="ms-auto text-end">
+                  <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#modal" onclick="loadMessage(${messageID})"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>View</a>
+                  <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;"><i class="far fa-trash-alt me-2"></i>Delete</a>
+              </div>
+          `;
+          listGroup.appendChild(li);
+      });
+  });
+
+  function loadMessage(id) {
+    messages.fetchMessage(id).then(function(m) {
+        let message = JSON.parse(m[0].data);
+        let data = message.data[0];
+        let sender = message.senders[0];
+
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+        const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
+
+        document.getElementById('modalLabel').innerHTML = sender.name + ' ' + sender.lastname;
+        document.getElementById('modalBody').innerHTML = `
+          <div class="d-flex flex-column">
+              <span class="mb-2 text-xs">Phone Number: <a href="tel:${sender.phone}" class="text-dark font-weight-bold ms-sm-2">${sender.phone}</a></span>  
+              <span class="mb-2 text-xs">Email Address: <a href="mailto:${sender.email}" class="text-dark ms-sm-2 font-weight-bold">${sender.email}</a></span>
+              <span class="text-xs">Sent at: <span class="text-dark ms-sm-2 font-weight-bold">${formattedDate}</span></span>
+          </div>
+          <hr>
+          <h6 class="mb-3 text-sm">Message</h6>
+          <p>${data.content}</p>
+        `;
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('modalBody').style.display = 'block';
+
+      messages.isPreviousCustomer(sender).then(function(isPrevious) {
+        if (isPrevious) {
+          document.getElementById('isPrevious').innerHTML = 'View Customer';
+          document.getElementById('isPrevious').className = 'btn btn-primary';
+          document.getElementById('isPrevious').onclick = function() {
+            window.location.href = '/admin_dashboard/customers/view/' + sender.id;
+          }
+        } else {
+          document.getElementById('isPrevious').innerHTML = 'Create Customer';
+          document.getElementById('isPrevious').className = 'btn btn-success';
+          document.getElementById('isPrevious').onclick = function() {
+          }
+        }
+      });
     });
-
-    function loadMessage(id){
-        messages.fetchMessage(id).then(function(m) {
-            let message = JSON.parse(m[0].data);
-            let data = message.data[0];
-            let sender = message.senders[0];
-
-            console.log(data);
-
-            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-            const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
-
-            document.getElementById('modalLabel').innerHTML = sender.name + ' ' + sender.lastname;
-            document.getElementById('modalBody').innerHTML = `
-                <p><b>Sender:</b> ${sender.name} (${sender.lastname})</p>
-                <p><b>Email:</b> <a href="mailto:${sender.email}">${sender.email}</a></p>
-                <p><b>Phone:</b> <a href="tel:${sender.phone}">${sender.phone}</a></p>
-                <p><b>Time:</b> ${formattedDate}</p>
-                <p><b>Message:</b> ${data.content}</p>
-            `;
-
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('modalBody').style.display = 'block';
-        });
-    }
+  }
 </script>
