@@ -26,6 +26,8 @@
                 ));
             }
 
+            // if ($_SERVER['REQUEST_METHOD'] !== 'GET') {}
+
             $property_name = $property[0];
             $id = isset($property[1]) ? $property[1] : null;
 

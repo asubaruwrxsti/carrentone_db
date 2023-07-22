@@ -26,8 +26,11 @@
             $r->addRoute('GET', '/users', 'Users');
 
             // API
-            $r->addRoute(['GET', 'POST'], '/api/{property}/', 'api');
-            $r->addRoute(['GET', 'POST'], '/api/{property}/{id:\d+}', 'api');
+            $r->addRoute('GET', '/api/{property}/', 'api');
+            $r->addRoute('GET', '/api/{property}/{id:\d+}', 'api');
+
+            // EDIT
+            $r->addRoute(['GET', 'POST'], '/api/{property}/edit/{id:\d+}', 'editapi');
 
             // Logout
             $r->addRoute('GET', '/logout', 'logout');
@@ -71,6 +74,16 @@
                     break;
                 
                 case 'api':
+                    require_once 'api.php';
+                    $api = new API($db);
+                    $property = $purifier->purify($vars['property']);
+                    $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
+
+                    $res = $api->fetch_data([$property, $id]);
+                    echo json_encode($res);
+                    break;
+                
+                case 'editapi':
                     require_once 'api.php';
                     $api = new API($db);
                     $property = $purifier->purify($vars['property']);
