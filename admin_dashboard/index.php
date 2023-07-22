@@ -144,7 +144,6 @@
                     break;
 
                 case 'Messages':
-
                     echo $header->render(array(
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
