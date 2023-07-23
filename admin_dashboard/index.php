@@ -29,8 +29,8 @@
             $r->addRoute('GET', '/api/{property}/', 'api');
             $r->addRoute('GET', '/api/{property}/{id:\d+}', 'api');
 
-            // EDIT
-            $r->addRoute('POST', '/api/{property}/edit/{id:\d+}', 'editapi');
+            // UPSERT
+            $r->addRoute(['POST', 'DELETE'], '/api/{property}/edit/{id:\d+}', 'editapi');
             $r->addRoute('POST', '/api/{property}/edit/', 'editapi');
 
             // VIEW
@@ -105,19 +105,28 @@
 
                     $data = $api->fetch_data([$property, $id]);
 
+                    if ($property == 'customers') {
+                        $sql = "SELECT * FROM revenue INNER JOIN cars ON revenue.car_id = cars.id WHERE revenue.customer_id = $id;";
+                        $result = $db->execute_query($sql);
+                        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                    }
+                    var_dump($result);
+
                     echo $header->render(array(
-                        'window_title' => $data[0]['firstname'].' '.$data[0]['lastname'],
+                        'window_title' => sprintf('%s %s - %s', $data[0]['firstname'], $data[0]['lastname'], strtoupper($property)),
                         'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => $_SESSION['user_role'],
                         'user_name' => strtoupper($_SESSION['username'])
                     ));
         
                     echo $base->render(array(
-                            'window_title' => $data[0]['firstname'].' '.$data[0]['lastname'],
+                            'window_title' => sprintf('%s %s', $data[0]['firstname'], $data[0]['lastname']),
                             'content' => sprintf('/%s/%s.twig', $handler, $handler),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
-                                'data' => $data[0]
+                                'property' => $property,
+                                'data' => $data[0],
+                                'related_data' => $result
                             ]
                         )
                     );

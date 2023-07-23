@@ -35,6 +35,7 @@
       <div class="card">
         <div class="card-body pt-4 p-3">
           <ul class="list-group" id="list-group">
+            <p class="text-center" id="noMessage">No messages</p>
           </ul>
         </div>
       </div>
@@ -68,93 +69,113 @@
 <script>
   let messages = new Messages();
   messages.fetchMessages().then(function(messages) {
-      Object.keys(messages).forEach(function(key) {
-          let message = JSON.parse(messages[key].data);
-          let messageID = messages[key].id;
-          let data = message.data[0];
-          let sender = message.senders[0];
-
-          const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-          const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
-
-          let listGroup = document.getElementById('list-group');
-
-          let li = document.createElement('li');
-          li.className = 'list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg';
-          li.innerHTML = `
-              <div class="d-flex flex-column">
-                  <h6 class="mb-3 text-sm">${sender.name} ${sender.lastname}</h6>
-                  <span class="mb-2 text-xs">Phone Number: <a href="tel:${sender.phone}" class="text-dark font-weight-bold ms-sm-2">${sender.phone}</a></span>  
-                  <span class="mb-2 text-xs">Email Address: <a href="mailto:${sender.email}" class="text-dark ms-sm-2 font-weight-bold">${sender.email}</a></span>
-                  <span class="text-xs">Sent at: <span class="text-dark ms-sm-2 font-weight-bold">${formattedDate}</span></span>
-              </div>
-              <div class="ms-auto text-end">
-                  <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#modal" onclick="loadMessage(${messageID})"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>View</a>
-                  <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;"><i class="far fa-trash-alt me-2"></i>Delete</a>
-              </div>
-          `;
-          listGroup.appendChild(li);
-      });
-  });
-
-function loadMessage(id) {
-    messages.fetchMessage(id).then(function(m) {
-        let message = JSON.parse(m[0].data);
+    if (Object.keys(messages).length != 0) document.getElementById('noMessage').style.display = 'none';
+    Object.keys(messages).forEach(function(key) {
+        let message = JSON.parse(messages[key].data);
+        let messageID = messages[key].id;
         let data = message.data[0];
         let sender = message.senders[0];
 
         const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
         const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
 
-        document.getElementById('modalLabel').innerHTML = sender.name + ' ' + sender.lastname;
-        document.getElementById('modalBody').innerHTML = `
-          <div class="d-flex flex-column">
-              <span class="mb-2 text-xs">Phone Number: <a href="tel:${sender.phone}" class="text-dark font-weight-bold ms-sm-2">${sender.phone}</a></span>  
-              <span class="mb-2 text-xs">Email Address: <a href="mailto:${sender.email}" class="text-dark ms-sm-2 font-weight-bold">${sender.email}</a></span>
-              <span class="text-xs">Sent at: <span class="text-dark ms-sm-2 font-weight-bold">${formattedDate}</span></span>
-          </div>
-          <hr>
-          <h6 class="mb-3 text-sm">Message</h6>
-          <p>${data.content}</p>
+        let listGroup = document.getElementById('list-group');
+
+        let li = document.createElement('li');
+        li.className = 'list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg';
+        li.innerHTML = `
+            <div class="d-flex flex-column">
+                <h6 class="mb-3 text-sm">${sender.name} ${sender.lastname}</h6>
+                <span class="mb-2 text-xs">Phone Number: <a href="tel:${sender.phone}" class="text-dark font-weight-bold ms-sm-2">${sender.phone}</a></span>  
+                <span class="mb-2 text-xs">Email Address: <a href="mailto:${sender.email}" class="text-dark ms-sm-2 font-weight-bold">${sender.email}</a></span>
+                <span class="text-xs">Sent at: <span class="text-dark ms-sm-2 font-weight-bold">${formattedDate}</span></span>
+            </div>
+            <div class="ms-auto text-end">
+                <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#modal" onclick="loadMessage(${messageID})"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>View</a>
+                <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;" onclick="deleteMessage(${messageID})"><i class="far fa-trash-alt me-2"></i>Delete</a>
+            </div>
         `;
-
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('modalBody').style.display = 'block';
-
-      messages.isPreviousCustomer(sender).then(function(isPrevious) {
-        if (isPrevious) {
-          document.getElementById('isPrevious').innerHTML = 'View Customer';
-          document.getElementById('isPrevious').className = 'btn btn-primary';
-          document.getElementById('isPrevious').onclick = function() {
-            window.location.href = '/admin_dashboard/index.php/view/customers/' + sender.id
-          }
-        } else {
-          document.getElementById('isPrevious').innerHTML = 'Create Customer';
-          document.getElementById('isPrevious').className = 'btn btn-success';
-          document.getElementById('isPrevious').onclick = function() {
-                fetch('/admin_dashboard/index.php/api/customers/edit/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        firstname: sender.name,
-                        lastname: sender.lastname,
-                        phone_number: sender.phone,
-                        email: sender.email
-                    })}).then(function(response) {
-                        return response.json();
-                    }).then(function(data) {
-                        if (JSON.parse(data).status) {
-                            window.location.reload();
-                        } else {
-                            alertify.error(JSON.parse(data).message);
-                        }
-                    }
-                );
-            }
-        }
-      });
+        listGroup.appendChild(li);
     });
-  }
+  });
+
+function loadMessage(id) {
+  messages.fetchMessage(id).then(function(m) {
+      let message = JSON.parse(m[0].data);
+      let data = message.data[0];
+      let sender = message.senders[0];
+
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+      const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
+
+      document.getElementById('modalLabel').innerHTML = sender.name + ' ' + sender.lastname;
+      document.getElementById('modalBody').innerHTML = `
+        <div class="d-flex flex-column">
+            <span class="mb-2 text-xs">Phone Number: <a href="tel:${sender.phone}" class="text-dark font-weight-bold ms-sm-2">${sender.phone}</a></span>  
+            <span class="mb-2 text-xs">Email Address: <a href="mailto:${sender.email}" class="text-dark ms-sm-2 font-weight-bold">${sender.email}</a></span>
+            <span class="text-xs">Sent at: <span class="text-dark ms-sm-2 font-weight-bold">${formattedDate}</span></span>
+        </div>
+        <hr>
+        <h6 class="mb-3 text-sm">Message</h6>
+        <p>${data.content}</p>
+      `;
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('modalBody').style.display = 'block';
+
+    messages.isPreviousCustomer(sender).then(function(isPrevious) {
+      if (isPrevious) {
+        document.getElementById('isPrevious').innerHTML = 'View Customer';
+        document.getElementById('isPrevious').className = 'btn btn-primary';
+        document.getElementById('isPrevious').onclick = function() {
+          window.location.href = '/admin_dashboard/index.php/view/customers/' + isPrevious[0].id;
+        }
+      } else {
+        document.getElementById('isPrevious').innerHTML = 'Create Customer';
+        document.getElementById('isPrevious').className = 'btn btn-success';
+        document.getElementById('isPrevious').onclick = function() {
+              fetch('/admin_dashboard/index.php/api/customers/edit/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      firstname: sender.name,
+                      lastname: sender.lastname,
+                      phone_number: sender.phone,
+                      email: sender.email
+                  })}).then(function(response) {
+                      return response.json();
+                  }).then(function(data) {
+                      if (JSON.parse(data).status) {
+                        alertify.notify(JSON.parse(data).message, 'success', 5);
+                        setTimeout(function() {
+                          window.location.reload();
+                        }, 1000);
+                      } else {
+                          alertify.error(JSON.parse(data).message);
+                      }
+                  }
+              );
+          }
+      }
+    });
+  });
+}
+
+function deleteMessage(id) {
+  messages.deleteMessage(id).then(function(response) {
+    if (JSON.parse(response).status) {
+      alertify.notify(JSON.parse(response).message, 'success', 5);
+      setTimeout(function() {
+        window.location.reload();
+      }, 1000);
+    } else {
+      alertify.notify(JSON.parse(response).message, 'error', 5);
+      setTimeout(function() {
+        window.location.reload();
+      }, 1000);
+    }
+  });
+}
 </script>
