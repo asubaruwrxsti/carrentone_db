@@ -97,7 +97,7 @@
       });
   });
 
-  function loadMessage(id) {
+function loadMessage(id) {
     messages.fetchMessage(id).then(function(m) {
         let message = JSON.parse(m[0].data);
         let data = message.data[0];
@@ -126,13 +126,33 @@
           document.getElementById('isPrevious').innerHTML = 'View Customer';
           document.getElementById('isPrevious').className = 'btn btn-primary';
           document.getElementById('isPrevious').onclick = function() {
-            window.location.href = '/admin_dashboard/customers/view/' + sender.id;
+            window.location.href = '/admin_dashboard/index.php/view/customers/' + sender.id
           }
         } else {
           document.getElementById('isPrevious').innerHTML = 'Create Customer';
           document.getElementById('isPrevious').className = 'btn btn-success';
           document.getElementById('isPrevious').onclick = function() {
-          }
+                fetch('/admin_dashboard/index.php/api/customers/edit/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        firstname: sender.name,
+                        lastname: sender.lastname,
+                        phone_number: sender.phone,
+                        email: sender.email
+                    })}).then(function(response) {
+                        return response.json();
+                    }).then(function(data) {
+                        if (JSON.parse(data).status) {
+                            window.location.reload();
+                        } else {
+                            alertify.error(JSON.parse(data).message);
+                        }
+                    }
+                );
+            }
         }
       });
     });

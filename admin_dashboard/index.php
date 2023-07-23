@@ -30,7 +30,11 @@
             $r->addRoute('GET', '/api/{property}/{id:\d+}', 'api');
 
             // EDIT
-            $r->addRoute(['GET', 'POST'], '/api/{property}/edit/{id:\d+}', 'editapi');
+            $r->addRoute('POST', '/api/{property}/edit/{id:\d+}', 'editapi');
+            $r->addRoute('POST', '/api/{property}/edit/', 'editapi');
+
+            // VIEW
+            $r->addRoute('GET', '/view/{property}/{id:\d+}', 'viewapi');
 
             // Logout
             $r->addRoute('GET', '/logout', 'logout');
@@ -91,6 +95,32 @@
 
                     $res = $api->fetch_data([$property, $id]);
                     echo json_encode($res);
+                    break;
+
+                case 'viewapi':
+                    require_once 'api.php';
+                    $api = new API($db);
+                    $property = $purifier->purify($vars['property']);
+                    $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
+
+                    $data = $api->fetch_data([$property, $id]);
+
+                    echo $header->render(array(
+                        'window_title' => $data[0]['firstname'].' '.$data[0]['lastname'],
+                        'user_logged_in' => $_SESSION['is_loggedin'],
+                        'user_role' => $_SESSION['user_role'],
+                        'user_name' => strtoupper($_SESSION['username'])
+                    ));
+        
+                    echo $base->render(array(
+                            'window_title' => $data[0]['firstname'].' '.$data[0]['lastname'],
+                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'vars' => [
+                                'currency' => $_SESSION['currency'],
+                                'data' => $data[0]
+                            ]
+                        )
+                    );
                     break;
 
                 case 'Dashboard':
