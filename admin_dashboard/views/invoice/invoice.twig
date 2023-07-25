@@ -1,0 +1,116 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .italic {
+        font-style: italic;
+    }
+
+    .separator {
+        border-top: 1px solid #000;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .renter-info,
+    .company-info {
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    strong {
+        font-weight: bold;
+    }
+
+    .row::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .col-md-6 {
+        width: 50%;
+        float: left;
+    }
+
+    .col-md-3 {
+        width: 25%;
+        float: left;
+    }
+</style>
+<div class="container">
+    <h1 class="display-4">CAR RENTAL CONTRACT</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="renter-info">
+                <h2>Renter:</h2>
+                <p>
+                    <strong>Name:</strong> [Renter's Full Name]<br>
+                    <strong>Address:</strong> [Renter's Address]<br>
+                    <strong>Contact Number:</strong> [Renter's Phone Number]
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="company-info">
+                <h2>Car Rental Company:</h2>
+                <p>
+                    <strong>Name:</strong> [Car Rental Company Name]<br>
+                    <strong>Address:</strong> [Car Rental Company Address]<br>
+                    <strong>Contact Number:</strong> [Car Rental Company Phone Number]
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h2>Rental Vehicle Details:</h2>
+    <div class="row">
+        <div class="col-md-3">
+            <strong>Vehicle Make:</strong> [Make of the Car]
+        </div>
+        <div class="col-md-3">
+            <strong>Vehicle Model:</strong> [Model of the Car]
+        </div>
+        <div class="col-md-3">
+            <strong>Year:</strong> [Year of the Car]
+        </div>
+        <div class="col-md-3">
+            <strong>License Plate:</strong> [License Plate Number]
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <strong>Color:</strong> [Color of the Car]
+        </div>
+    </div>
+
+    <!-- Other sections of the contract (Rental Period, Rental Charges, Insurance, etc.) -->
+
+    <div class="separator"></div>
+
+    <div class="signature row">
+        <div class="col-md-6 italic">
+            <p>Renter:</p>
+            <p><strong>Signature:</strong> __________________</p>
+            <p><strong>Name:</strong> [Renter's Full Name]</p>
+            <p><strong>Date:</strong> __________________</p>
+        </div>
+        <div class="col-md-6 italic">
+            <p>Car Rental Company:</p>
+            <p><strong>Signature:</strong> __________________</p>
+            <p><strong>Name:</strong> [Car Rental Company Name]</p>
+            <p><strong>Date:</strong> __________________</p>
+        </div>
+    </div>
+</div>

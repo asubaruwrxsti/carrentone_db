@@ -14,6 +14,12 @@
     $purifier_config = HTMLPurifier_Config::createDefault();
     $purifier = new HTMLPurifier($purifier_config);
 
+    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('CarRentOne');
+    $pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addGroup('/admin_dashboard/index.php', function ($r) {
 
@@ -30,11 +36,13 @@
             $r->addRoute('GET', '/api/{property}/{id:\d+}', 'api');
 
             // UPSERT
-            $r->addRoute(['POST', 'DELETE'], '/api/{property}/edit/{id:\d+}', 'editapi');
-            $r->addRoute('POST', '/api/{property}/edit/', 'editapi');
+            $r->addRoute(['POST', 'DELETE'], '/api/{property}/edit/{id:\d+}', 'upsertapi');
 
             // VIEW
             $r->addRoute('GET', '/view/{property}/{id:\d+}', 'viewapi');
+
+            // INVOICE
+            $r->addRoute('GET', '/invoice/{id:\d+}', 'invoice');
 
             // Logout
             $r->addRoute('GET', '/logout', 'logout');
@@ -87,7 +95,7 @@
                     echo json_encode($res);
                     break;
                 
-                case 'editapi':
+                case 'upsertapi':
                     require_once 'api.php';
                     $api = new API($db);
                     $property = $purifier->purify($vars['property']);
@@ -106,30 +114,71 @@
                     $data = $api->fetch_data([$property, $id]);
 
                     if ($property == 'customers') {
-                        $sql = "SELECT * FROM revenue INNER JOIN cars ON revenue.car_id = cars.id WHERE revenue.customer_id = $id;";
+                        $sql = "SELECT revenue.id, cars.id AS car_id, cars.name AS car_name, revenue.rental_date, revenue.rental_duration, revenue.price 
+                            FROM revenue 
+                            INNER JOIN cars ON revenue.car_id = cars.id 
+                            WHERE revenue.customer_id = $id;";
                         $result = $db->execute_query($sql);
                         $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+                        $window_title = sprintf('%s %s', $data[0]['firstname'], $data[0]['lastname']);
+                    } else if ($property == 'cars') {
+                        $sql = "SELECT revenue.id, customers.id AS customer_id, customers.firstname, customers.lastname, revenue.rental_date, revenue.rental_duration, revenue.price 
+                            FROM revenue 
+                            INNER JOIN customers ON revenue.customer_id = customers.id 
+                            WHERE revenue.car_id = $id;";
+                        $result = $db->execute_query($sql);
+                        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                        $window_title = sprintf('%s', strtoupper($data[0]['name']));
                     }
-                    var_dump($result);
 
                     echo $header->render(array(
-                        'window_title' => sprintf('%s %s - %s', $data[0]['firstname'], $data[0]['lastname'], strtoupper($property)),
+                        'window_title' => sprintf('%s', strtoupper($property)),
                         'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => $_SESSION['user_role'],
                         'user_name' => strtoupper($_SESSION['username'])
                     ));
         
                     echo $base->render(array(
-                            'window_title' => sprintf('%s %s', $data[0]['firstname'], $data[0]['lastname']),
+                            'window_title' => $window_title,
                             'content' => sprintf('/%s/%s.twig', $handler, $handler),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
                                 'property' => $property,
                                 'data' => $data[0],
-                                'related_data' => $result
+                                'invoices' => $result,
+                                'view_type' => $property
                             ]
                         )
                     );
+                    break;
+                
+                case 'invoice':
+                    require_once 'api.php';
+                    $api = new API($db);
+                    $pdf->SetTitle(strtoupper($handler));
+
+                    $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
+
+                    $sql = "SELECT revenue.id, customers.id AS customer_id, customers.firstname, customers.lastname, revenue.rental_date, revenue.rental_duration, revenue.price, cars.name AS car_name
+                        FROM revenue 
+                        INNER JOIN customers ON revenue.customer_id = customers.id 
+                        INNER JOIN cars ON revenue.car_id = cars.id 
+                        WHERE revenue.id = $id;";
+                    $result = $db->execute_query($sql);
+                    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                    
+                    $html = $twig->render('base.twig', array(
+                        'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                        'vars' => [
+                            'currency' => $_SESSION['currency'],
+                            'data' => $result[0]
+                        ]
+                    ));
+
+                    $pdf->AddPage();
+                    $pdf->writeHTML($html, true, false, true, false, '');
+                    $pdf->Output('invoice.pdf', 'I');
                     break;
 
                 case 'Dashboard':

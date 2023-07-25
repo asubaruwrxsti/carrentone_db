@@ -18,11 +18,11 @@
     <script src="/admin_dashboard/views/assets/js/packery.pkgd.min.js"></script>
     <script src="/admin_dashboard/views/assets/js/draggabilly.pkgd.min.js"></script>
 
-    <title> {{window_title}} </title>
+    <title>{{ window_title ?? '' }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-{% if user_logged_in == true %}
+{% if user_logged_in and not printable %}
   <style>
     .more-padding {
       padding-right: 5px;
@@ -44,9 +44,6 @@
       <li class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/cars">Cars</a></li>
       <li class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/messages">Messages</a></li>
       <li class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/orders">Orders</a></li>
-      {% if user_role == "admin" %}
-        <li class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/users">Users</a></li>
-      {% endif %}
       <li class="nav-item dropdown nav-padding">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Options</a>
           <ul class="dropdown-menu">
