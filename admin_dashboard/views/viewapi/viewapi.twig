@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="card-body pt-4 p-3">
-            <p class="text-center" id="noMessage" style="display: none;">No previous orders</p>
+            <p class="text-center" id="noOrders" style="display: none;">No previous orders</p>
             {% if view_type == 'customers' %}
                 <ul class="list-group" id="list-group">
                     <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
@@ -44,3 +44,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    const invoices = {{invoices | json_encode | raw}};
+
+    if (invoices.length === 0) {
+        document.getElementById('noOrders').style.display = 'block';
+    }
+</script>

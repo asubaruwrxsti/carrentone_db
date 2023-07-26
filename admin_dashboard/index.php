@@ -261,10 +261,10 @@
                     break;
                 
                 case 'Customers':
-                    $data = "SELECT * FROM customers;";
-                    $data = $db->execute_query($data);
-                    $data = $data->fetch_all(MYSQLI_ASSOC);
-                    
+                    $customers = "SELECT * FROM customers;";
+                    $customers = $db->execute_query($customers);
+                    $customers = $customers->fetch_all(MYSQLI_ASSOC);
+
                     echo $header->render(array(
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
@@ -276,7 +276,7 @@
                             'content' => sprintf('/%s/%s.twig', $handler, $handler),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
-                                'customers' => $data
+                                'customers' => $customers,
                             ]
                         )
                     );
