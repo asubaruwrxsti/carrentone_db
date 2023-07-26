@@ -14,11 +14,7 @@
     $purifier_config = HTMLPurifier_Config::createDefault();
     $purifier = new HTMLPurifier($purifier_config);
 
-    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-    $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor('CarRentOne');
-    $pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+    $dompdf = new Dompdf\Dompdf();
 
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addGroup('/admin_dashboard/index.php', function ($r) {
@@ -29,7 +25,7 @@
             $r->addRoute('GET', '/reports', 'Reports');
             $r->addRoute('GET', '/messages', 'Messages');
             $r->addRoute('GET', '/orders', 'Orders');
-            $r->addRoute('GET', '/users', 'Users');
+            $r->addRoute('GET', '/customers', 'Customers');
 
             // API
             $r->addRoute('GET', '/api/{property}/', 'api');
@@ -37,6 +33,7 @@
 
             // UPSERT
             $r->addRoute(['POST', 'DELETE'], '/api/{property}/edit/{id:\d+}', 'upsertapi');
+            $r->addRoute(['POST', 'DELETE'], '/api/{property}/edit/', 'upsertapi');
 
             // VIEW
             $r->addRoute('GET', '/view/{property}/{id:\d+}', 'viewapi');
@@ -156,7 +153,6 @@
                 case 'invoice':
                     require_once 'api.php';
                     $api = new API($db);
-                    $pdf->SetTitle(strtoupper($handler));
 
                     $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
 
@@ -176,9 +172,10 @@
                         ]
                     ));
 
-                    $pdf->AddPage();
-                    $pdf->writeHTML($html, true, false, true, false, '');
-                    $pdf->Output('invoice.pdf', 'I');
+                    $dompdf->loadHtml($html);
+                    $dompdf->setPaper('A4', 'portrait');
+                    $dompdf->render();
+                    $dompdf->stream();
                     break;
 
                 case 'Dashboard':
@@ -259,6 +256,31 @@
                             ]
                         )
                     );
+                
+                case 'Orders':
+                    break;
+                
+                case 'Customers':
+                    $data = "SELECT * FROM customers;";
+                    $data = $db->execute_query($data);
+                    $data = $data->fetch_all(MYSQLI_ASSOC);
+                    
+                    echo $header->render(array(
+                        'window_title' => $handler,
+                        'user_logged_in' => $_SESSION['is_loggedin'],
+                        'user_role' => $_SESSION['user_role'],
+                        'user_name' => strtoupper($_SESSION['username'])
+                    ));
+                    echo $base->render(array(
+                            'window_title' => $handler,
+                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'vars' => [
+                                'currency' => $_SESSION['currency'],
+                                'customers' => $data
+                            ]
+                        )
+                    );
+                    break;
             }
             break;
     }
