@@ -30,21 +30,32 @@ class Customer {
         revenue = await revenue.json();
         carData = await carData.json();
 
-        // filter where customer_id = id
         revenue = revenue.filter((order) => {
             return order.customer_id == id;
         });
+        revenue = revenue.slice(0, 3);
 
-        // filter where car_id = revenue.car_id
         carData = carData.filter((car) => {
             return revenue.some((order) => {
                 return order.car_id == car.id;
             });
         });
+        carData = carData.slice(0, 3);
 
         return {
             revenue: revenue,
             carData: carData
         };
+    }
+
+    async deleteCustomer(id) {
+        const response = await fetch(`/admin_dashboard/index.php/api/customers/edit/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        return data;
     }
 }

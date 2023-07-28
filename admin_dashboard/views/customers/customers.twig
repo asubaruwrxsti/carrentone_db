@@ -28,8 +28,7 @@
 }
 </style>
 
-<div class="container">
-
+<div class="container" style="z-index: 1">
   <div class="row">
     <div class="col">
       <div class="card">
@@ -39,16 +38,20 @@
             {% endif %}
           <ul class="list-group" id="list-group">
             {% for customer in customers %}
-                <div class="d-flex flex-column">
-                    <h6 class="mb-3 text-sm">{{ customer.firstname }} {{ customer.lastname }}</h6>
-                    <span class="mb-2 text-xs">Phone Number: <a href="tel:{{ customer.phone_number }}" class="text-dark font-weight-bold ms-sm-2">{{ customer.phone_number }}</a></span>  
-                    <span class="mb-2 text-xs">Email Address: <a href="mailto:{{ customer.email }}" class="text-dark ms-sm-2 font-weight-bold">{{ customer.email }}</a></span>
-                    <span class="text-xs">Created at: <span class="text-dark ms-sm-2 font-weight-bold">{{ customer.created_at }}</span></span>
-                </div>
-                <div class="ms-auto text-end">
-                    <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#modal" onclick="loadCustomer({{ customer.id }})"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>View</a>
-                    <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;" onclick="deleteCustomer({{ customer.id }})"><i class="far fa-trash-alt me-2"></i>Delete</a>
-                </div>
+                <ul class="list-group" id='list-{{ customer.id }}'>
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                      <div class="d-flex flex-column">
+                          <h6 class="mb-3 text-sm" id="userIdents">{{ customer.firstname }} {{ customer.lastname }}</h6>
+                          <span class="mb-2 text-xs" id="userPhone">Phone Number: <a href="tel:{{ customer.phone_number }}" class="text-dark font-weight-bold ms-sm-2">{{ customer.phone_number }}</a></span>  
+                          <span class="mb-2 text-xs" id="userEmail">Email Address: <a href="mailto:{{ customer.email }}" class="text-dark ms-sm-2 font-weight-bold">{{ customer.email }}</a></span>
+                          <span class="text-xs">Created at: <span class="text-dark ms-sm-2 font-weight-bold">{{ customer.created_at }}</span></span>
+                      </div>
+                      <div class="ms-auto text-end">
+                          <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#modal" onclick="loadCustomer({{ customer.id }})"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>View</a>
+                          <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;" onclick="deleteCustomer({{ customer.id }})"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                      </div>
+                    </li>
+                </ul>
             {% endfor %}
           </ul>
         </div>
@@ -58,13 +61,13 @@
 </div>
 
 <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="loading" class="modal-body text-center">
+            <div id="loading" class="modal-body text-center mt-3">
                 <div class="spinner-border text-primary" role="status">
                     <span class="sr-only"></span>
                 </div>
@@ -83,11 +86,95 @@
 
     function loadCustomer(id) {
         customer.loadCustomer(id).then(function(c) {
-            document.getElementById('modalLabel').innerHTML = c.firstname + ' ' + c.lastname;
+          console.log(c);
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('modalLabel').innerHTML = c[0].firstname + ' ' + c[0].lastname;
+            
+            document.getElementById('modalBody').style.display = 'block';
+            document.getElementById('modalBody').innerHTML = `
+            <ul class="list-group" id="list-group">
+                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                  <div class="d-flex flex-column">
+                      <span class="mb-2 text-xs" id="userPhone">Phone Number: <a href="tel:undefined" class="text-dark font-weight-bold ms-sm-2">${c[0].phone_number}</a></span>  
+                      <span class="mb-2 text-xs" id="userEmail">Email Address: <a href="mailto:${c[0].email}" class="text-dark ms-sm-2 font-weight-bold">${c[0].email}</a></span>
+                      <span class="text-xs">Created at: <span class="text-dark ms-sm-2 font-weight-bold"></span>${c[0].created_at}</span>
+                  </div>
+                  <div class="ms-auto text-end">
+                      <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#modal" id="editButton" onclick="editCustomer(${c[0].id})"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
+                      <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;" onclick="deleteCustomer(${c[0].id})"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                  </div>
+                </li>
+            </ul>
+            `;
         });
 
         customer.loadOrders(id).then(function (c) {
-            console.log(c);
+          console.log(c); // returns [revenue, carData]
+          document.getElementById('modalBody').innerHTML += `
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col" class="text-center align-middle">#</th>
+                  <th scope="col">Rental Dates</th>
+                  <th scope="col">Car</th>
+                  <th scope="col">Order Status</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${c['revenue'].map((r, i) => {
+                  const rentalStartDate = new Date(r['rental_date']);
+                  const rentalDuration = Number(r['rental_duration']);
+                  const rentalEndDate = new Date(rentalStartDate.getTime() + rentalDuration * 24 * 60 * 60 * 1000);
+
+                  const formattedDates = `${rentalStartDate.toISOString().slice(0, 10)} - ${rentalEndDate.toISOString().slice(0, 10)}`;
+
+                  const today = new Date();
+                  const isOrderActive = today <= rentalEndDate;
+                  let orderStatus = '';
+                  if (isOrderActive) {
+                    orderStatus += ` <span class="badge badge-sm bg-gradient-info ms-2">Active</span>`;
+                  } else {
+                    orderStatus += ` <span class="badge badge-sm bg-gradient-success ms-2">Completed</span>`;
+                  }
+
+                  const carName = c['carData'].find(car => car['id'] === r['car_id'])['name'];
+
+                  return `
+                    <tr>
+                      <td class="text-center align-middle">${i + 1}</td>
+                      <td class="text-center align-middle">${formattedDates}</td>
+                      <td class="text-center align-middle">${carName}</td>
+                      <td class="text-center align-middle">${orderStatus}</td>
+                      <td class="text-center align-middle">${r['price']}</td>
+                      <td class="text-center align-middle"><a href="/admin_dashboard/index.php/invoice/${r['id']}"><button type="button" class="btn btn-sm">View</button></a></td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div> `;
         });
     }
+
+    function deleteCustomer(id) {
+      customer.deleteCustomer(id).then(function (response) {
+        if (JSON.parse(response).status) {
+          alertify.notify(JSON.parse(response).message, 'success', 5);
+        } else {
+          alertify.notify(JSON.parse(response).message, 'error', 5);
+        }
+        setTimeout(function() {
+          window.location.reload();
+        }, 1000);
+      });
+    }
+
+    function editCustomer(id) {
+      // make the text fields editable in the modal
+      let modal = document.getElementById('modalBody').innerHTML;
+    }
+
 </script>
