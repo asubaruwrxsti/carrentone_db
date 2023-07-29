@@ -129,7 +129,7 @@
             <ul class="list-group" id="list-group">
                 <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
                   <div class="d-flex flex-column">
-                      <span class="mb-2 text-xs" id="userPhone-modal">Phone Number: <a href="tel:undefined" class="text-dark font-weight-bold ms-sm-2">${c[0].phone_number}</a></span>  
+                      <span class="mb-2 text-xs" id="userPhone-modal">Phone Number: <a href="tel:${c[0].phone_number}" class="text-dark font-weight-bold ms-sm-2">${c[0].phone_number}</a></span>  
                       <span class="mb-2 text-xs" id="userEmail-modal">Email Address: <a href="mailto:${c[0].email}" class="text-dark ms-sm-2 font-weight-bold">${c[0].email}</a></span>
                       <span class="text-xs">Created at: <span class="text-dark ms-sm-2 font-weight-bold"></span>${c[0].created_at}</span>
                   </div>
@@ -226,6 +226,10 @@
       setTimeout(() => {
         document.querySelector('.customer-info').classList.remove('editing');
       }, 1000);
+    }
+
+    function saveCustomer(id) {
+      
     }
 
     document.addEventListener('DOMContentLoaded', function () {
