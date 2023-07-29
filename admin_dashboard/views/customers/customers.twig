@@ -222,6 +222,7 @@
 
       let editButton = document.getElementById('editButton');
       editButton.innerHTML = '<i class="fas fa-check text-dark me-2" data-bs-dismiss="modal" aria-hidden="true"></i>Save';
+      editButton.setAttribute('onclick', `saveCustomer(${id})`);
 
       setTimeout(() => {
         document.querySelector('.customer-info').classList.remove('editing');
@@ -229,7 +230,38 @@
     }
 
     function saveCustomer(id) {
-      
+      let data = {
+        id: id,
+        firstname: document.getElementById('firstname').value,
+        lastname: document.getElementById('lastname').value,
+        phone_number: document.getElementById('phone').value,
+        email: document.getElementById('email').value
+      };
+
+      customer.updateCustomer(id, data).then(function (response) {
+        if (JSON.parse(response).status) {
+          alertify.notify(JSON.parse(response).message, 'success', 5);
+        } else {
+          alertify.notify(JSON.parse(response).message, 'error', 5);
+        }
+        setTimeout(function() {
+          restoreView(id);
+        }, 1000);
+      });
+    }
+
+    function restoreView(id) {
+        document.getElementById('modalLabel').innerHTML = '';
+        document.getElementById('modalBody').innerHTML = '';
+        // show loading and wait for .3s
+        document.getElementById('modalLabel').innerHTML = `
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        `;
+        setTimeout(() => {
+          loadCustomer(id);
+        }, 300);
     }
 
     document.addEventListener('DOMContentLoaded', function () {

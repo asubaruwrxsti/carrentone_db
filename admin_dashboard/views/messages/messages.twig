@@ -150,7 +150,11 @@ function loadMessage(id) {
                       if (JSON.parse(data).status) {
                         alertify.notify(JSON.parse(data).message, 'success', 5);
                         setTimeout(function() {
-                          window.location.reload();
+                          document.getElementById('modalBody').innerHTML = '';
+                          document.getElementById('loading').style.display = 'block';
+                          setTimeout(function() {
+                            loadMessage(id);
+                          }, 300);
                         }, 1000);
                       } else {
                           alertify.error(JSON.parse(data).message);

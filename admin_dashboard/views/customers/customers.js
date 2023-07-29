@@ -58,4 +58,16 @@ class Customer {
         const data = await response.json();
         return data;
     }
+
+    async updateCustomer(id, data) {
+        const response = await fetch(`/admin_dashboard/index.php/api/customers/edit/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const res = await response.json();
+        return res;
+    }
 }
