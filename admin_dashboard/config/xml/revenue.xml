@@ -1,0 +1,18 @@
+<!-- Revenue.orm.xml -->
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                     https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Revenue" table="revenues">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="customer_id" type="integer" column="customer_id"/>
+        <field name="rental_date" type="integer" column="rental_date"/>
+        <field name="car_id" type="integer" column="car_id"/>
+        <field name="rental_duration" type="integer" column="rental_duration"/>
+        <field name="price" type="integer" column="price"/>
+    </entity>
+
+</doctrine-mapping>

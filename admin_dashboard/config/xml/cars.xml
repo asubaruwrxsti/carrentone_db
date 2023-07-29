@@ -1,0 +1,22 @@
+<!-- Cars.orm.xml -->
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                     https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Cars" table="cars">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="name" type="string" column="name" length="255"/>
+        <field name="price" type="integer" column="price"/>
+        <field name="description" type="string" column="description" length="1000"/>
+        <field name="travel_distance" type="integer" column="travel_distance"/>
+        <field name="transmission" type="integer" column="transmission"/>
+        <field name="available" type="integer" column="available"/>
+        <field name="next_order" type="string" column="next_order" length="255"/>
+        <field name="order_count" type="string" column="order_count" length="255"/>
+        <field name="created_at" type="string" column="created_at" length="255"/>
+    </entity>
+
+</doctrine-mapping>

@@ -1,0 +1,15 @@
+<!-- ActiveSession.orm.xml -->
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                     https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="ActiveSession" table="active_sessions">
+        <id name="uid" type="integer" column="user_id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="session_id" type="string" column="session_id" length="255"/>
+        <field name="ip_address" type="string" column="ip_address" length="45"/>
+    </entity>
+
+</doctrine-mapping>
