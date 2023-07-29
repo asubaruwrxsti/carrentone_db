@@ -66,6 +66,9 @@
 <div class="container" style="z-index: 1">
   <div class="row">
     <div class="col">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+        Add Customer
+      </button>
       <div class="card">
         <div class="card-body pt-4 p-3">
             {% if customers is empty %}
@@ -113,6 +116,48 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Add Customer Modal -->
+<div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCustomerModalLabel">Add Customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <!-- First Name -->
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Enter first name">
+          </div>
+          <div class="col-md-6">
+            <!-- Last Name -->
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Enter last name">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <!-- Phone Number -->
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
+          </div>
+          <div class="col-md-6">
+            <!-- Email -->
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="createCustomer()">Save</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="/admin_dashboard/views/customers/customers.js"></script>
@@ -245,31 +290,73 @@
           alertify.notify(JSON.parse(response).message, 'error', 5);
         }
         setTimeout(function() {
-          restoreView(id);
+          restoreView(data);
         }, 1000);
       });
     }
 
-    function restoreView(id) {
+    function restoreView(data) {
         document.getElementById('modalLabel').innerHTML = '';
         document.getElementById('modalBody').innerHTML = '';
-        // show loading and wait for .3s
-        document.getElementById('modalLabel').innerHTML = `
+
+        let loading = document.getElementById('modalLabel').innerHTML = `
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
         `;
+
         setTimeout(() => {
-          loadCustomer(id);
+          loadCustomer(data.id);
+          let ul = document.getElementById('list-' + data.id);
+          ul.querySelector('#userIdents').innerHTML = `${data.firstname} ${data.lastname}`;
+          ul.querySelector('#userEmail').innerHTML = `Email: <a href="mailto:${data.email}">${data.email}</a>`;
+          ul.querySelector('#userPhone').innerHTML = `Phone: <a href="tel:${data.phone_number}">${data.phone_number}</a>`;
+          loading = '';
         }, 300);
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-      const modalElement = document.querySelector('[aria-labelledby="exampleModalLabel"]');
+    function createCustomer() {
+      let modal = document.getElementById('addCustomerModal');
+      let modalBody = modal.querySelector('.modal-body');
 
-      modalElement.addEventListener('hidden.bs.modal', function () {
+      if (modalBody.querySelector('#firstName').value === '' || modalBody.querySelector('#lastName').value === '') {
+        alertify.notify(`Please fill ${modalBody.querySelector('#firstName').value === '' ? 'first' : 'last'} name`, 'error', 5);
+        return;
+      }
+
+      let data = {
+        firstname: modalBody.querySelector('#firstName').value,
+        lastname: modalBody.querySelector('#lastName').value,
+        phone_number: modalBody.querySelector('#phone').value,
+        email: modalBody.querySelector('#email').value
+      };
+      customer.addCustomer(data).then(function (response) {
+        console.log(response);
+        if (JSON.parse(response).status) {
+          alertify.notify(JSON.parse(response).message, 'success', 5);
+          setTimeout(function() {
+            window.location.reload();
+          }, 1000);
+        } else {
+          alertify.notify(JSON.parse(response).message, 'error', 5);
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const viewCustomer = document.querySelector('[aria-labelledby="exampleModalLabel"]');
+      const addCustomerModal = document.querySelector('[aria-labelledby="addCustomerModalLabel"]');
+
+      viewCustomer.addEventListener('hidden.bs.modal', function () {
         document.getElementById('modalLabel').innerHTML = '';
         document.getElementById('modalBody').innerHTML = '';
+      });
+
+      addCustomerModal.addEventListener('hidden.bs.modal', function () {
+        addCustomerModal.querySelector('#firstName').value = '';
+        addCustomerModal.querySelector('#lastName').value = '';
+        addCustomerModal.querySelector('#phone').value = '';
+        addCustomerModal.querySelector('#email').value = '';
       });
     });
 

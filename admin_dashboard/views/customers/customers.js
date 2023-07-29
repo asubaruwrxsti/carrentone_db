@@ -70,4 +70,31 @@ class Customer {
         const res = await response.json();
         return res;
     }
+
+    async addCustomer(data) {
+        let response = await fetch(`/admin_dashboard/index.php/api/customers/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        let res = await response.json();
+        res = res.filter((customer) => {
+            return customer.firstname === data.firstname && customer.lastname === data.lastname;
+        });
+        
+        if (res.length > 0) {
+            return '{"status": false, "message": "Customer already exists"}'
+        }
+
+        response = await fetch(`/admin_dashboard/index.php/api/customers/edit/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        res = await response.json();
+        return res;
+    }
 }
