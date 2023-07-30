@@ -113,7 +113,11 @@
             return true;
         }
 
-        public function repairSchema() {
+        /**
+         * Restore the database from the local schema
+         * @return boolean
+         */
+        public function restoreSchema() {
             $schema = json_decode(json_encode($this->schema), true);
             foreach ($schema as $table => $columns) {
                 try {
@@ -135,7 +139,7 @@
          */
         public function importSchema($schema) {
             $this->schema = $schema;
-            $this->repairSchema();
+            $this->restoreSchema();
         }
 
         /**
