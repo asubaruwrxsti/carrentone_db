@@ -3,9 +3,13 @@
     require_once 'vendor/autoload.php';
     include_once 'Database.php';
 
-    $db = new DB('localhost', 'root', '', 'carrentone');
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->safeLoad();
+
     $purifier_config = HTMLPurifier_Config::createDefault();
     $purifier = new HTMLPurifier($purifier_config);
+
+    $db = new DB($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
 
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $loader = new \Twig\Loader\FilesystemLoader('views');

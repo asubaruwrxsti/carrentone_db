@@ -1,13 +1,11 @@
 #!/usr/bin/env php
 <?php
-// bin/doctrine
+    require_once "database.php";
+    require_once "vendor/autoload.php";
 
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->safeLoad();
 
-// Adjust this path to your actual bootstrap.php
-require __DIR__ . '/bootstrap.php';
-
-ConsoleRunner::run(
-    new SingleManagerProvider($entityManager)
-);
+    $db = new DB($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
+    $res = $db->execute_query("SHOW TABLES");
+    var_dump($res);
