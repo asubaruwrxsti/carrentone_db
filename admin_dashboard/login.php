@@ -1,4 +1,9 @@
 <?php
+    /**
+     * Login page
+     * @package admin_dashboard
+     */
+
     session_start();
     require_once 'vendor/autoload.php';
     include_once 'Database.php';
@@ -13,7 +18,7 @@
     $db = new DB($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     $schema = new Schema();
     if (!$schema->verifySchema()) {
-        $schema->repairSchema();
+        $schema->restoreSchema();
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {

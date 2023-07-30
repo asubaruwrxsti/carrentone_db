@@ -2,6 +2,10 @@
     require_once 'vendor/autoload.php';
     require_once 'Database.php';
 
+    /**
+     * API class
+     * @package admin_dashboard
+     */
     class API {
         private $db;
 
@@ -9,6 +13,10 @@
             $this->db = $db;
         }
 
+        /**
+         * Check if the user has a valid session ID
+         * @return bool
+         */
         function checkSid() {
             $sid = session_id();
             $sql = "SELECT * FROM active_sessions WHERE session_id = '$sid'";
@@ -17,6 +25,11 @@
             return count($data) > 0 ? true : false;
         }
 
+        /**
+         * Fetch data from the database
+         * @param array $property
+         * @return array
+         */
         function fetch_data($property) {
 
             if (!$this->checkSid()) {

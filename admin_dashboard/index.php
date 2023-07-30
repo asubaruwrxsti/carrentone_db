@@ -1,4 +1,9 @@
 <?php
+    /**
+     * Main Routing file
+     * @package admin_dashboard
+     */
+
     session_start();
     if (!isset($_SESSION['is_loggedin'])) {
         header("Location: /admin_dashboard/Login.php");

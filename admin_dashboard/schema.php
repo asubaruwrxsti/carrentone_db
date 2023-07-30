@@ -2,6 +2,10 @@
     require_once "database.php";
     require_once "vendor/autoload.php";
 
+    if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
+        die("403 - Access Forbidden");
+    }
+
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->safeLoad();
     /**
