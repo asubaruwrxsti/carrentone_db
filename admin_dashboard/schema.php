@@ -131,17 +131,22 @@
 
         /**
          * Import a schema into the database
-         * @return array
+         * @return boolean
          */
         public function importSchema($schema) {
-
+            $this->schema = $schema;
+            $this->repairSchema();
         }
 
         /**
-         * Update the schema of the database
-         * @return array
+         * Run a changeset on the database
+         * @return boolean
          */
-        public function updateSchema($changeSet = false) {
+        public function runChangeset($changeSet) {
+            require_once "{$changeSet['path']}";
+            $changeSet['class']::{$changeSet['method']}($this);
 
+            $this->saveSchema();
+            return $this->verifySchema();
         }
     }
