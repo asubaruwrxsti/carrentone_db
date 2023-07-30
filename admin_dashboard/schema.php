@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
     require_once "database.php";
     require_once "vendor/autoload.php";
@@ -44,15 +43,31 @@
          * @return array
          */
         public function createTable($name, $columns) {
+            
+            $this->dropTable($name);
+
             $query = "CREATE TABLE IF NOT EXISTS $name (";
             foreach ($columns as $column) {
-                $query .= $column['name'] . " " . $column['type'] . " " . $column['extra'] . ",";
+                $nullValue = $column['Null'] === 'NO' ? 'NOT NULL' : 'NULL';
+
+                if ($column['Default'] !== null && $column['Type'] !== "varchar(255)") {
+                    $defaultValue = "DEFAULT {$column['Default']}";
+                } else if ($column['Type'] == "varchar(255)") {
+                    $defaultValue = "DEFAULT '{$column['Default']}'";
+                } else {
+                    $defaultValue = '';
+                }
+
+                $query .= "{$column['Field']} {$column['Type']} {$nullValue} {$defaultValue} {$column['Extra']},";
+                if ($column['Key'] == "PRI") {
+                    $query .= "PRIMARY KEY ({$column['Field']}),";
+                }
             }
-            $query = rtrim($query, ",");
+            $query = rtrim($query, ',');
             $query .= ");";
             $this->db->execute_query($query);
-            $this->tables[$name] = $columns;
         }
+        
 
         /**
          * Drop a table from the database
@@ -82,16 +97,37 @@
          * @return boolean
          */
         public function verifySchema() {
-            $schema = json_decode($this->schema, true);
+            $schema = json_decode(json_encode($this->schema), true);
+
             foreach ($schema as $table => $columns) {
-                $res = $this->db->execute_query("SHOW COLUMNS FROM $table");
-                $db_columns = $res->fetch_all(MYSQLI_ASSOC);
-                if ($columns != $db_columns) {
+                try {
+                    $res = $this->db->execute_query("SHOW COLUMNS FROM $table");
+                    $db_columns = $res->fetch_all(MYSQLI_ASSOC);
+                    if ($columns != $db_columns) {
+                        return false;
+                    }
+                } catch (Exception $e) {
                     return false;
                 }
             }
             return true;
-        } 
+        }
+
+        public function repairSchema() {
+            $schema = json_decode(json_encode($this->schema), true);
+            foreach ($schema as $table => $columns) {
+                try {
+                    $res = $this->db->execute_query("SHOW COLUMNS FROM $table");
+                    $db_columns = $res->fetch_all(MYSQLI_ASSOC);
+                    if ($columns != $db_columns) {
+                        $this->dropTable($table);
+                        $this->createTable($table, $columns);
+                    }
+                } catch (Exception $e) {
+                    $this->createTable($table, $columns);
+                }
+            }
+        }
 
         /**
          * Import a schema into the database
@@ -105,7 +141,7 @@
          * Update the schema of the database
          * @return array
          */
-        public function updateSchema() {
+        public function updateSchema($changeSet = false) {
 
         }
     }
