@@ -31,10 +31,30 @@
         $("#calendar").evoCalendar('toggleEventList', newDate);
     });
 
-        // calendar-day 
+    let orders = [
+    {% for order in orders %}
+        {
+        orderId: '{{ order.id }}',
+        renterName: '{{ order.firstname }} {{ order.lastname }}',
+        car: '{{ order.name }}',
+        startDate: '{{ order.rental_date|date("M d, Y") }}',
+        endDate: '{{ order.rental_date|date_modify('+' ~ order.rental_duration ~ ' days')|date('M d, Y') }}',
+        }{% if not loop.last %},{% endif %}
+    {% endfor %}
+    ];
+
     document.querySelectorAll('.calendar-day').forEach(item => {
-        // change the color
-        // make the corner rounded
-        item.style.backgroundColor = '#f5f5f5';
-    })
+        let div = item.querySelector('div');
+        let date = new Date(div.getAttribute('data-date-val'));
+
+        orders.forEach(order => {
+            let startDate = new Date(order.startDate);
+            let endDate = new Date(order.endDate);
+            
+            if (date >= startDate && date <= endDate) {
+                div.style.backgroundColor = generateUniqueColor(order.orderId);
+            }
+        });
+    });
+
 </script>
