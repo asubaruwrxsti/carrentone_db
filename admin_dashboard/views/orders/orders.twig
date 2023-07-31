@@ -14,23 +14,6 @@
         return color;
     }
 
-    {# $("#calendar").evoCalendar('addCalendarEvent', [
-    {% for order in orders %}
-        {
-        id: '{{ order.id }}',
-        name: '{{ order.name }}',
-        date: '{{ order.rental_date|date("M d, Y") }}',
-        type: 'Rental',
-        description: '{{ order.firstname }} {{ order.lastname }}',
-        color: generateUniqueColor('{{ order.id }}')
-        } {% if not loop.last %},{% endif %}
-    {% endfor %}
-    ]); #}
-
-    $('#calendar').on('selectDate', function(event, newDate, oldDate) {
-        $("#calendar").evoCalendar('toggleEventList', newDate);
-    });
-
     let orders = [
     {% for order in orders %}
         {
