@@ -14,7 +14,7 @@
         return color;
     }
 
-    $("#calendar").evoCalendar('addCalendarEvent', [
+    {# $("#calendar").evoCalendar('addCalendarEvent', [
     {% for order in orders %}
         {
         id: '{{ order.id }}',
@@ -25,7 +25,7 @@
         color: generateUniqueColor('{{ order.id }}')
         } {% if not loop.last %},{% endif %}
     {% endfor %}
-    ]);
+    ]); #}
 
     $('#calendar').on('selectDate', function(event, newDate, oldDate) {
         $("#calendar").evoCalendar('toggleEventList', newDate);
@@ -42,6 +42,7 @@
         }{% if not loop.last %},{% endif %}
     {% endfor %}
     ];
+    $('#calendar').evoCalendar('selectDate', orders[0].startDate);
 
     document.querySelectorAll('.calendar-day').forEach(item => {
         let div = item.querySelector('div');
@@ -52,7 +53,34 @@
             let endDate = new Date(order.endDate);
             
             if (date >= startDate && date <= endDate) {
-                div.style.backgroundColor = generateUniqueColor(order.orderId);
+                item.style.backgroundColor = generateUniqueColor(order.orderId);
+                div.style.color = 'white';
+
+                if (date.getTime() == startDate.getTime()) {
+                    item.style.borderRadius = '20px 0 0 20px';
+                    $("#calendar").evoCalendar('addCalendarEvent', [
+                        {
+                            id: order.orderId,
+                            name: order.renterName,
+                            type: 'Rental',
+                            date: order.startDate,
+                            color: generateUniqueColor(order.orderId)
+                        }
+                    ]);
+                } else if (date.getTime() == endDate.getTime()) {
+                    item.style.borderRadius = '0 20px 20px 0';
+                    $("#calendar").evoCalendar('addCalendarEvent', [
+                        {
+                            id: order.orderId,
+                            name: order.renterName,
+                            type: 'Rental',
+                            date: order.endDate,
+                            color: generateUniqueColor(order.orderId)
+                        }
+                    ]);
+                } else {
+                    item.style.borderRadius = '0';
+                }
             }
         });
     });
