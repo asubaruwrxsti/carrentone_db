@@ -262,7 +262,33 @@
                         )
                     );
                 
+                /* Represents Orders */
                 case 'Orders':
+                    $orders = "SELECT revenue.id, customers.firstname, customers.lastname, customers.phone_number, cars.name, cars.id, revenue.rental_date, revenue.rental_duration
+                        FROM revenue 
+                        JOIN customers 
+                        ON customers.id = revenue.customer_id 
+                        JOIN cars ON cars.id = revenue.car_id;";
+                    $orders = $db->execute_query($orders);
+                    $orders = $orders->fetch_all(MYSQLI_ASSOC);
+
+                    echo $header->render(array(
+                        'window_title' => $handler,
+                        'user_logged_in' => $_SESSION['is_loggedin'],
+                        'user_role' => $_SESSION['user_role'],
+                        'user_name' => strtoupper($_SESSION['username'])
+                    ));
+
+                    echo $base->render(array(
+                            'window_title' => $handler,
+                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'vars' => [
+                                'currency' => $_SESSION['currency'],
+                                'orders' => $orders
+                            ]
+                        )
+                    );
+
                     break;
                 
                 case 'Customers':
