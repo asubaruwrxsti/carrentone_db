@@ -37,6 +37,7 @@
             
             if (date >= startDate && date <= endDate) {
                 item.style.backgroundColor = generateUniqueColor(order.orderId);
+                item.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
                 div.style.color = 'white';
 
                 if (date.getTime() == startDate.getTime()) {
