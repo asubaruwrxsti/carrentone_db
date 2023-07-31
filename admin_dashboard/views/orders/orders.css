@@ -1,5 +1,6 @@
 .evo-calendar {
     box-shadow: 0 10px 50px -20px #344767;
+    border-radius: 10px;
 }
 
 .calendar-sidebar {

@@ -1,19 +1,40 @@
-{% for order in orders %}
-    <tr>
-        <td>{{ order.rental_date }}</td>
-    </tr>
-{% endfor %}
-
 <link rel="stylesheet" href="/admin_dashboard/views/orders/orders.css">
 <div id="calendar"></div>
 
 <script>
     $("#calendar").evoCalendar({
         'eventDisplayDefault': false,
-        'sidebarDisplayDefault': false
+        'sidebarDisplayDefault': false,
+        'format': 'MM dd, yyyy'
     });
+
+    function generateUniqueColor(id) {
+        var hue = (id * 137.508) % 360;
+        var color = 'hsl(' + hue + ', 70%, 60%)';
+        return color;
+    }
+
+    $("#calendar").evoCalendar('addCalendarEvent', [
+    {% for order in orders %}
+        {
+        id: '{{ order.id }}',
+        name: '{{ order.name }}',
+        date: '{{ order.rental_date|date("M d, Y") }}',
+        type: 'Rental',
+        description: '{{ order.firstname }} {{ order.lastname }}',
+        color: generateUniqueColor('{{ order.id }}')
+        } {% if not loop.last %},{% endif %}
+    {% endfor %}
+    ]);
 
     $('#calendar').on('selectDate', function(event, newDate, oldDate) {
         $("#calendar").evoCalendar('toggleEventList', newDate);
     });
+
+        // calendar-day 
+    document.querySelectorAll('.calendar-day').forEach(item => {
+        // change the color
+        // make the corner rounded
+        item.style.backgroundColor = '#f5f5f5';
+    })
 </script>

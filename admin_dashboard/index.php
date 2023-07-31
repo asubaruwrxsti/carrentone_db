@@ -265,7 +265,7 @@
                 
                 /* Represents Revenue */
                 case 'Orders':
-                    $orders = "SELECT revenue.id, customers.firstname, customers.lastname, customers.phone_number, cars.name, cars.id, revenue.rental_date, revenue.rental_duration
+                    $orders = "SELECT revenue.id, customers.firstname, customers.lastname, customers.phone_number, cars.name, revenue.rental_date, revenue.rental_duration
                         FROM revenue 
                         JOIN customers 
                         ON customers.id = revenue.customer_id 
