@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function enumerateCards() {
     let cards = document.getElementsByClassName('card');
     for (let i = 0; i < cards.length; i++) {
+      if (cards[i].classList.contains('ignore')) {
+        continue;
+      }
       let card = cards[i];
       let canvas = card.querySelector('canvas');
       if (canvas) {
