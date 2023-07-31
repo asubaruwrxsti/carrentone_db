@@ -261,8 +261,9 @@
                             ]
                         )
                     );
+                    break;
                 
-                /* Represents Orders */
+                /* Represents Revenue */
                 case 'Orders':
                     $orders = "SELECT revenue.id, customers.firstname, customers.lastname, customers.phone_number, cars.name, cars.id, revenue.rental_date, revenue.rental_duration
                         FROM revenue 
