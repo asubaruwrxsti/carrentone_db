@@ -1,0 +1,39 @@
+.evo-calendar {
+    box-shadow: 0 10px 50px -20px #344767;
+}
+
+.calendar-sidebar {
+    background-color: #344767;
+    box-shadow: 5px 0 18px -3px #344767;
+}
+
+.calendar-sidebar>span#sidebarToggler {
+    background-color: #344767c2;
+    box-shadow: 5px 0 18px -3px #344767;
+}
+
+.calendar-sidebar>.month-list>.calendar-months>li.active-month {
+    background-color: #7183a1c2;
+}
+
+th[colspan="7"] {
+    color: #344767;
+}
+
+th[colspan="7"]::after {
+    background-color: rgb(52 71 103 / 26%);
+}
+
+#eventListToggler {
+    background-color: #344767c2;
+    box-shadow: 5px 0 18px -3px #65738b;
+}
+
+.event-list>.event-empty {
+    background-color: rgb(52 71 103 / 21%);
+    border: 1px solid #3447672e;
+}
+
+.event-list>.event-empty>p {
+    color: #344767;
+}
