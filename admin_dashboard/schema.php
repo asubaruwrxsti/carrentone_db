@@ -44,7 +44,7 @@
 
         /**
          * Create a table in the database
-         * @return array
+         * @return void
          */
         public function createTable($name, $columns) {
             
@@ -75,7 +75,7 @@
 
         /**
          * Drop a table from the database
-         * @return array
+         * @return void
          */
         public function dropTable($name) {
             $this->db->execute_query("DROP TABLE IF EXISTS $name");
