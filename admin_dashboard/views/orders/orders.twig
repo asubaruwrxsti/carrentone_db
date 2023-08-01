@@ -32,6 +32,18 @@
         {% endfor %}
     ];
 
+    orders.forEach(order => {
+        $("#calendar").evoCalendar('addCalendarEvent', [
+            {
+                id: order.orderId,
+                name: order.renterName,
+                type: 'Rental',
+                date: order.startDate,
+                color: generateUniqueColor(order.orderId)
+            }
+        ]);
+    });
+
     function generateView() {
         document.querySelectorAll('.calendar-day').forEach(item => {
             let div = item.querySelector('div');
@@ -42,32 +54,29 @@
                 let endDate = new Date(order.endDate);
                 
                 if (date >= startDate && date <= endDate) {
+
+                    if (endDate.getTime() == startDate.getTime()) {
+                        item.style.backgroundColor = generateUniqueColor(order.orderId);
+                        item.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
+                        div.style.color = 'white';
+                        item.style.borderRadius = '20px 20px 20px 20px';
+                        return;
+                    }
+
                     item.style.backgroundColor = generateUniqueColor(order.orderId);
                     item.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
                     div.style.color = 'white';
 
                     if (date.getTime() == startDate.getTime()) {
                         item.style.borderRadius = '20px 0 0 20px';
-                        $("#calendar").evoCalendar('addCalendarEvent', [
-                            {
-                                id: order.orderId,
-                                name: order.renterName,
-                                type: 'Rental',
-                                date: order.startDate,
-                                color: generateUniqueColor(order.orderId)
-                            }
-                        ]);
-                    } else if (date.getTime() == endDate.getTime()) {
-                        item.style.borderRadius = '0 20px 20px 0';
-                        $("#calendar").evoCalendar('addCalendarEvent', [
-                            {
-                                id: order.orderId,
-                                name: order.renterName,
-                                type: 'Rental',
-                                date: order.endDate,
-                                color: generateUniqueColor(order.orderId)
-                            }
-                        ]);
+                        // check if the parent of the next element has style property
+                        if (item.nextElementSibling && item.nextElementSibling.style.backgroundColor) {
+                            item.style.borderRadius = '0 20px 20px 0';
+                        } else {
+                            item.style.borderRadius = '0';
+                        }
+                    } else if (startDate == endDate) {
+                        item.style.borderRadius = '20px 20px 20px 20px';
                     } else {
                         item.style.borderRadius = '0';
                     }
