@@ -269,7 +269,7 @@
                         FROM revenue 
                         JOIN customers 
                         ON customers.id = revenue.customer_id 
-                        JOIN cars ON cars.id = revenue.car_id limit 1";
+                        JOIN cars ON cars.id = revenue.car_id;";
                     $orders = $db->execute_query($orders);
                     $orders = $orders->fetch_all(MYSQLI_ASSOC);
 

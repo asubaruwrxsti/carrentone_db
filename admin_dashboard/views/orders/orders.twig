@@ -1,20 +1,22 @@
 <link rel="stylesheet" href="/admin_dashboard/views/orders/orders.css">
-<div id="calendar"></div>
+
+<div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
+    <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Cars</button>
+    <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">Search Agenda</button>
+</div>
+
+<div class="card">
+    <div id="calendar" style="height: 600px"></div>
+</div>
 
 <script>
-    $("#calendar").evoCalendar({
-        'eventDisplayDefault': false,
-        'sidebarDisplayDefault': false,
-        'format': 'MM dd, yyyy'
-    });
-
     function generateUniqueColor(id) {
         var hue = (id * 137.508) % 360;
         var color = 'hsl(' + hue + ', 70%, 60%)';
         return color;
     }
 
-    let orders = [
+    {# let orders = [
     {% for order in orders %}
         {
         orderId: '{{ order.id }}',
@@ -24,49 +26,49 @@
         endDate: '{{ order.rental_date|date_modify('+' ~ order.rental_duration ~ ' days')|date('M d, Y') }}',
         }{% if not loop.last %},{% endif %}
     {% endfor %}
-    ];
-    $('#calendar').evoCalendar('selectDate', orders[0].startDate);
+    ]; #}
 
-    document.querySelectorAll('.calendar-day').forEach(item => {
-        let div = item.querySelector('div');
-        let date = new Date(div.getAttribute('data-date-val'));
+    const Calendar = tui.Calendar;
+    const container = document.getElementById('calendar');
+    const options = {
+        template: {
+            time(event) {
+            const { start, end, title } = event;
 
-        orders.forEach(order => {
-            let startDate = new Date(order.startDate);
-            let endDate = new Date(order.endDate);
-            
-            if (date >= startDate && date <= endDate) {
-                item.style.backgroundColor = generateUniqueColor(order.orderId);
-                item.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
-                div.style.color = 'white';
+            return `<span style="color: white;">${formatTime(start)}~${formatTime(end)} ${title}</span>`;
+            },
+            allday(event) {
+            return `<span style="color: gray;">${event.title}</span>`;
+            },
+        },
+        useFormPopup: true,
+        useDetailPopup: true,
+        usageStatistics: false,
+        defaultView: 'month',
+        timezone: {
+            zones: [
+                {
+                    timezoneName: 'Europe/London',
+                    displayLabel: 'London',
+                },
+            ],
+        },
+        useDetailPopup: true,
+        useCreationPopup: true,
+        calendars: [
+            {% for order in orders %}
+                {
+                    id: '{{ order.id }}',
+                    calendarId: '1',
+                    name: '{{ order.name }}',
+                    start: '{{ order.rental_date|date("Y-m-d") }}',
+                    end: '{{ order.rental_date|date_modify('+' ~ order.rental_duration ~ ' days')|date('Y-m-d') }}',
+                    color: generateUniqueColor('{{ order.id }}'),
+                }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ],
+    }
 
-                if (date.getTime() == startDate.getTime()) {
-                    item.style.borderRadius = '20px 0 0 20px';
-                    $("#calendar").evoCalendar('addCalendarEvent', [
-                        {
-                            id: order.orderId,
-                            name: order.renterName,
-                            type: 'Rental',
-                            date: order.startDate,
-                            color: generateUniqueColor(order.orderId)
-                        }
-                    ]);
-                } else if (date.getTime() == endDate.getTime()) {
-                    item.style.borderRadius = '0 20px 20px 0';
-                    $("#calendar").evoCalendar('addCalendarEvent', [
-                        {
-                            id: order.orderId,
-                            name: order.renterName,
-                            type: 'Rental',
-                            date: order.endDate,
-                            color: generateUniqueColor(order.orderId)
-                        }
-                    ]);
-                } else {
-                    item.style.borderRadius = '0';
-                }
-            }
-        });
-    });
+    const calendar = new Calendar(container, options);
 
 </script>
