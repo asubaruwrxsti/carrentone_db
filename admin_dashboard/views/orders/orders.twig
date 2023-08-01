@@ -32,6 +32,26 @@
         {% endfor %}
     ];
 
+function doesOverlap(date) {
+  var dateObj = new Date(date);
+
+  // Use Array.prototype.filter() to get all overlapping orders
+  var overlappingOrders = orders.filter(order => {
+    var startDate = new Date(order.startDate);
+    var endDate = new Date(order.endDate);
+    return dateObj >= startDate && dateObj <= endDate;
+  });
+
+  if (overlappingOrders.length > 0) {
+    // Return an array with true and the color
+    return overlappingOrders.map(order => generateUniqueColor(order.orderId));
+  } else {
+    return [false, ''];
+  }
+}
+
+
+
     orders.forEach(order => {
         $("#calendar").evoCalendar('addCalendarEvent', [
             {
@@ -67,19 +87,35 @@
                     item.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
                     div.style.color = 'white';
 
+                    //background-color: #e5e5f7;
+                    //opacity: 0.8;
+                    //background: repeating-linear-gradient( 45deg, #444cf7, #444cf7 5px, #e5e5f7 5px, #e5e5f7 25px );
+
                     if (date.getTime() == startDate.getTime()) {
                         item.style.borderRadius = '20px 0 0 20px';
-                        // check if the parent of the next element has style property
-                        if (item.nextElementSibling && item.nextElementSibling.style.backgroundColor) {
-                            item.style.borderRadius = '0 20px 20px 0';
-                        } else {
-                            item.style.borderRadius = '0';
-                        }
-                    } else if (startDate == endDate) {
-                        item.style.borderRadius = '20px 20px 20px 20px';
+                    } else if (date.getTime() == endDate.getTime()) {
+                        item.style.borderRadius = '0 20px 20px 0';
                     } else {
                         item.style.borderRadius = '0';
                     }
+
+                    let overlappingOrders = doesOverlap(div.getAttribute('data-date-val'));
+
+                    if (overlappingOrders.length > 0) {
+                    console.log(overlappingOrders);
+                    let gradientColors = overlappingOrders.join(', ');
+
+                    item.style.backgroundColor = overlappingOrders[0];
+                    item.style.background = 'repeating-linear-gradient(45deg, ' + gradientColors + ' 0px, transparent 15px)';
+                    
+                    let date = new Date(div.getAttribute('data-date-val'));
+                    let endDate = new Date(div.getAttribute('data-end-date-val'));
+                    
+                    if (date.getTime() == endDate.getTime()) {
+                        item.style.borderRadius = '0';
+                    }
+                    }
+
                 }
             });
         });
