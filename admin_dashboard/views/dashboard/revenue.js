@@ -45,7 +45,7 @@ class Revenue {
         previousRevenue = revenuePerMonth[month];
       }
       let growth = document.getElementById('revenueGrowth');
-      growth.innerHTML = parseInt(Math.round((revenueGrowth[Object.keys(revenueGrowth)[Object.keys(revenueGrowth).length - 1]] / previousRevenue) * 100) + '%');
+      growth.innerHTML = parseInt(Math.round((revenueGrowth[Object.keys(revenueGrowth)[Object.keys(revenueGrowth).length - 1]] / previousRevenue) * 100)) + '%';
       if (growth.innerHTML.includes('-')) {
         growth.style.color = 'lightcoral';
         growth.innerHTML = '&#9660;' + growth.innerHTML;
