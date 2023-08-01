@@ -36,7 +36,7 @@ class Cars {
         }).reduce((acc, item) => {
             return acc + parseInt(item.price);
         }, 0);
-        let growRate = ((filteredData - lastMonthData) / lastMonthData) * 100;
+        let growRate = parseInt(((filteredData - lastMonthData) / lastMonthData) * 100);
         if (isNaN(growRate) || growRate == Infinity) growRate = 0;
         return {'revenue': filteredData, 'growRate': growRate};
     }
