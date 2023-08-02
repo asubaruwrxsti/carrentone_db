@@ -62,29 +62,6 @@
         }
     }
 
-function findMaxOrderNumber(orders) {
-    const monthMax = {};
-
-    document.querySelectorAll('.calendar-day').forEach(item => {
-        let div = item.querySelector('div');
-        let date = new Date(div.getAttribute('data-date-val'));
-
-        let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
-        if (overlapResults[0] == false || overlapResults.length == 1) return;
-
-        // Get the row index (you'll need to modify this depending on your HTML structure)
-        const rowIndex = item.parentElement.rowIndex;
-
-        if (!monthMax[rowIndex]) {
-            monthMax[rowIndex - 1] = overlapResults.length;
-        } else if (overlapResults.length > monthMax[rowIndex -1]) {
-            monthMax[rowIndex - 1] = overlapResults.length;
-        }
-    });
-
-    console.log(monthMax);
-}
-
     orders.forEach(order => {
         $("#calendar").evoCalendar('addCalendarEvent', [
             {
@@ -97,8 +74,19 @@ function findMaxOrderNumber(orders) {
         ]);
     });
 
+    function calculateSpaces(maxOrders, item) {
+        maxOrders.forEach(order => {
+            if (order.orders.length == 0) return;
+            let div = item.querySelector('div');
+            if (div.style.backgroundColor == order.orders[0].color) {
+                console.log('found');
+            }
+        });
+    }
+
     function generateView() {
         generatedDates = [];
+        maxOrders = [];
 
         document.querySelectorAll('.calendar-day').forEach(item => {
             let div = item.querySelector('div');
@@ -119,6 +107,16 @@ function findMaxOrderNumber(orders) {
                         return overlapResult.date.date.getTime() == date.getTime();
                     });
                     if (result.length == 0) return;
+                    let weekNumber = Math.floor(generatedDates.indexOf(div.getAttribute('data-date-val')) / 7);
+                    if (maxOrders[weekNumber] == undefined) maxOrders[weekNumber] = {
+                        number: 0,
+                        orders: []
+                    };
+                    if (result.length > maxOrders[weekNumber].number) maxOrders[weekNumber] = {
+                        number: result.length,
+                        orders: result
+                    };
+
                     result.forEach(result => {
                         let newDiv = item.appendChild(document.createElement('div'));
                         newDiv.className = 'day';
@@ -139,9 +137,8 @@ function findMaxOrderNumber(orders) {
                 }
             });
         });
+        console.log(maxOrders);
     }
-
-    console.log(findMaxOrderNumber(orders));
     generateView();
     $('#calendar').on('selectMonth', function(event, newDate, oldDate) {
         generateView();
