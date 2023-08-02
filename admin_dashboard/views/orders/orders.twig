@@ -5,6 +5,7 @@
     <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">Search Agenda</button>
 </div>
 <div id="calendar"></div>
+{# <iframe src="https://calendar.google.com/calendar/embed?src=arlind12344%40gmail.com&ctz=Europe%2FTirane" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe> #}
 
 <script>
     $("#calendar").evoCalendar({
@@ -32,23 +33,27 @@
         {% endfor %}
     ];
 
-function doesOverlap(date) {
-  var dateObj = new Date(date);
+    function doesOverlap(date) {
+        var dateObj = new Date(date);
 
-  // Use Array.prototype.filter() to get all overlapping orders
-  var overlappingOrders = orders.filter(order => {
-    var startDate = new Date(order.startDate);
-    var endDate = new Date(order.endDate);
-    return dateObj >= startDate && dateObj <= endDate;
-  });
+        // Use Array.prototype.filter() to get all overlapping orders
+        var overlappingOrders = orders.filter(order => {
+            var startDate = new Date(order.startDate);
+            var endDate = new Date(order.endDate);
+            return dateObj >= startDate && dateObj <= endDate;
+        });
 
-  if (overlappingOrders.length > 0) {
-    // Return an array with true and the color
-    return overlappingOrders.map(order => generateUniqueColor(order.orderId));
-  } else {
-    return [false, ''];
-  }
-}
+        if (overlappingOrders.length > 0) {
+            return overlappingOrders.map(order => {
+                return {
+                    color: generateUniqueColor(order.orderId),
+                    date: dateObj
+                }
+            });
+        } else {
+            return [false, ''];
+        }
+    }
 
 
 
@@ -68,54 +73,66 @@ function doesOverlap(date) {
         document.querySelectorAll('.calendar-day').forEach(item => {
             let div = item.querySelector('div');
             let date = new Date(div.getAttribute('data-date-val'));
+            // go inside the div and hide the soan with class event-indicator if it exists
+            let eventIndicator = div.querySelector('.event-indicator');
+            if (eventIndicator) eventIndicator.style.display = 'none';
 
             orders.forEach(order => {
                 let startDate = new Date(order.startDate);
                 let endDate = new Date(order.endDate);
                 
                 if (date >= startDate && date <= endDate) {
+                    div.style.width = '100%';
 
                     if (endDate.getTime() == startDate.getTime()) {
-                        item.style.backgroundColor = generateUniqueColor(order.orderId);
-                        item.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
+                        div.style.backgroundColor = generateUniqueColor(order.orderId);
+                        div.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
                         div.style.color = 'white';
-                        item.style.borderRadius = '20px 20px 20px 20px';
+                        div.style.borderRadius = '20px 20px 20px 20px';
                         return;
                     }
 
-                    item.style.backgroundColor = generateUniqueColor(order.orderId);
-                    item.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
+                    div.style.backgroundColor = generateUniqueColor(order.orderId);
+                    div.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
                     div.style.color = 'white';
 
-                    //background-color: #e5e5f7;
-                    //opacity: 0.8;
-                    //background: repeating-linear-gradient( 45deg, #444cf7, #444cf7 5px, #e5e5f7 5px, #e5e5f7 25px );
-
                     if (date.getTime() == startDate.getTime()) {
-                        item.style.borderRadius = '20px 0 0 20px';
+                        div.style.borderRadius = '20px 0 0 20px';
                     } else if (date.getTime() == endDate.getTime()) {
-                        item.style.borderRadius = '0 20px 20px 0';
+                        div.style.borderRadius = '0 20px 20px 0';
                     } else {
-                        item.style.borderRadius = '0';
+                        div.style.borderRadius = '0';
                     }
 
-                    let overlappingOrders = doesOverlap(div.getAttribute('data-date-val'));
+                    let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
+                    // keep only the 2 first elements with same date
+                    overlapResults = overlapResults.filter((item, index) => {
+                        return index < 2;
+                    });
+                    console.log(overlapResults);
+                    if (overlapResults.length > 1) {
+                        div.style.height = '45%';
 
-                    if (overlappingOrders.length > 0) {
-                    console.log(overlappingOrders);
-                    let gradientColors = overlappingOrders.join(', ');
+                        // add another div inside the item
+                        let newDiv = item.appendChild(document.createElement('div'));
+                        newDiv.className = 'day';
+                        // margin top and bottom
+                        newDiv.style.margin = '5px 0';
+                        newDiv.style.display = 'flex';
+                        newDiv.style.height = '45%';
+                        newDiv.style.backgroundColor = overlapResults[0].color;
+                        newDiv.style.boxShadow = '0 0 10px ' + overlapResults[0].color;
+                        newDiv.style.borderRadius = '20px 0 0 20px';
 
-                    item.style.backgroundColor = overlappingOrders[0];
-                    item.style.background = 'repeating-linear-gradient(45deg, ' + gradientColors + ' 0px, transparent 15px)';
-                    
-                    let date = new Date(div.getAttribute('data-date-val'));
-                    let endDate = new Date(div.getAttribute('data-end-date-val'));
-                    
-                    if (date.getTime() == endDate.getTime()) {
-                        item.style.borderRadius = '0';
+                        if (date.getTime() == startDate.getTime()) {
+                            newDiv.style.borderRadius = '20px 0 0 20px';
+                        } else if (date.getTime() == endDate.getTime()) {
+                            newDiv.style.borderRadius = '0 20px 20px 0';
+                        } else {
+                            newDiv.style.borderRadius = '0';
+                        }
+                        newDiv.style.width = '100%';
                     }
-                    }
-
                 }
             });
         });
