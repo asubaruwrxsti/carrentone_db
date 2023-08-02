@@ -105,7 +105,6 @@
                     }
 
                     let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
-                    // keep only the 2 first elements with same date
                     overlapResults = overlapResults.filter((item, index) => {
                         return index < 2;
                     });
@@ -113,10 +112,8 @@
                     if (overlapResults.length > 1) {
                         div.style.height = '45%';
 
-                        // add another div inside the item
                         let newDiv = item.appendChild(document.createElement('div'));
                         newDiv.className = 'day';
-                        // margin top and bottom
                         newDiv.style.margin = '5px 0';
                         newDiv.style.display = 'flex';
                         newDiv.style.height = '45%';
