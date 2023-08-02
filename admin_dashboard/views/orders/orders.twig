@@ -36,11 +36,13 @@
 
     function doesOverlap(date) {
         var dateObj = new Date(date);
+        var startDate;
+        var endDate;
 
         // Use Array.prototype.filter() to get all overlapping orders
         var overlappingOrders = orders.filter(order => {
-            var startDate = new Date(order.startDate);
-            var endDate = new Date(order.endDate);
+            startDate = new Date(order.startDate);
+            endDate = new Date(order.endDate);
             return dateObj >= startDate && dateObj <= endDate;
         });
 
@@ -48,7 +50,11 @@
             return overlappingOrders.map(order => {
                 return {
                     color: generateUniqueColor(order.orderId),
-                    date: dateObj
+                    date: {
+                        date: new Date(date),
+                        startDate: new Date(order.startDate),
+                        endDate: new Date(order.endDate)
+                    }
                 }
             });
         } else {
@@ -97,7 +103,6 @@ function findMaxOrderNumber(orders) {
         document.querySelectorAll('.calendar-day').forEach(item => {
             let div = item.querySelector('div');
             let date = new Date(div.getAttribute('data-date-val'));
-            // go inside the div and hide the soan with class event-indicator if it exists
             let eventIndicator = div.querySelector('.event-indicator');
             if (eventIndicator) eventIndicator.style.display = 'none';
 
@@ -110,28 +115,24 @@ function findMaxOrderNumber(orders) {
                     let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
                     generatedDates.push(div.getAttribute('data-date-val'));
 
-                    if (date.getTime() == startDate.getTime()) {
-                        div.style.borderRadius = '20px 0 0 20px';
-                    } else if (date.getTime() == endDate.getTime()) {
-                        div.style.borderRadius = '0 20px 20px 0';
-                    } else {
-                        div.style.borderRadius = '0';
-                    }
-
-                    overlapResults.forEach((result, index) => {
+                    let result = overlapResults.filter(overlapResult => {
+                        return overlapResult.date.date.getTime() == date.getTime();
+                    });
+                    if (result.length == 0) return;
+                    result.forEach(result => {
                         let newDiv = item.appendChild(document.createElement('div'));
                         newDiv.className = 'day';
                         newDiv.style.margin = '5px 0';
                         newDiv.style.height = '15%';
-                        newDiv.style.backgroundColor = overlapResults[index].color;
-                        newDiv.style.boxShadow = '0 0 10px ' + overlapResults[index].color;
+                        newDiv.style.backgroundColor = result.color;
+                        newDiv.style.boxShadow = '0 0 10px ' + result.color;
                         newDiv.style.width = '100%';
 
-                        if (date.getTime() == startDate.getTime()) {
+                        if (result.date.startDate.getTime() == result.date.date.getTime()) {
                             newDiv.style.borderRadius = '20px 0 0 20px';
-                        } else if (date.getTime() == endDate.getTime()) {
+                        } else if (result.date.endDate.getTime() == result.date.date.getTime()) {
                             newDiv.style.borderRadius = '0 20px 20px 0';
-                        } else {
+                        } else{
                             newDiv.style.borderRadius = '0';
                         }
                     });
