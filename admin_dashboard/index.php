@@ -270,7 +270,7 @@
                         JOIN customers 
                         ON customers.id = revenue.customer_id 
                         JOIN cars ON cars.id = revenue.car_id
-                        ORDER BY revenue.rental_date DESC, revenue.rental_duration DESC;";
+                        ORDER BY revenue.rental_date DESC;";
                     $orders = $db->execute_query($orders);
                     $orders = $orders->fetch_all(MYSQLI_ASSOC);
 

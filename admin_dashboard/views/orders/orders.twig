@@ -12,7 +12,8 @@
         'eventDisplayDefault': false,
         'sidebarDisplayDefault': false,
         'format': 'MM dd, yyyy',
-        'todayHighlight': false
+        'todayHighlight': false,
+        'firstDayOfWeek': 1
     });
 
     function generateUniqueColor(id) {
@@ -55,7 +56,28 @@
         }
     }
 
+function findMaxOrderNumber(orders) {
+    const monthMax = {};
 
+    document.querySelectorAll('.calendar-day').forEach(item => {
+        let div = item.querySelector('div');
+        let date = new Date(div.getAttribute('data-date-val'));
+
+        let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
+        if (overlapResults[0] == false || overlapResults.length == 1) return;
+
+        // Get the row index (you'll need to modify this depending on your HTML structure)
+        const rowIndex = item.parentElement.rowIndex;
+
+        if (!monthMax[rowIndex]) {
+            monthMax[rowIndex - 1] = overlapResults.length;
+        } else if (overlapResults.length > monthMax[rowIndex -1]) {
+            monthMax[rowIndex - 1] = overlapResults.length;
+        }
+    });
+
+    console.log(monthMax);
+}
 
     orders.forEach(order => {
         $("#calendar").evoCalendar('addCalendarEvent', [
@@ -70,6 +92,8 @@
     });
 
     function generateView() {
+        generatedDates = [];
+
         document.querySelectorAll('.calendar-day').forEach(item => {
             let div = item.querySelector('div');
             let date = new Date(div.getAttribute('data-date-val'));
@@ -82,19 +106,9 @@
                 let endDate = new Date(order.endDate);
                 
                 if (date >= startDate && date <= endDate) {
-                    div.style.width = '100%';
-
-                    if (endDate.getTime() == startDate.getTime()) {
-                        div.style.backgroundColor = generateUniqueColor(order.orderId);
-                        div.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
-                        div.style.color = 'white';
-                        div.style.borderRadius = '20px 20px 20px 20px';
-                        return;
-                    }
-
-                    div.style.backgroundColor = generateUniqueColor(order.orderId);
-                    div.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
-                    div.style.color = 'white';
+                    if (generatedDates.includes(div.getAttribute('data-date-val'))) return;
+                    let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
+                    generatedDates.push(div.getAttribute('data-date-val'));
 
                     if (date.getTime() == startDate.getTime()) {
                         div.style.borderRadius = '20px 0 0 20px';
@@ -104,22 +118,14 @@
                         div.style.borderRadius = '0';
                     }
 
-                    let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
-                    overlapResults = overlapResults.filter((item, index) => {
-                        return index < 2;
-                    });
-                    console.log(overlapResults);
-                    if (overlapResults.length > 1) {
-                        div.style.height = '45%';
-
+                    overlapResults.forEach((result, index) => {
                         let newDiv = item.appendChild(document.createElement('div'));
                         newDiv.className = 'day';
                         newDiv.style.margin = '5px 0';
-                        newDiv.style.display = 'flex';
-                        newDiv.style.height = '45%';
-                        newDiv.style.backgroundColor = overlapResults[0].color;
-                        newDiv.style.boxShadow = '0 0 10px ' + overlapResults[0].color;
-                        newDiv.style.borderRadius = '20px 0 0 20px';
+                        newDiv.style.height = '15%';
+                        newDiv.style.backgroundColor = overlapResults[index].color;
+                        newDiv.style.boxShadow = '0 0 10px ' + overlapResults[index].color;
+                        newDiv.style.width = '100%';
 
                         if (date.getTime() == startDate.getTime()) {
                             newDiv.style.borderRadius = '20px 0 0 20px';
@@ -128,13 +134,13 @@
                         } else {
                             newDiv.style.borderRadius = '0';
                         }
-                        newDiv.style.width = '100%';
-                    }
+                    });
                 }
             });
         });
     }
 
+    console.log(findMaxOrderNumber(orders));
     generateView();
     $('#calendar').on('selectMonth', function(event, newDate, oldDate) {
         generateView();
