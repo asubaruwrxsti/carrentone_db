@@ -1,26 +1,30 @@
 <link rel="stylesheet" href="/admin_dashboard/views/orders/orders.css">
 
-<div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
-    <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Cars</button>
-    <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">Search Agenda</button>
+<div class="container">
+    <div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
+        <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Cars</button>
+        <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">Search Agenda</button>
+    </div>
+    <div class="row">
+        <div class="col-5">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="badge bg-primary rounded-pill">Total Orders</span>
+                    <span class="badge bg-primary rounded-pill" id="ordersThisMonth"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="badge bg-primary rounded-pill">Car Mapping</span>
+                    <span id="carMapping"></span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-12 mt-5">
+            <div id="calendar"></div>
+        </div>
+    </div>
 </div>
-<div id="calendar"></div>
 
 <script>
-    $("#calendar").evoCalendar({
-        'eventDisplayDefault': false,
-        'sidebarDisplayDefault': false,
-        'format': 'MM dd, yyyy',
-        'todayHighlight': false,
-        'firstDayOfWeek': 1
-    });
-
-    function generateUniqueColor(id) {
-        var hue = (id * 137.508) % 360;
-        var color = 'hsl(' + hue + ', 70%, 60%)';
-        return color;
-    }
-
     let orders = [
         {% for order in orders %}
             {
@@ -33,65 +37,10 @@
         {% endfor %}
     ];
 
-    orders.forEach(order => {
-        $("#calendar").evoCalendar('addCalendarEvent', [
-            {
-                id: order.orderId,
-                name: order.renterName,
-                type: 'Rental',
-                date: order.startDate,
-                color: generateUniqueColor(order.orderId)
-            }
-        ]);
-    });
-
-    function generateView() {
-        document.querySelectorAll('.calendar-day').forEach(item => {
-            let div = item.querySelector('div');
-            let date = new Date(div.getAttribute('data-date-val'));
-            let eventIndicator = div.querySelector('.event-indicator');
-            if (eventIndicator) eventIndicator.style.display = 'none';
-
-            orders.forEach(order => {
-                let startDate = new Date(order.startDate);
-                let endDate = new Date(order.endDate);
-                
-                if (date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime()) {
-                    let newDiv = item.appendChild(document.createElement('div'));
-                    newDiv.className = 'day';
-                    newDiv.style.margin = '5px 0';
-                    newDiv.style.height = '15%';
-                    newDiv.style.backgroundColor = generateUniqueColor(order.orderId);
-                    newDiv.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
-                    newDiv.style.width = '100%';
-
-                    if (startDate.getTime() == date.getTime()) {
-                        newDiv.style.borderRadius = '20px 0 0 20px';
-                    } else if (endDate.getTime() == date.getTime()) {
-                        newDiv.style.borderRadius = '0 20px 20px 0';
-                    } else {
-                        newDiv.style.borderRadius = '0';
-                    }
-                } else {
-                    var overlappingOrders = orders.filter(o => {
-                        let sD = new Date(o.startDate);
-                        let eD = new Date(o.endDate);
-                        return date.getTime() <= eD.getTime();
-                    });
-                    console.log(overlappingOrders);
-                    if (overlappingOrders.length > 1) {
-                        let newDiv = item.appendChild(document.createElement('div'));
-                        newDiv.className = 'day no-event';
-                        newDiv.style.margin = '5px 0';
-                        newDiv.style.height = '15%';
-                    }
-                }
-            });
-        });
+    function generateUniqueColor(id) {
+        var hue = (id * 137.508) % 360;
+        var color = 'hsl(' + hue + ', 70%, 60%)';
+        return color;
     }
-    generateView();
-    $('#calendar').on('selectMonth', function(event, newDate, oldDate) {
-        generateView();
-    });
-
 </script>
+<script src="/admin_dashboard/views/orders/generateCalendar.js"></script>
