@@ -79,14 +79,15 @@
         if (div.length == 1) return;
 
         activeRow = Math.floor(new Date(div[0].getAttribute('data-date-val')).getDate() / 7);
-        if (maxOrders[activeRow] == undefined) return;
-        
         console.log(activeRow);
-        console.log(maxOrders[activeRow]);
-        // count how many divs are inside the item
+        console.log(maxOrders);
+        //if (maxOrders[activeRow] == undefined) return;
         let divCount = div.length - 1;
+
         maxOrders.forEach((order, index) => {
-            //if (order)
+            if (order.number == divCount) return;
+            order.orders.forEach(value => {
+            });
         });
     }
 
@@ -143,7 +144,6 @@
             });
             calculateSpaces(maxOrders, item);
         });
-        console.log(maxOrders);
     }
     generateView();
     $('#calendar').on('selectMonth', function(event, newDate, oldDate) {
