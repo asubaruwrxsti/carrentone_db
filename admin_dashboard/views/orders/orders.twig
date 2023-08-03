@@ -75,12 +75,18 @@
     });
 
     function calculateSpaces(maxOrders, item) {
-        maxOrders.forEach(order => {
-            if (order.orders.length == 0) return;
-            let div = item.querySelector('div');
-            if (div.style.backgroundColor == order.orders[0].color) {
-                console.log('found');
-            }
+        let div = item.querySelectorAll('.day');
+        if (div.length == 1) return;
+
+        activeRow = Math.floor(new Date(div[0].getAttribute('data-date-val')).getDate() / 7);
+        if (maxOrders[activeRow] == undefined) return;
+        
+        console.log(activeRow);
+        console.log(maxOrders[activeRow]);
+        // count how many divs are inside the item
+        let divCount = div.length - 1;
+        maxOrders.forEach((order, index) => {
+            //if (order)
         });
     }
 
@@ -107,7 +113,7 @@
                         return overlapResult.date.date.getTime() == date.getTime();
                     });
                     if (result.length == 0) return;
-                    let weekNumber = Math.floor(generatedDates.indexOf(div.getAttribute('data-date-val')) / 7);
+                    let weekNumber = Math.floor((date.getDate() - 1) / 7);
                     if (maxOrders[weekNumber] == undefined) maxOrders[weekNumber] = {
                         number: 0,
                         orders: []
@@ -116,7 +122,6 @@
                         number: result.length,
                         orders: result
                     };
-
                     result.forEach(result => {
                         let newDiv = item.appendChild(document.createElement('div'));
                         newDiv.className = 'day';
@@ -136,6 +141,7 @@
                     });
                 }
             });
+            calculateSpaces(maxOrders, item);
         });
         console.log(maxOrders);
     }
