@@ -58,7 +58,7 @@
                 }
             });
         } else {
-            return [false, ''];
+            return false;
         }
     }
 
@@ -136,13 +136,21 @@
                             newDiv.style.borderRadius = '20px 0 0 20px';
                         } else if (result.date.endDate.getTime() == result.date.date.getTime()) {
                             newDiv.style.borderRadius = '0 20px 20px 0';
-                        } else{
+                        } else {
                             newDiv.style.borderRadius = '0';
                         }
                     });
+                } else {
+                    activeRow = Math.floor(new Date(div.getAttribute('data-date-val')).getDate() / 7);
+                    let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
+                    if (overlapResults.length <= 1 || overlapResults == false) return;
+                    let newDiv = item.appendChild(document.createElement('div'));
+                    newDiv.className = 'day';
+                    newDiv.style.margin = '5px 0';
+                    newDiv.style.height = '15%';
+                    newDiv.style.width = '100%';
                 }
             });
-            calculateSpaces(maxOrders, item);
         });
     }
     generateView();
