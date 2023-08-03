@@ -5,7 +5,6 @@
     <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">Search Agenda</button>
 </div>
 <div id="calendar"></div>
-{# <iframe src="https://calendar.google.com/calendar/embed?src=arlind12344%40gmail.com&ctz=Europe%2FTirane" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe> #}
 
 <script>
     $("#calendar").evoCalendar({
@@ -34,34 +33,6 @@
         {% endfor %}
     ];
 
-    function doesOverlap(date) {
-        var dateObj = new Date(date);
-        var startDate;
-        var endDate;
-
-        // Use Array.prototype.filter() to get all overlapping orders
-        var overlappingOrders = orders.filter(order => {
-            startDate = new Date(order.startDate);
-            endDate = new Date(order.endDate);
-            return dateObj >= startDate && dateObj <= endDate;
-        });
-
-        if (overlappingOrders.length > 0) {
-            return overlappingOrders.map(order => {
-                return {
-                    color: generateUniqueColor(order.orderId),
-                    date: {
-                        date: new Date(date),
-                        startDate: new Date(order.startDate),
-                        endDate: new Date(order.endDate)
-                    }
-                }
-            });
-        } else {
-            return false;
-        }
-    }
-
     orders.forEach(order => {
         $("#calendar").evoCalendar('addCalendarEvent', [
             {
@@ -74,27 +45,7 @@
         ]);
     });
 
-    function calculateSpaces(maxOrders, item) {
-        let div = item.querySelectorAll('.day');
-        if (div.length == 1) return;
-
-        activeRow = Math.floor(new Date(div[0].getAttribute('data-date-val')).getDate() / 7);
-        console.log(activeRow);
-        console.log(maxOrders);
-        //if (maxOrders[activeRow] == undefined) return;
-        let divCount = div.length - 1;
-
-        maxOrders.forEach((order, index) => {
-            if (order.number == divCount) return;
-            order.orders.forEach(value => {
-            });
-        });
-    }
-
     function generateView() {
-        generatedDates = [];
-        maxOrders = [];
-
         document.querySelectorAll('.calendar-day').forEach(item => {
             let div = item.querySelector('div');
             let date = new Date(div.getAttribute('data-date-val'));
@@ -105,50 +56,35 @@
                 let startDate = new Date(order.startDate);
                 let endDate = new Date(order.endDate);
                 
-                if (date >= startDate && date <= endDate) {
-                    if (generatedDates.includes(div.getAttribute('data-date-val'))) return;
-                    let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
-                    generatedDates.push(div.getAttribute('data-date-val'));
-
-                    let result = overlapResults.filter(overlapResult => {
-                        return overlapResult.date.date.getTime() == date.getTime();
-                    });
-                    if (result.length == 0) return;
-                    let weekNumber = Math.floor((date.getDate() - 1) / 7);
-                    if (maxOrders[weekNumber] == undefined) maxOrders[weekNumber] = {
-                        number: 0,
-                        orders: []
-                    };
-                    if (result.length > maxOrders[weekNumber].number) maxOrders[weekNumber] = {
-                        number: result.length,
-                        orders: result
-                    };
-                    result.forEach(result => {
-                        let newDiv = item.appendChild(document.createElement('div'));
-                        newDiv.className = 'day';
-                        newDiv.style.margin = '5px 0';
-                        newDiv.style.height = '15%';
-                        newDiv.style.backgroundColor = result.color;
-                        newDiv.style.boxShadow = '0 0 10px ' + result.color;
-                        newDiv.style.width = '100%';
-
-                        if (result.date.startDate.getTime() == result.date.date.getTime()) {
-                            newDiv.style.borderRadius = '20px 0 0 20px';
-                        } else if (result.date.endDate.getTime() == result.date.date.getTime()) {
-                            newDiv.style.borderRadius = '0 20px 20px 0';
-                        } else {
-                            newDiv.style.borderRadius = '0';
-                        }
-                    });
-                } else {
-                    activeRow = Math.floor(new Date(div.getAttribute('data-date-val')).getDate() / 7);
-                    let overlapResults = doesOverlap(div.getAttribute('data-date-val'));
-                    if (overlapResults.length <= 1 || overlapResults == false) return;
+                if (date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime()) {
                     let newDiv = item.appendChild(document.createElement('div'));
                     newDiv.className = 'day';
                     newDiv.style.margin = '5px 0';
                     newDiv.style.height = '15%';
+                    newDiv.style.backgroundColor = generateUniqueColor(order.orderId);
+                    newDiv.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
                     newDiv.style.width = '100%';
+
+                    if (startDate.getTime() == date.getTime()) {
+                        newDiv.style.borderRadius = '20px 0 0 20px';
+                    } else if (endDate.getTime() == date.getTime()) {
+                        newDiv.style.borderRadius = '0 20px 20px 0';
+                    } else {
+                        newDiv.style.borderRadius = '0';
+                    }
+                } else {
+                    var overlappingOrders = orders.filter(o => {
+                        let sD = new Date(o.startDate);
+                        let eD = new Date(o.endDate);
+                        return date.getTime() <= eD.getTime();
+                    });
+                    console.log(overlappingOrders);
+                    if (overlappingOrders.length > 1) {
+                        let newDiv = item.appendChild(document.createElement('div'));
+                        newDiv.className = 'day no-event';
+                        newDiv.style.margin = '5px 0';
+                        newDiv.style.height = '15%';
+                    }
                 }
             });
         });

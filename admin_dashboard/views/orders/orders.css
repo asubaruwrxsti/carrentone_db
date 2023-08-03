@@ -77,3 +77,8 @@ td {
     display: table-cell;
     vertical-align: top !important;
 }
+
+.no-event:hover {
+    background-color: #fff !important;
+    pointer-events: none !important;
+}
