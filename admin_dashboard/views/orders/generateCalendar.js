@@ -52,6 +52,7 @@ function generateView() {
                 });
 
             } else {
+                /* BACKLOG: Utilize order overlap 
                 var overlappingOrders = orders.filter(o => {
                     let sD = new Date(o.startDate);
                     let eD = new Date(o.endDate);
@@ -63,6 +64,12 @@ function generateView() {
                     newDiv.style.margin = '5px 0';
                     newDiv.style.height = '15%';
                 }
+                */
+
+                let newDiv = item.appendChild(document.createElement('div'));
+                newDiv.className = 'day no-event';
+                newDiv.style.margin = '5px 0';
+                newDiv.style.height = '15%';
             }
         });
     });
