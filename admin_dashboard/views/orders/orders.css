@@ -77,3 +77,21 @@ td {
     display: table-cell;
     vertical-align: top !important;
 }
+
+.no-event:hover {
+    background-color: #fff !important;
+    pointer-events: none !important;
+}
+
+.spanned-event {
+    animation: event 0.5s ease-in-out;
+}
+
+@keyframes event {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
