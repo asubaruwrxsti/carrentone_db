@@ -9,20 +9,18 @@ class Orders {
             }
         });
         let data = await response.json();
-
-        if (month != null || year != null) {
+        
+        // filter data where rental_date is within the month and year
+        // rental_date format: YYYY-MM-DD
+        if (month != null && year != null) {
+            month = parseInt(month);
+            year = parseInt(year);
             data = data.filter(order => {
-                let date = new Date(order.rental_date);
-                if (month != null && year != null) {
-                    return date.getMonth() == month && date.getFullYear() == year;
-                } else if (month != null) {
-                    return date.getMonth() == month;
-                } else {
-                    return date.getFullYear() == year;
-                }
+                let rentalDate = new Date(order.rental_date);
+                console.log(rentalDate.getMonth())
+                return (rentalDate.getMonth() + 1) == month && (rentalDate.getFullYear()) == year;
             });
         }
-
         return data;
     }
 }

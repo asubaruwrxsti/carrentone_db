@@ -42,7 +42,6 @@
     </div>
 </div>
 
-<script src="/admin_dashboard/views/orders/generateCalendar.js"></script>
 <script src="/admin_dashboard/views/orders/orders.js"></script>
 <script>
     let orders = [
@@ -56,12 +55,22 @@
             }{% if not loop.last %},{% endif %}
         {% endfor %}
     ];
-
+    
     function generateUniqueColor(id) {
         var hue = (id * 137.508) % 360;
         var color = 'hsl(' + hue + ', 70%, 60%)';
         return color;
     }
+</script>
+<script src="/admin_dashboard/views/orders/generateCalendar.js"></script>
+<script>
+    var active_date = $('#calendar').evoCalendar('getActiveDate');
+
+    let ord = new Orders();
+    let ordersThisMonth = document.getElementById('ordersThisMonth');
+    ord.getOrders(new Date(active_date).getMonth() + 1, new Date(active_date).getFullYear()).then((data) => {
+        ordersThisMonth.innerHTML = data.length;
+    });
 
     window.onscroll = function () {
         let inputPanel = document.getElementById('inputPanel');
@@ -91,12 +100,4 @@
             goToTopBtn.style.opacity = 0;
         }
     }
-
-    var active_date = $('#calendar').evoCalendar('getActiveDate');
-    console.log(new Date(active_date).getMonth() + 1, new Date(active_date).getFullYear());
-
-    let ord = new Orders();
-    ord.getOrders(new Date(active_date).getMonth() + 1, new Date(active_date).getFullYear()).then((data) => {
-        console.log(data);
-    });
 </script>
