@@ -48,7 +48,7 @@ function generateView() {
                 
                 // add event listener on mouse hover and on click
                 newDiv.addEventListener('mouseover', function() {
-                    console.log(order);
+                    //console.log(order);
                 });
 
             } else {
