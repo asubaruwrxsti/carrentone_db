@@ -5,14 +5,14 @@
         <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Cars</button>
         <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">Search Agenda</button>
     </div>
-    <div class="row input-panel" id="inputPanel">
+    <div class="row input-panel" style="position: sticky; top: 0; z-index: 99; padding-top: 100px;" id="inputPanel">
         <div class="col-5" id="infoGroup">
             <ul class="card list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between">
                     <span class="badge bg-primary rounded-pill">Total Orders</span>
                     <span class="badge bg-primary rounded-pill" id="ordersThisMonth"></span>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between">
                     <span class="">Legend</span>
                     <span id="carMapping"></span>
                 </li>
@@ -20,10 +20,10 @@
         </div>
         <div class="col-5 ms-auto" id="inputGroup">
             <ul class="card list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between">
                     <input type="text" id="search" class="form-control" placeholder="Search for a car">
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between">
                     <input type="date" id="datepicker" class="form-control">
                 </li>
             </ul>
@@ -54,7 +54,7 @@
         return color;
     }
 
-    window.onscroll = function () {
+    {# window.onscroll = function () {
         makeInputPanelSticky();
     };
 
@@ -77,6 +77,6 @@
                 inputGroup.classList.add('ms-auto');
             } catch (error) {}
         }
-    }
+    } #}
 </script>
 <script src="/admin_dashboard/views/orders/generateCalendar.js"></script>

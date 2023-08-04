@@ -95,14 +95,3 @@ td {
         width: 100%;
     }
 }
-
-.input-panel {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-}
-
-.input-panel.sticky {
-    position: fixed;
-    width: 100%;
-}
