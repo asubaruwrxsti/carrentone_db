@@ -6,6 +6,16 @@ $("#calendar").evoCalendar({
     'firstDayOfWeek': 1
 });
 
+
+var active_date = $('#calendar').evoCalendar('getActiveDate');
+
+let ord = new Orders();
+let ordersThisMonth = document.getElementById('ordersThisMonth');
+ord.getOrders(new Date(active_date).getMonth() + 1, new Date(active_date).getFullYear()).then((data) => {
+    ordersThisMonth.innerHTML = data.length;
+    console.log(data);
+});
+
 orders.forEach(order => {
     $("#calendar").evoCalendar('addCalendarEvent', [
         {
@@ -34,8 +44,8 @@ function generateView() {
                 newDiv.className = 'day spanned-event';
                 newDiv.style.margin = '5px 0';
                 newDiv.style.height = '5px';
-                newDiv.style.backgroundColor = generateUniqueColor(order.orderId);
-                newDiv.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.orderId);
+                newDiv.style.backgroundColor = generateUniqueColor(order.carId);
+                newDiv.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.carId);
                 newDiv.style.width = '100%';
 
                 if (startDate.getTime() == date.getTime()) {

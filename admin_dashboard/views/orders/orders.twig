@@ -47,7 +47,8 @@
     let orders = [
         {% for order in orders %}
             {
-            orderId: '{{ order.carId }}',
+            orderId: '{{ order.id }}',
+            carId: '{{ order.carId }}',
             renterName: '{{ order.firstname }} {{ order.lastname }}',
             car: '{{ order.name }}',
             startDate: '{{ order.rental_date|date("M d, Y") }}',
@@ -64,13 +65,6 @@
 </script>
 <script src="/admin_dashboard/views/orders/generateCalendar.js"></script>
 <script>
-    var active_date = $('#calendar').evoCalendar('getActiveDate');
-
-    let ord = new Orders();
-    let ordersThisMonth = document.getElementById('ordersThisMonth');
-    ord.getOrders(new Date(active_date).getMonth() + 1, new Date(active_date).getFullYear()).then((data) => {
-        ordersThisMonth.innerHTML = data.length;
-    });
 
     window.onscroll = function () {
         let inputPanel = document.getElementById('inputPanel');
