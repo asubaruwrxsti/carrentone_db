@@ -5,7 +5,7 @@
         <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Cars</button>
         <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">Search Agenda</button>
     </div>
-    <div class="row input-panel" style="position: sticky; top: 0; z-index: 99; padding-top: 100px;" id="inputPanel">
+    <div class="row input-panel" style="position: sticky; top: 0; z-index: 99;" id="inputPanel">
         <div class="col-5" id="infoGroup">
             <ul class="card list-group">
                 <li class="list-group-item d-flex justify-content-between">
@@ -30,16 +30,25 @@
             <button class="btn btn-primary mt-3" id="searchBtn">Search</button>
         </div>
     </div>
-    <div class="col-lg-12 mt-5">
-        <div id="calendar"></div>
+    <div class="row">
+        <div class="col-lg-12 mt-5">
+            <div id="calendar"></div>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" id="goToTopBtn" style="position: fixed; opacity: 0; bottom: 20px; right: 20px; z-index: 99; width: 50px; height: 50px;">
+                <i class="fas fa-arrow-up"></i>
+            </button>
+        </div>
     </div>
 </div>
 
+<script src="/admin_dashboard/views/orders/generateCalendar.js"></script>
+<script src="/admin_dashboard/views/orders/orders.js"></script>
 <script>
     let orders = [
         {% for order in orders %}
             {
-            orderId: '{{ order.id }}',
+            orderId: '{{ order.carId }}',
             renterName: '{{ order.firstname }} {{ order.lastname }}',
             car: '{{ order.name }}',
             startDate: '{{ order.rental_date|date("M d, Y") }}',
@@ -54,29 +63,40 @@
         return color;
     }
 
-    {# window.onscroll = function () {
-        makeInputPanelSticky();
-    };
-
-    function makeInputPanelSticky() {
+    window.onscroll = function () {
         let inputPanel = document.getElementById('inputPanel');
         let inputGroup = document.getElementById('inputGroup');
         let infoGroup = document.getElementById('infoGroup');
 
-        if (window.pageYOffset > 200) {
-            inputPanel.classList.add('sticky');
-            try {
-                inputGroup.classList.remove('ms-auto');
-            } catch (error) {}
+        let goToTopBtn = document.getElementById('goToTopBtn');
+        goToTopBtn.onclick = function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        };
 
-            inputPanel.innerHtml = '';
-
+        var threshold = 100;
+        if (window.pageYOffset > threshold) {
+            let opacity = (window.pageYOffset - threshold) / 100;
+            if (opacity > 0.5) opacity = 0.5;
+            inputPanel.style.paddingTop = Math.min(window.pageYOffset - threshold, 20) + 'px';
+            inputPanel.style.backdropFilter = `blur(${opacity * 10}px)`;
+            goToTopBtn.style.opacity = 1;
+            goToTopBtn.style.transform = `translateY(-${Math.min(window.pageYOffset - threshold, 20)}px)`;
         } else {
-            inputPanel.classList.remove('sticky');
-            try {
-                inputGroup.classList.add('ms-auto');
-            } catch (error) {}
+            let opacity = (window.pageYOffset - threshold) / 100;
+            inputPanel.style.paddingTop = '0px';
+            inputPanel.style.backdropFilter = `blur(${opacity * 10}px)`;
+            goToTopBtn.style.opacity = 0;
         }
-    } #}
+    }
+
+    var active_date = $('#calendar').evoCalendar('getActiveDate');
+    console.log(new Date(active_date).getMonth() + 1, new Date(active_date).getFullYear());
+
+    let ord = new Orders();
+    ord.getOrders(new Date(active_date).getMonth() + 1, new Date(active_date).getFullYear()).then((data) => {
+        console.log(data);
+    });
 </script>
-<script src="/admin_dashboard/views/orders/generateCalendar.js"></script>
