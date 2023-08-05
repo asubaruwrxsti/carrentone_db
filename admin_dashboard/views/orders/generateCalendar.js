@@ -3,7 +3,8 @@ $("#calendar").evoCalendar({
     'sidebarDisplayDefault': false,
     'format': 'MM dd, yyyy',
     'todayHighlight': false,
-    'firstDayOfWeek': 1
+    'firstDayOfWeek': 1,
+    'eventListToggler': false
 });
 
 orders.forEach(order => {
@@ -21,6 +22,7 @@ orders.forEach(order => {
 let ordersThisMonth = new Orders();
 
 function generateView(newDate = null) {
+    document.getElementById('carMapping').innerHTML = '';
     if (newDate != null) {
         var active_date = '01 ' + newDate + new Date(document.querySelector("#calendar > div.calendar-sidebar > div.calendar-year > p").innerHTML).getFullYear();
     } else {
@@ -33,16 +35,20 @@ function generateView(newDate = null) {
         data.forEach(order => {
             if (!carIds.includes(order.car_id)) carIds.push(order.car_id);
         });
-        
-        carIds.forEach(carId => {
-            ordersThisMonth.getCarName(carId).then((car) => {
-                let newDiv = document.getElementById('carMapping').appendChild(document.createElement('div'));
-                newDiv.innerHTML = `
-                    <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
-                    <span>${car[0].name}</span>
-                `;
+
+        if (carIds.length == 0) {
+            document.getElementById('carMapping').innerHTML = '<p>No data</p>';
+        } else {
+            carIds.forEach(carId => {
+                ordersThisMonth.getCarName(carId).then((car) => {
+                    let newDiv = document.getElementById('carMapping').appendChild(document.createElement('div'));
+                    newDiv.innerHTML = `
+                        <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
+                        <span>${car[0].name}</span>
+                    `;
+                });
             });
-        });
+        }
     });
 
     document.querySelectorAll('.calendar-day').forEach(item => {
@@ -72,7 +78,7 @@ function generateView(newDate = null) {
                     newDiv.style.borderRadius = '0';
                 }
                 
-                // add event listener on mouse hover and on click
+                // BACKLOG: Add tooltip
                 newDiv.addEventListener('mouseover', function() {
                     //console.log(order);
                 });

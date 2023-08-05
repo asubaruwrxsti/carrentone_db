@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="/admin_dashboard/views/orders/orders.css">
 
+
 <div class="container">
     <div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
         <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Cars</button>
@@ -21,7 +22,7 @@
         <div class="col-5 ms-auto" id="inputGroup">
             <ul class="card list-group">
                 <li class="list-group-item d-flex justify-content-between">
-                    <input type="text" id="search" class="form-control" placeholder="Search for a car">
+                    <input type="text" id="autoComplete" class="form-control">
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <input type="date" id="datepicker" class="form-control">
@@ -56,6 +57,43 @@
             }{% if not loop.last %},{% endif %}
         {% endfor %}
     ];
+
+    let cars = [];
+    orders.forEach(order => {
+        if (!cars[order.carId]) {
+            cars[order.carId] = order.car;
+        }
+    });
+    console.log(cars);
+
+    const autoCompleteJS = new autoComplete({ 
+        placeholder: "Search by car name",
+        data: {
+            src: cars,
+        },
+        resultsList: {
+            element: (list, data) => {
+                if (!data.results.length) {
+                    const message = document.createElement("div");
+                    message.setAttribute("class", "no_result");
+                    message.innerHTML = `<span>Found no results for "${data.query}"</span>`;
+                    list.prepend(message);
+                }
+                // found 
+                if (data.results.length) {
+                    data.results.forEach((result) => {
+                        console.log(result);
+                        const option = document.createElement("a");
+                        option.setAttribute("class", "autoComplete_result");
+                        option.setAttribute("href", `/admin_dashboard/orders/${result}`);
+                        option.setAttribute("data-value", result);
+                        option.innerHTML = `<span>${result}</span>`;
+                        list.appendChild(option);
+                    });
+                }
+            },
+        },
+     });
     
     function generateUniqueColor(id) {
         var hue = (id * 137.508) % 360;
