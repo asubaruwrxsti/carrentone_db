@@ -22,7 +22,7 @@
         <div class="col-5 ms-auto" id="inputGroup">
             <ul class="card list-group">
                 <li class="list-group-item d-flex justify-content-between">
-                    <input type="text" id="autoComplete" class="form-control">
+                    <input type="text" id="autoComplete" class="form-control" placeholder="Search by car name">
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <input type="date" id="datepicker" class="form-control">
@@ -59,38 +59,34 @@
     ];
 
     let cars = [];
+    // BACKLOG: add carId color
     orders.forEach(order => {
-        if (!cars[order.carId]) {
-            cars[order.carId] = order.car;
+        if (!cars.includes(order.car)) {
+            cars.push(order.car);
         }
     });
-    console.log(cars);
 
-    const autoCompleteJS = new autoComplete({ 
-        placeholder: "Search by car name",
+    const autoCompleteJS = new autoComplete({
+        selector: "#autoComplete",
         data: {
             src: cars,
         },
         resultsList: {
             element: (list, data) => {
+                const message = document.createElement("div");
                 if (!data.results.length) {
-                    const message = document.createElement("div");
                     message.setAttribute("class", "no_result");
                     message.innerHTML = `<span>Found no results for "${data.query}"</span>`;
                     list.prepend(message);
                 }
-                // found 
-                if (data.results.length) {
-                    data.results.forEach((result) => {
-                        console.log(result);
-                        const option = document.createElement("a");
-                        option.setAttribute("class", "autoComplete_result");
-                        option.setAttribute("href", `/admin_dashboard/orders/${result}`);
-                        option.setAttribute("data-value", result);
-                        option.innerHTML = `<span>${result}</span>`;
-                        list.appendChild(option);
-                    });
-                }
+            },
+        },
+        events: {
+            input: {
+                selection: (event) => {
+                    const selection = event.detail.selection.value;
+                    autoCompleteJS.input.value = selection;
+                },
             },
         },
      });
@@ -103,7 +99,6 @@
 </script>
 <script src="/admin_dashboard/views/orders/generateCalendar.js"></script>
 <script>
-
     window.onscroll = function () {
         let inputPanel = document.getElementById('inputPanel');
         let inputGroup = document.getElementById('inputGroup');
@@ -131,5 +126,53 @@
             inputPanel.style.backdropFilter = `blur(${opacity * 10}px)`;
             goToTopBtn.style.opacity = 0;
         }
+    }
+
+    window.onload = function () {
+        let datepicker = document.getElementById("datepicker");
+        datepicker.style.transition = "width 0.1s ease-in-out";
+        datepicker.style.width = "100%";
+
+        datepicker.addEventListener("change", function () {
+            if (datepicker.value !== "") {
+                datepicker.style.width = "90%";
+
+                setTimeout(function () {
+                    let parentElement = datepicker.parentElement;
+                    let addButton = document.createElement("button");
+                    addButton.setAttribute("class", "btn btn-primary fade-in");
+
+                    addButton.style.paddingTop = "5px";
+                    addButton.style.paddingBottom = "5px";
+                    addButton.style.paddingLeft = "15px";
+                    addButton.style.paddingRight = "15px";
+                    addButton.style.marginBottom = "0px";
+                    addButton.style.marginLeft = "10px";
+
+                    addButton.innerHTML = "+";
+                    addButton.addEventListener("click", function () {
+                        addButton.style.backgroundColor = "#0d6efd";
+                        addButton.style.color = "white";
+
+                        // add a new datepicker before the button
+                        datepicker.style.width = "45%";
+
+                        let newDatepicker = document.createElement("input");
+                        newDatepicker.setAttribute("type", "date");
+                        newDatepicker.setAttribute("class", "form-control fade-in");
+                        newDatepicker.style.width = "45%";
+                        newDatepicker.style.marginLeft = "10px";
+
+                        parentElement.insertBefore(newDatepicker, addButton);
+                        // make add button - and blue
+                        addButton.style.backgroundColor = "#0d6efd";
+                        addButton.style.color = "white";
+                        addButton.innerHTML = "-";
+                    });
+                    parentElement.appendChild(addButton);
+                }, 100);
+            }
+        });
+
     }
 </script>

@@ -104,7 +104,7 @@
             {% endfor %}
         </div>
         <div id="details" style="display: none;">
-            <div id="mainDetailCard" class="card detail-container fade-slide-in" style="height: 55%; transform: translateX(-200px); position: fixed;">
+            <div id="mainDetailCard" class="card detail-container d-flex fade-slide-in" style="height: 55%; transform: translateX(-200px); position: fixed;">
                 <div class="card-body p-3">
                     <div class="row" id="details" style="display: none;">
                         <div class="col">
@@ -294,9 +294,11 @@
         Car.calculateIsAvailable(id).then(function (availability) {
             if (availability) {
                 document.getElementById('isAvailable').innerHTML = 'Available';
+                document.getElementById('isAvailable').classList.remove('bg-gradient-danger');
                 document.getElementById('isAvailable').classList.add('bg-gradient-success');
             } else {
                 document.getElementById('isAvailable').innerHTML = 'Not Available';
+                document.getElementById('isAvailable').classList.remove('bg-gradient-success');
                 document.getElementById('isAvailable').classList.add('bg-gradient-danger');
             }
         });
