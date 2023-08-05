@@ -6,16 +6,6 @@ $("#calendar").evoCalendar({
     'firstDayOfWeek': 1
 });
 
-
-var active_date = $('#calendar').evoCalendar('getActiveDate');
-
-let ord = new Orders();
-let ordersThisMonth = document.getElementById('ordersThisMonth');
-ord.getOrders(new Date(active_date).getMonth() + 1, new Date(active_date).getFullYear()).then((data) => {
-    ordersThisMonth.innerHTML = data.length;
-    console.log(data);
-});
-
 orders.forEach(order => {
     $("#calendar").evoCalendar('addCalendarEvent', [
         {
@@ -28,7 +18,33 @@ orders.forEach(order => {
     ]);
 });
 
-function generateView() {
+let ordersThisMonth = new Orders();
+
+function generateView(newDate = null) {
+    if (newDate != null) {
+        var active_date = '01 ' + newDate + new Date(document.querySelector("#calendar > div.calendar-sidebar > div.calendar-year > p").innerHTML).getFullYear();
+    } else {
+        var active_date = $('#calendar').evoCalendar('getActiveDate');
+    }
+    var active_date = new Date(active_date);
+    ordersThisMonth.getOrders(active_date.getMonth(), active_date.getFullYear()).then((data) => {
+        document.getElementById('ordersThisMonth').innerHTML = data.length;
+        let carIds = [];
+        data.forEach(order => {
+            if (!carIds.includes(order.car_id)) carIds.push(order.car_id);
+        });
+        
+        carIds.forEach(carId => {
+            ordersThisMonth.getCarName(carId).then((car) => {
+                let newDiv = document.getElementById('carMapping').appendChild(document.createElement('div'));
+                newDiv.innerHTML = `
+                    <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
+                    <span>${car[0].name}</span>
+                `;
+            });
+        });
+    });
+
     document.querySelectorAll('.calendar-day').forEach(item => {
         let div = item.querySelector('div');
         let date = new Date(div.getAttribute('data-date-val'));
@@ -75,16 +91,19 @@ function generateView() {
                     newDiv.style.height = '15%';
                 }
                 */
-
-                let newDiv = item.appendChild(document.createElement('div'));
-                newDiv.className = 'day no-event';
-                newDiv.style.margin = '5px 0';
-                newDiv.style.height = '15%';
+    
+                // check if the start date is in current month
+                if (startDate.getMonth() == date.getMonth() && startDate.getFullYear() == date.getFullYear()) {
+                    let newDiv = item.appendChild(document.createElement('div'));
+                    newDiv.className = 'day no-event';
+                    newDiv.style.margin = '5px 0';
+                    newDiv.style.height = '15%';
+                }
             }
         });
     });
 }
 generateView();
 $('#calendar').on('selectMonth', function(event, newDate, oldDate) {
-    generateView();
+    generateView(newDate);
 });
