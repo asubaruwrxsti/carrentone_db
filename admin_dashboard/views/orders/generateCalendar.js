@@ -97,8 +97,7 @@ function generateView(newDate = null) {
                     newDiv.style.height = '15%';
                 }
                 */
-    
-                // check if the start date is in current month
+               
                 if (startDate.getMonth() == date.getMonth() && startDate.getFullYear() == date.getFullYear()) {
                     let newDiv = item.appendChild(document.createElement('div'));
                     newDiv.className = 'day no-event';

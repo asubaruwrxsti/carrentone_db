@@ -129,18 +129,21 @@
     }
 
     window.onload = function () {
+        let searchBtn = document.getElementById("searchBtn");
         let datepicker = document.getElementById("datepicker");
         datepicker.style.transition = "width 0.1s ease-in-out";
         datepicker.style.width = "100%";
 
         datepicker.addEventListener("change", function () {
-            if (datepicker.value !== "") {
+            // if datepicker is not empty or the new value is a valid date
+            if (!isNaN(Date.parse(datepicker.value))) {
                 datepicker.style.width = "90%";
 
                 setTimeout(function () {
                     let parentElement = datepicker.parentElement;
                     let addButton = document.createElement("button");
                     addButton.setAttribute("class", "btn btn-primary fade-in");
+                    addButton.setAttribute("id", "addButton");
 
                     addButton.style.paddingTop = "5px";
                     addButton.style.paddingBottom = "5px";
@@ -151,27 +154,52 @@
 
                     addButton.innerHTML = "+";
                     addButton.addEventListener("click", function () {
-                        addButton.style.backgroundColor = "#0d6efd";
-                        addButton.style.color = "white";
-
-                        // add a new datepicker before the button
                         datepicker.style.width = "45%";
 
-                        let newDatepicker = document.createElement("input");
-                        newDatepicker.setAttribute("type", "date");
-                        newDatepicker.setAttribute("class", "form-control fade-in");
-                        newDatepicker.style.width = "45%";
-                        newDatepicker.style.marginLeft = "10px";
+                        if(document.getElementById("additionalDatepicker") !== null) {
+                            document.getElementById("additionalDatepicker").remove();
+                            addButton.innerHTML = "+";
+                            addButton.removeAttribute("class");
+                            addButton.setAttribute("class", "btn btn-primary fade-in");
+                            datepicker.style.width = "90%";
+                        } else {
+                            let newDatepicker = document.createElement("input");
+                            newDatepicker.setAttribute("id", "additionalDatepicker");
+                            newDatepicker.setAttribute("type", "date");
+                            newDatepicker.setAttribute("class", "form-control fade-in");
+                            newDatepicker.style.width = "45%";
+                            newDatepicker.style.marginLeft = "10px";
 
-                        parentElement.insertBefore(newDatepicker, addButton);
-                        // make add button - and blue
-                        addButton.style.backgroundColor = "#0d6efd";
-                        addButton.style.color = "white";
-                        addButton.innerHTML = "-";
+                            parentElement.insertBefore(newDatepicker, addButton);
+                            addButton.removeAttribute("class");
+                            addButton.setAttribute("class", "btn btn-secondary");
+                            addButton.innerHTML = "-";
+                        }
                     });
                     parentElement.appendChild(addButton);
                 }, 100);
+            } else {
+                try {
+                    datepicker.style.width = "100%";
+                    document.getElementById("addButton").remove();
+                    document.getElementById("additionalDatepicker").remove();
+                } catch (error) {}
             }
+        });
+        
+        searchBtn.addEventListener("click", function() {
+            let car = "";
+            let date = "";
+            let additionalDate = "";
+            try {
+                car = document.getElementById("autoComplete").value ? document.getElementById("autoComplete").value : "";
+                date = datepicker.value ? datepicker.value : "";
+                additionalDate = document.getElementById("additionalDatepicker") ? document.getElementById("additionalDatepicker").value : "";
+            } catch (error) {}
+
+            console.log(car);
+            console.log(date);
+            console.log(additionalDate);
         });
 
     }
