@@ -135,8 +135,8 @@
         datepicker.style.width = "100%";
 
         datepicker.addEventListener("change", function () {
-            // if datepicker is not empty or the new value is a valid date
-            if (!isNaN(Date.parse(datepicker.value))) {
+            if (!isNaN(Date.parse(datepicker.value)) && document.getElementById("addButton") === null) {
+                hasBeenSelected = true;
                 datepicker.style.width = "90%";
 
                 setTimeout(function () {
@@ -162,6 +162,7 @@
                             addButton.removeAttribute("class");
                             addButton.setAttribute("class", "btn btn-primary fade-in");
                             datepicker.style.width = "90%";
+                            //hasBeenSelected = false;
                         } else {
                             let newDatepicker = document.createElement("input");
                             newDatepicker.setAttribute("id", "additionalDatepicker");
@@ -169,6 +170,14 @@
                             newDatepicker.setAttribute("class", "form-control fade-in");
                             newDatepicker.style.width = "45%";
                             newDatepicker.style.marginLeft = "10px";
+
+                            newDatepicker.addEventListener("change", function() {
+                                if (Date.parse(newDatepicker.value) <= Date.parse(datepicker.value)) {
+                                    newDatepicker.style.border = "1px solid red";
+                                } else {
+                                    newDatepicker.style.border = "1px solid #ced4da";
+                                }
+                            });
 
                             parentElement.insertBefore(newDatepicker, addButton);
                             addButton.removeAttribute("class");
@@ -180,26 +189,60 @@
                 }, 100);
             } else {
                 try {
-                    datepicker.style.width = "100%";
-                    document.getElementById("addButton").remove();
-                    document.getElementById("additionalDatepicker").remove();
+                    if (document.getElementById("additionalDatepicker").value === "") {
+                        document.getElementById("addButton").remove();
+                        document.getElementById("additionalDatepicker").remove();
+                        datepicker.style.width = "100%";
+                    }
                 } catch (error) {}
             }
         });
+
+        function dimOrder(id) {
+            console.log("dimming order: " + id);
+            try {
+                let order = document.querySelectorAll(`[id='order-${id}']`);
+                order.forEach(o => {
+                    o.style.opacity = "0.2";
+                    o.style.transition = "opacity 0.5s ease-in-out";
+                });
+            } catch (error) {};
+        }
+
+        function undimOrders() {
+            console.log("undim");
+            try {
+                let order = document.querySelectorAll(`[id^='order-']`);
+                order.forEach(o => {
+                    o.style.opacity = "1";
+                    o.style.transition = "opacity 0.5s ease-in-out";
+                });
+            } catch (error) {};
+        }
         
         searchBtn.addEventListener("click", function() {
-            let car = "";
-            let date = "";
-            let additionalDate = "";
+            undimOrders();
+            var filterCar = "";
+            var filterStartDate = "";
+            var filterEndDate = "";
             try {
-                car = document.getElementById("autoComplete").value ? document.getElementById("autoComplete").value : "";
-                date = datepicker.value ? datepicker.value : "";
-                additionalDate = document.getElementById("additionalDatepicker") ? document.getElementById("additionalDatepicker").value : "";
+                filterCar = document.getElementById("autoComplete").value ? document.getElementById("autoComplete").value : "";
+                filterStartDate = datepicker.value ? datepicker.value : "";
+                filterEndDate = document.getElementById("additionalDatepicker") ? document.getElementById("additionalDatepicker").value : "";
             } catch (error) {}
 
-            console.log(car);
-            console.log(date);
-            console.log(additionalDate);
+            orders.forEach(order => {
+                let orderDate = new Date(order.startDate);
+                let orderEndDate = new Date(order.endDate);
+                let startDate = new Date(filterStartDate);
+                let endDate = new Date(filterEndDate);
+                console.log(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderDate >= startDate && orderEndDate <= endDate);
+                console.log(order.orderId)
+
+                if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderDate >= startDate && orderEndDate <= endDate)) {
+                    dimOrder(order.orderId);
+                }
+            });
         });
 
     }

@@ -69,6 +69,7 @@ function generateView(newDate = null) {
                 newDiv.style.backgroundColor = generateUniqueColor(order.carId);
                 newDiv.style.boxShadow = '0 0 10px ' + generateUniqueColor(order.carId);
                 newDiv.style.width = '100%';
+                newDiv.id = "order-" + order.orderId;
 
                 if (startDate.getTime() == date.getTime()) {
                     newDiv.style.borderRadius = '20px 0 0 20px';
