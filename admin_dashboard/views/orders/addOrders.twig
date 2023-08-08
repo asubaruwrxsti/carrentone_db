@@ -35,7 +35,13 @@
 
     let cars = [
         {% for car in cars %}
-            "{{ car.name }}",
+            {
+                "name": "{{ car.name }}",
+                "data": {
+                    "id": "{{ car.id }}",
+                    "price": "{{ car.price }}",
+                }
+            } {% if not loop.last %},{% endif %}
         {% endfor %}
     ]
 
@@ -68,6 +74,8 @@
         selector: "#autoCompleteCar",
         data: {
             src: cars,
+            keys: ["name"],
+            cache: false,
         },
         resultsList: {
             element: (list, data) => {
@@ -77,7 +85,9 @@
                     message.innerHTML = `<span>Found no results for "${data.query}"</span>`;
                     list.prepend(message);
                 }
+                console.log(data);
             },
+            noResults: true,
         },
         events: {
             input: {

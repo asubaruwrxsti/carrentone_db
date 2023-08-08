@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row input-panel" style="position: sticky; top: 0; z-index: 99;" id="inputPanel">
         <div class="col-5" id="infoGroup">
-            <a href="/admin_dashboard/index.php/orders/add/" class="btn btn-primary mt-3" id="addButton"><span class="fas fa-plus"></span>&nbsp;Add Order</a>
+            <a href="/admin_dashboard/index.php/orders/add/" class="btn btn-primary mt-3"><span class="fas fa-plus"></span>&nbsp;Add Order</a>
             <ul class="card list-group">
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="badge bg-primary rounded-pill fade-in">Total Orders</span>
@@ -195,7 +195,6 @@
         });
 
         function dimOrder(id) {
-            console.log("dimming order: " + id);
             try {
                 let order = document.querySelectorAll(`[id='order-${id}']`);
                 order.forEach(o => {
@@ -208,7 +207,6 @@
         }
 
         function undimOrders() {
-            console.log("undim");
             try {
                 let order = document.querySelectorAll(`[id^='order-']`);
                 order.forEach(o => {
@@ -251,7 +249,6 @@
                 let endDate = filterEndDate !== "" ? new Date(filterEndDate).setHours(0, 0, 0, 0) : false;
 
                 if (endDate === false) {
-                    console.log(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate == startDate);
                     if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate == startDate)) {
                         dimOrder(order.orderId);
                     }
