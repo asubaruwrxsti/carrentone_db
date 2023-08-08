@@ -10,8 +10,8 @@
         <div class="col-5" id="infoGroup">
             <ul class="card list-group">
                 <li class="list-group-item d-flex justify-content-between">
-                    <span class="badge bg-primary rounded-pill">Total Orders</span>
-                    <span class="badge bg-primary rounded-pill" id="ordersThisMonth"></span>
+                    <span class="badge bg-primary rounded-pill fade-in">Total Orders</span>
+                    <span class="badge bg-primary rounded-pill fade-in" id="ordersThisMonth"></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="">Legend</span>
@@ -22,10 +22,10 @@
         <div class="col-5 ms-auto" id="inputGroup">
             <ul class="card list-group">
                 <li class="list-group-item d-flex justify-content-between">
-                    <input type="text" id="autoComplete" class="form-control" placeholder="Search by car name">
+                    <input type="text" id="autoComplete" class="form-control fade-in" placeholder="Search by car name">
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <input type="date" id="datepicker" class="form-control">
+                    <input type="date" id="datepicker" class="form-control fade-in">
                 </li>
             </ul>
             <button class="btn btn-primary mt-3" id="searchBtn">Search</button>
@@ -162,7 +162,6 @@
                             addButton.removeAttribute("class");
                             addButton.setAttribute("class", "btn btn-primary fade-in");
                             datepicker.style.width = "90%";
-                            //hasBeenSelected = false;
                         } else {
                             let newDatepicker = document.createElement("input");
                             newDatepicker.setAttribute("id", "additionalDatepicker");
@@ -174,8 +173,10 @@
                             newDatepicker.addEventListener("change", function() {
                                 if (Date.parse(newDatepicker.value) <= Date.parse(datepicker.value)) {
                                     newDatepicker.style.border = "1px solid red";
+                                    searchBtn.setAttribute("disabled", "true");
                                 } else {
                                     newDatepicker.style.border = "1px solid #ced4da";
+                                    searchBtn.removeAttribute("disabled");
                                 }
                             });
 
@@ -231,19 +232,40 @@
                 filterEndDate = document.getElementById("additionalDatepicker") ? document.getElementById("additionalDatepicker").value : "";
             } catch (error) {}
 
+            if (filterCar == "") {
+                document.getElementById("autoComplete").style.border = "1px solid red";
+                setTimeout(function() {
+                    document.getElementById("autoComplete").style.border = "1px solid #ced4da";
+                }, 500);
+                return;
+            }
+            if (filterStartDate == "") {
+                datepicker.style.border = "1px solid red";
+                setTimeout(function() {
+                    datepicker.style.border = "1px solid #ced4da";
+                }, 500);
+                return;
+            }
+
             orders.forEach(order => {
-                let orderDate = new Date(order.startDate);
+                let orderStartDate = new Date(order.startDate);
                 let orderEndDate = new Date(order.endDate);
                 let startDate = new Date(filterStartDate);
-                let endDate = new Date(filterEndDate);
-                console.log(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderDate >= startDate && orderEndDate <= endDate);
-                console.log(order.orderId)
+                let endDate = filterEndDate !== "" ? new Date(filterEndDate) : false;
 
-                if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderDate >= startDate && orderEndDate <= endDate)) {
-                    dimOrder(order.orderId);
+                if (endDate === false) {
+                    console.log("endDate is false");
+                    if (order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate >= startDate) {
+                        dimOrder(order.orderId);
+                    }
+                } else {
+                    console.log("endDate is not false");
+                    console.log(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate >= startDate && orderEndDate <= endDate);
+                    if (order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate >= startDate && orderEndDate <= endDate) {
+                        dimOrder(order.orderId);
+                    }
                 }
             });
         });
-
     }
 </script>
