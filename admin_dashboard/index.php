@@ -29,8 +29,11 @@
             $r->addRoute('GET', '/cars', 'Cars');
             $r->addRoute('GET', '/reports', 'Reports');
             $r->addRoute('GET', '/messages', 'Messages');
-            $r->addRoute('GET', '/orders', 'Orders');
             $r->addRoute('GET', '/customers', 'Customers');
+
+            // Orders
+            $r->addRoute('GET', '/orders', 'Orders');
+            $r->addRoute('GET', '/orders/add/', 'Orders');
 
             // API
             $r->addRoute('GET', '/api/{property}/', 'api');
@@ -274,6 +277,34 @@
                     $orders = $db->execute_query($orders);
                     $orders = $orders->fetch_all(MYSQLI_ASSOC);
 
+                    if (strpos($_SERVER['REQUEST_URI'], '/add/') !== false) {
+                        $customers = "SELECT * FROM customers;";
+                        $customers = $db->execute_query($customers);
+                        $customers = $customers->fetch_all(MYSQLI_ASSOC);
+
+                        $cars = "SELECT * FROM cars;";
+                        $cars = $db->execute_query($cars);
+                        $cars = $cars->fetch_all(MYSQLI_ASSOC);
+
+                        echo $header->render(array(
+                            'window_title' => $handler,
+                            'user_logged_in' => $_SESSION['is_loggedin'],
+                            'user_role' => $_SESSION['user_role'],
+                            'user_name' => strtoupper($_SESSION['username'])
+                        ));
+                        echo $base->render(array(
+                                'window_title' => 'Add Order',
+                                'content' => sprintf('/%s/%s.twig', $handler, 'addOrders'),
+                                'vars' => [
+                                    'currency' => $_SESSION['currency'],
+                                    'customers' => $customers,
+                                    'cars' => $cars
+                                ]
+                            )
+                        );
+                        break;
+                    }
+
                     echo $header->render(array(
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
@@ -290,7 +321,6 @@
                             ]
                         )
                     );
-
                     break;
                 
                 case 'Customers':

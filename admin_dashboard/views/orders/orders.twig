@@ -1,13 +1,8 @@
 <link rel="stylesheet" href="/admin_dashboard/views/orders/orders.css">
-
-
 <div class="container">
-    <div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
-        <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Cars</button>
-        <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">Search Agenda</button>
-    </div>
     <div class="row input-panel" style="position: sticky; top: 0; z-index: 99;" id="inputPanel">
         <div class="col-5" id="infoGroup">
+            <a href="/admin_dashboard/index.php/orders/add/" class="btn btn-primary mt-3" id="addButton"><span class="fas fa-plus"></span>&nbsp;Add Order</a>
             <ul class="card list-group">
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="badge bg-primary rounded-pill fade-in">Total Orders</span>
@@ -89,7 +84,7 @@
                 },
             },
         },
-     });
+    });
     
     function generateUniqueColor(id) {
         var hue = (id * 137.508) % 360;
@@ -131,7 +126,7 @@
     window.onload = function () {
         let searchBtn = document.getElementById("searchBtn");
         let datepicker = document.getElementById("datepicker");
-        datepicker.style.transition = "width 0.1s ease-in-out";
+        datepicker.style.transition = "width 0.1s ease-in-out"; 
         datepicker.style.width = "100%";
 
         datepicker.addEventListener("change", function () {
@@ -207,7 +202,9 @@
                     o.style.opacity = "0.2";
                     o.style.transition = "opacity 0.5s ease-in-out";
                 });
-            } catch (error) {};
+            } catch (error) {
+                console.log(error);
+            };
         }
 
         function undimOrders() {
@@ -248,20 +245,18 @@
             }
 
             orders.forEach(order => {
-                let orderStartDate = new Date(order.startDate);
-                let orderEndDate = new Date(order.endDate);
-                let startDate = new Date(filterStartDate);
-                let endDate = filterEndDate !== "" ? new Date(filterEndDate) : false;
+                let orderStartDate = new Date(order.startDate).setHours(0, 0, 0, 0);
+                let orderEndDate = new Date(order.endDate).setHours(0, 0, 0, 0);
+                let startDate = new Date(filterStartDate).setHours(0, 0, 0, 0);
+                let endDate = filterEndDate !== "" ? new Date(filterEndDate).setHours(0, 0, 0, 0) : false;
 
                 if (endDate === false) {
-                    console.log("endDate is false");
-                    if (order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate >= startDate) {
+                    console.log(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate == startDate);
+                    if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate == startDate)) {
                         dimOrder(order.orderId);
                     }
                 } else {
-                    console.log("endDate is not false");
-                    console.log(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate >= startDate && orderEndDate <= endDate);
-                    if (order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate >= startDate && orderEndDate <= endDate) {
+                    if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate >= startDate && orderEndDate <= endDate)) {
                         dimOrder(order.orderId);
                     }
                 }
