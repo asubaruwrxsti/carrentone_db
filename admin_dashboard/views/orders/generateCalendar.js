@@ -40,7 +40,7 @@ function generateView(newDate = null) {
             document.getElementById('carMapping').innerHTML = '<p>No data</p>';
         } else {
             carIds.forEach(carId => {
-                ordersThisMonth.getCarName(carId).then((car) => {
+                ordersThisMonth.getCar(carId).then((car) => {
                     let newDiv = document.getElementById('carMapping').appendChild(document.createElement('div'));
                     newDiv.innerHTML = `
                         <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
