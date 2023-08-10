@@ -23,7 +23,7 @@
     <link href="/admin_dashboard/views/assets/css/autoComplete.min.css" rel="stylesheet" />
     <script src="/admin_dashboard/views/assets/js/autoComplete.min.js"></script>
 
-    <title>{{ window_title ?? '' }}</title>
+    <title style="font-weight: bold;">{{ window_title ?? '' }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/admin_dashboard/views/assets/img/favicon.png" type="image/png">
 
@@ -83,7 +83,7 @@
           <li class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/">Dashboard</a></li>
           <li class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/cars">Cars</a></li>
 		  {# BACKLOG: archived messages #}
-          <li class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/messages">Messages <span class="badge bg-danger rounded-pill" style="position: relative; top: -5px; left: -5px;">1</span></a></li>
+          <li style="position: relative;" class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/messages">Messages <span class="badge bg-danger rounded-pill" style="position: absolute; top: -5px; right: -5px;">1</span></a></li>
           <li class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/orders">Orders</a></li>
           <li class="nav-item more-padding"><a class="nav-link" href="/admin_dashboard/index.php/customers">Customers</a></li>
           <li class="nav-item dropdown nav-padding">
