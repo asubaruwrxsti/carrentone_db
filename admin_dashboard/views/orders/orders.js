@@ -34,6 +34,7 @@ class Orders {
 
     async isCarBusy(carId, rentalDate, returnDate) {
         let busy = false;
+		let car = await this.getCar(carId);
 
         let revenue = await fetch(`/admin_dashboard/index.php/api/revenue/`, {
             method: 'GET',
@@ -46,7 +47,7 @@ class Orders {
         return revenue.some(order => {
             let orderRentalDate = new Date(order.rental_date);
             let orderReturnDate = orderRentalDate.setDate(orderRentalDate.getDate() + order.rental_duration);
-            return (order.car_id == carId && orderRentalDate <= returnDate && orderReturnDate >= orderRentalDate);
+			return (order.car_id == carId && orderRentalDate <= rentalDate && orderReturnDate >= returnDate);
         });
     }
 

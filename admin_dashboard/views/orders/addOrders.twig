@@ -6,7 +6,7 @@
 
 <div class="container-fluid card mt-3">
     <form>
-        <div class="row">
+        <div class="row" class="formContainer">
             <div class="col-lg-12 mb-3">
                 <div class="new_property_form">
                     <h4 class="title mt-5">Order Details</h4>
@@ -14,15 +14,15 @@
                         <div class="col">
                             <div class="form">
                                 <label class="form-label">Customer</label>
-                                <input name="form_name" id="autoCompleteCustomer" class="form-control" type="text" placeholder="Customer" required>
-                                <span style="display: none" class="form-text fade-in" id="customerMessage"></span>
+                                <input name="form_name" id="autoCompleteCustomers" class="form-control" type="text" placeholder="Customer" required>
+                                <span style="display: none" class="form-text fade-in mt-2" id="customerMessage"></span>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form">
                                 <label class="form-label">Car</label>
                                 <input name="form_name" id="autoCompleteCar" class="form-control" type="text" placeholder="Car" required>
-                                <span style="display: none" class="form-text fade-in" id="carMessage"></span>
+                                <span style="display: none" class="form-text fade-in mt-2" id="carMessage"></span>
                             </div>
                         </div>
                     </div>
@@ -31,14 +31,14 @@
                             <div class="form">
                                 <label class="form-label">Start Date</label>
                                 <input name="form_name" id="orderStartDate" class="form-control" type="date" required>
-                                <span style="display: none" class="form-text fade-in" id="startDateMessage"></span>
+                                <span style="display: none" class="form-text fade-in mt-2" id="startDateMessage"></span>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form">
                                 <label class="form-label">End Date</label>
                                 <input name="form_name" id="orderEndDate" class="form-control" type="date" required>
-                                <span style="display: none" class="form-text fade-in" id="endDateMessage"></span>
+                                <span style="display: none" class="form-text fade-in mt-2" id="endDateMessage"></span>
                             </div>
                         </div>
                     </div>
@@ -91,18 +91,21 @@
     ]
 
     const autoCompleteCustomers = new autoComplete({
-        selector: "#autoCompleteCustomer",
+        selector: "#autoCompleteCustomers",
         data: {
             src: customers,
             keys: ["name"],
         },
         resultsList: {
             element: (list, data) => {
-                const message = document.createElement("div");
+				console.log(data.results.length);
                 if (!data.results.length) {
-                    message.setAttribute("class", "no_result");
-                    message.innerHTML = `<span>Found no results for "${data.query}"</span>`;
-                    list.prepend(message);
+                    customerMessage.style.display = "block";
+					customerMessage.innerHTML = "Customer doesnt exist!";
+					customerMessage.style.color = "red";
+				} else {
+					customerMessage.innerHTML = "";
+					customerMessage.style.display = "none";
                 }
             },
         },
@@ -125,28 +128,22 @@
         },
         resultsList: {
             element: (list, data) => {
-                const message = document.createElement("div");
                 if (!data.results.length) {
-                    message.setAttribute("class", "no_result");
-                    message.innerHTML = `<span>Found no results for "${data.query}"</span>`;
-                    list.prepend(message);
+						carMessage.style.display = "block";
+						carMessage.innerHTML = "Car doesnt exist!";
+						carMessage.style.color = "red";
+				} else {
+					carMessage.innerHTML = "";
+					carMessage.style.display = "none";
                 }
-                console.log(data);
             },
             noResults: true,
         },
         events: {
             input: {
                 selection: (event) => {
-                    const selectionCar = event.detail.selection.value.name;
-                    autoCompleteCars.input.value = selectionCar;
-                    orders.getCar(event.detail.selection.value.data.id).then((car) => {
-                        console.log(car);
-                    });
-
-                    orders.isCarBusy(event.detail.selection.value.data.id, orderStartDate.value, orderEndDate.value).then((isBusy) => {
-                        console.log(isBusy);
-                    });
+					const selectionCar = event.detail.selection.value.name;
+					autoCompleteCars.input.value = selectionCar;
                 },
             },
         },

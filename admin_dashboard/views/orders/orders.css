@@ -109,3 +109,7 @@ td {
 .fade-in {
     animation: fadeIn 0.3s ease-in-out;
 }
+
+.formContainer {
+	transition: all 0.3s ease-in-out;
+}

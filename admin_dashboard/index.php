@@ -10,9 +10,8 @@
     }
 
     require_once 'vendor/autoload.php';
-    require_once 'Database.php';
-    $db = new DB('localhost', 'root', '', 'carrentone');
-
+    require_once 'database.php';
+    $db = new DB($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     $loader = new \Twig\Loader\FilesystemLoader('views');
     $twig = new \Twig\Environment($loader);
 
@@ -146,7 +145,7 @@
         
                     echo $base->render(array(
                             'window_title' => $window_title,
-                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
                                 'property' => $property,
@@ -173,7 +172,7 @@
                     $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
                     
                     $html = $twig->render('base.twig', array(
-                        'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                        'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                         'vars' => [
                             'currency' => $_SESSION['currency'],
                             'data' => $result[0]
@@ -204,7 +203,7 @@
                     ));
                     echo $base->render(array(
                             'window_title' => $handler,
-                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
                                 'recent_orders' => $recentOrders
@@ -240,7 +239,7 @@
                     ));
                     echo $base->render(array(
                             'window_title' => $handler,
-                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
                                 'cars' => $cars
@@ -258,7 +257,7 @@
                     ));
                     echo $base->render(array(
                             'window_title' => $handler,
-                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
                             ]
@@ -294,7 +293,7 @@
                         ));
                         echo $base->render(array(
                                 'window_title' => 'Add Order',
-                                'content' => sprintf('/%s/%s.twig', $handler, 'addOrders'),
+                                'content' => sprintf('/%s/%s.twig', strtolower($handler), 'addOrders'),
                                 'vars' => [
                                     'currency' => $_SESSION['currency'],
                                     'customers' => $customers,
@@ -314,7 +313,7 @@
 
                     echo $base->render(array(
                             'window_title' => $handler,
-                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
                                 'orders' => $orders
@@ -336,7 +335,7 @@
                     ));
                     echo $base->render(array(
                             'window_title' => $handler,
-                            'content' => sprintf('/%s/%s.twig', $handler, $handler),
+                            'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
                                 'customers' => $customers,

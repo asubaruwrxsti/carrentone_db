@@ -6,7 +6,7 @@
 
     session_start();
     require_once 'vendor/autoload.php';
-    include_once 'Database.php';
+    include_once 'database.php';
     include_once 'schema.php';
 
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -17,9 +17,9 @@
 
     $db = new DB($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     $schema = new Schema();
-    if (!$schema->verifySchema()) {
-        $schema->restoreSchema();
-    }
+    // if (!$schema->verifySchema()) {
+    //     $schema->restoreSchema();
+    // }
 
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $loader = new \Twig\Loader\FilesystemLoader('views');
