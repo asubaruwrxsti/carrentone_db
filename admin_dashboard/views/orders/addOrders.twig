@@ -231,6 +231,9 @@
             order.append("price", orderTotalPrice.value);
             order.append("notes", notes);
 
+            // BACKLOG: isCarBusy
+            // BACKLOG: update car order number
+
             orders.addOrder(order).then(function(response) {
                 if (JSON.parse(response).status) {
                     alertify.success(JSON.parse(response).message);
