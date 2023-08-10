@@ -5,7 +5,7 @@
 </a>
 
 <div class="container-fluid card mt-3">
-    <form>
+    <form class="form" id="addOrderForm">
         <div class="row" class="formContainer">
             <div class="col-lg-12 mb-3">
                 <div class="new_property_form">
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-5">
+                    <div class="row mt-3">
                         <div class="col">
                             <div class="form">
                                 <label class="form-label">Start Date</label>
@@ -53,13 +53,19 @@
 					<input name="form_name" id="orderNotes" class="form-control" type="text" placeholder="Notes">
 				</div>
 			</div>
+            <div class="col">
+				<div class="form">
+					<label class="form-label">Total Price (optional)</label>
+					<input name="form_name" id="orderTotalPrice" class="form-control" type="text">
+				</div>
+			</div>
 		</div>
 		<div class="row mt-5">
 			<div class="col">
 				<div class="form">
 					{# BACKLOG: make add order functional #}
 					{# BACKLOG: ask user if he wants to create user if not exists #}
-					<button type="button" class="btn btn-primary btn-sm" id="addOrder">Add Order</button>
+					<button type="submit" class="btn btn-primary btn-sm" id="addOrder">Add Order</button>
 				</div>
 			</div>
 		</div>
@@ -70,6 +76,7 @@
     let orders = new Orders();
     let orderStartDate = document.getElementById("orderStartDate");
     let orderEndDate = document.getElementById("orderEndDate");
+    let orderTotalPrice = document.getElementById("orderTotalPrice");
 
     let orderStartDateMessage = document.getElementById("startDateMessage");
     let orderEndDateMessage = document.getElementById("endDateMessage");
@@ -84,6 +91,11 @@
         } else {
             document.getElementById("startDateMessage").innerHTML = "";
             document.getElementById("startDateMessage").style.display = "none";
+            if (orderStartDate.value != "" && orderEndDate.value != "") {
+                let days = Math.floor((new Date(orderEndDate.value).setHours(0, 0, 0, 0) - new Date(orderStartDate.value).setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24));
+                let price = document.getElementById("autoCompleteCar").dataset.price;
+                orderTotalPrice.value = days * price;
+            }
         }
     })
 
@@ -133,6 +145,7 @@
                 selection: (event) => {
                     const selectionCustomer = event.detail.selection.value.name;
                     autoCompleteCustomers.input.value = selectionCustomer;
+                    document.getElementById("autoCompleteCustomers").setAttribute("data-id", event.detail.selection.value.id);
                 },
             },
         },
@@ -163,8 +176,69 @@
                 selection: (event) => {
 					const selectionCar = event.detail.selection.value.name;
 					autoCompleteCars.input.value = selectionCar;
+                    document.getElementById("autoCompleteCar").setAttribute("data-id", event.detail.selection.value.data.id);
+                    document.getElementById("autoCompleteCar").setAttribute("data-price", event.detail.selection.value.data.price);
+
+                    if (orderEndDate != "" && orderStartDate != "") {
+                        let days = Math.floor((new Date(orderEndDate.value).setHours(0, 0, 0, 0) - new Date(orderStartDate.value).setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24));
+                        let price = document.getElementById("autoCompleteCar").dataset.price;
+                        orderTotalPrice.value = days * price;
+                    }
                 },
             },
         },
     });
+
+    document.getElementById("addOrderForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        let customer = autoCompleteCustomers.input.dataset.id;
+        let car = autoCompleteCars.input.dataset.id;
+        let startDate = orderStartDate.value;
+        let endDate = orderEndDate.value;
+        let notes = document.getElementById("orderNotes").value;
+
+        if (customer == "" || car == "" || startDate == "" || endDate == "") {
+            if (customer == "") {
+                customerMessage.innerHTML = "Customer is required!";
+                customerMessage.style.color = "red";
+                customerMessage.style.display = "block";
+                return;
+            }
+            if (car == "") {
+                carMessage.innerHTML = "Car is required!";
+                carMessage.style.color = "red";
+                carMessage.style.display = "block";
+                return;
+            }
+            if (startDate == "") {
+                orderStartDateMessage.innerHTML = "Start date is required!";
+                orderStartDateMessage.style.color = "red";
+                orderStartDateMessage.style.display = "block";
+                return;
+            }
+            if (endDate == "") {
+                orderEndDateMessage.innerHTML = "End date is required!";
+                orderEndDateMessage.style.color = "red";
+                orderEndDateMessage.style.display = "block";
+                return;
+            }
+        } else {
+            let order = new FormData();
+            order.append("customer_id", customer);
+            order.append("rental_date", startDate);
+            order.append("rental_duration", Math.floor((new Date(endDate).setHours(0, 0, 0, 0) - new Date(startDate).setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24)));
+            order.append("car_id", document.getElementById("autoCompleteCar").dataset.id);
+            order.append("price", orderTotalPrice.value);
+            order.append("notes", notes);
+
+            orders.addOrder(order).then(function(response) {
+                if (JSON.parse(response).status) {
+                    alertify.success(JSON.parse(response).message);
+                    setTimeout(function() {
+                        window.location.href = "/admin_dashboard/index.php/orders";
+                    }, 1000);
+                }
+            });
+        }
+    })
 </script>

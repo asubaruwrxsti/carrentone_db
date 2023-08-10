@@ -61,4 +61,18 @@ class Orders {
         let data = await response.json();
         return data;
     }
+
+    async addOrder(order) {
+        order = JSON.stringify(Object.fromEntries(order));
+
+        const response = await fetch(`/admin_dashboard/index.php/api/revenue/edit/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: order
+        });
+        let data = await response.json();
+        return data;
+    }
 }
