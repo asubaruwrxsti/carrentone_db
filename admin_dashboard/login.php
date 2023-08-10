@@ -26,7 +26,7 @@
         $twig = new \Twig\Environment($loader);
 
         if (isset($_SESSION['is_loggedin'])) {
-            header("Location: /admin_dasboard/index.php");
+            header("Location: /admin_dashboard/index.php/");
             die();
         }
 

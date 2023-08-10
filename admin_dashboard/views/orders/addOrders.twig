@@ -45,6 +45,24 @@
                 </div>
             </div>
         </div>
+		<div class="row mt-2">
+			<div class="col">
+				<div class="form">
+					{# BACKLOG: add order notes #}
+					<label class="form-label">Notes (optional)</label>
+					<input name="form_name" id="orderNotes" class="form-control" type="text" placeholder="Notes">
+				</div>
+			</div>
+		</div>
+		<div class="row mt-5">
+			<div class="col">
+				<div class="form">
+					{# BACKLOG: make add order functional #}
+					{# BACKLOG: ask user if he wants to create user if not exists #}
+					<button type="button" class="btn btn-primary btn-sm" id="addOrder">Add Order</button>
+				</div>
+			</div>
+		</div>
     </form>
 </div>
 
@@ -108,6 +126,7 @@
 					customerMessage.style.display = "none";
                 }
             },
+			noResults: true,
         },
         events: {
             input: {

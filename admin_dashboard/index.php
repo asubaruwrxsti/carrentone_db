@@ -6,11 +6,15 @@
 
     session_start();
     if (!isset($_SESSION['is_loggedin'])) {
-        header("Location: /admin_dashboard/Login.php");
+        header("Location: /admin_dashboard/login.php");
     }
 
     require_once 'vendor/autoload.php';
     require_once 'database.php';
+
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->safeLoad();
+
     $db = new DB($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     $loader = new \Twig\Loader\FilesystemLoader('views');
     $twig = new \Twig\Environment($loader);
@@ -29,6 +33,8 @@
             $r->addRoute('GET', '/reports', 'Reports');
             $r->addRoute('GET', '/messages', 'Messages');
             $r->addRoute('GET', '/customers', 'Customers');
+            $r->addRoute('GET', '/profile', 'Profile');
+            $r->addRoute('GET', '/settings', 'Settings');
 
             // Orders
             $r->addRoute('GET', '/orders', 'Orders');
@@ -86,7 +92,7 @@
                     session_destroy();
                     $db->destroy_session_id($_SESSION['user_id']);
                     $db->close_connection();
-                    header("Location: /admin_dashboard/Login.php");
+                    header("Location: /admin_dashboard/login.php");
                     break;
                 
                 case 'api':
@@ -343,6 +349,52 @@
                         )
                     );
                     break;
+				
+				case 'Profile':
+					// BACKLOG: implement settings
+					$profile = "SELECT * FROM users WHERE username = '" . $_SESSION['username'] . "';";
+					$profile = $db->execute_query($profile);
+					$profile = $profile->fetch_all(MYSQLI_ASSOC);
+
+					echo $header->render(array(
+						'window_title' => $handler,
+						'user_logged_in' => $_SESSION['is_loggedin'],
+						'user_role' => $_SESSION['user_role'],
+						'user_name' => strtoupper($_SESSION['username'])
+					));
+
+					echo $base->render(array(
+						'window_title' => $handler,
+						'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
+						'vars' => [
+							'currency' => $_SESSION['currency'],
+							'profile' => $profile
+						]
+					));
+					break;
+				
+				case 'Settings':
+					// BACKLOG: implement settings
+					$settings = "SELECT * FROM settings;";
+					$settings = $db->execute_query($settings);
+					$settings = $settings->fetch_all(MYSQLI_ASSOC);
+
+					echo $header->render(array(
+						'window_title' => $handler,
+						'user_logged_in' => $_SESSION['is_loggedin'],
+						'user_role' => $_SESSION['user_role'],
+						'user_name' => strtoupper($_SESSION['username'])
+					));
+
+					echo $base->render(array(
+						'window_title' => $handler,
+						'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
+						'vars' => [
+							'currency' => $_SESSION['currency'],
+							'settings' => $settings
+						]
+					));
+					break;
             }
             break;
     }

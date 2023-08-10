@@ -106,7 +106,7 @@
             foreach ($schema as $table => $columns) {
                 try {
                     $res = $this->db->execute_query("SHOW COLUMNS FROM $table");
-                    $db_columns = $res->fetch_all(MYSQLI_ASSOC);
+                    $db_columns = $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
                     if ($columns != $db_columns) {
                         return false;
                     }
@@ -126,8 +126,9 @@
             foreach ($schema as $table => $columns) {
                 try {
                     $res = $this->db->execute_query("SHOW COLUMNS FROM $table");
-                    $db_columns = $res->fetch_all(MYSQLI_ASSOC);
+                    $db_columns = $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
                     if ($columns != $db_columns) {
+						// BACKLOG: alter table instead of dropping and recreating
                         $this->dropTable($table);
                         $this->createTable($table, $columns);
                     }
