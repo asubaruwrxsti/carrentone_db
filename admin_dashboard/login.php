@@ -17,9 +17,9 @@
 
     $db = new DB($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     $schema = new Schema();
-    // if (!$schema->verifySchema()) {
-    //     $schema->restoreSchema();
-    // }
+    if (!$schema->verifySchema()) {
+        $schema->restoreSchema();
+    }
 
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $loader = new \Twig\Loader\FilesystemLoader('views');

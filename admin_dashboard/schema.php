@@ -81,6 +81,38 @@
             $this->db->execute_query("DROP TABLE IF EXISTS $name");
         }
 
+		/**
+		 * Alter a table in the database
+		 * @return void
+		 */
+		public function alterTable($name, $columns) {
+			$query = "ALTER TABLE $name ";
+			foreach ($columns as $column) {
+				$nullValue = $column['Null'] === 'NO' ? 'NOT NULL' : 'NULL';
+
+				if ($column['Default'] !== null && $column['Type'] !== "varchar(255)") {
+					$defaultValue = "DEFAULT {$column['Default']}";
+					$query .= "MODIFY COLUMN ";
+				} else if ($column['Type'] == "varchar(255)") {
+					$defaultValue = "DEFAULT '{$column['Default']}'";
+					$query .= "MODIFY COLUMN ";
+				} else if ($column['Key'] == "PRI") {
+					continue;
+				} else {
+					$defaultValue = 'DEFAULT NULL';
+					$query .= "MODIFY COLUMN ";
+				}
+
+				$query .= "{$column['Field']} {$column['Type']} {$nullValue} {$defaultValue} {$column['Extra']},";
+				if ($column['Key'] == "PRI") {
+					$query .= "PRIMARY KEY ({$column['Field']}),";
+				}
+			}
+			$query = rtrim($query, ',');
+			$query .= ";";
+			$this->db->execute_query($query);
+		}
+
         /**
          * Save the schema of the database in JSON format
          * @return array
@@ -127,10 +159,10 @@
                 try {
                     $res = $this->db->execute_query("SHOW COLUMNS FROM $table");
                     $db_columns = $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
-                    if ($columns != $db_columns) {
-						// BACKLOG: alter table instead of dropping and recreating
-                        $this->dropTable($table);
-                        $this->createTable($table, $columns);
+                    if (empty($db_columns)) {
+						$this->createTable($table, $columns);
+					} else if ($columns != $db_columns) {
+						$this->alterTable($table, $columns);
                     }
                 } catch (Exception $e) {
                     $this->createTable($table, $columns);

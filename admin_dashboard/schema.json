@@ -84,7 +84,7 @@
         },
         {
             "Field": "next_order",
-            "Type": "date",
+            "Type": "TIMESTAMP",
             "Null": "YES",
             "Key": "",
             "Default": null,
@@ -100,10 +100,10 @@
         },
         {
             "Field": "created_at",
-            "Type": "date",
+            "Type": "TIMESTAMP",
             "Null": "NO",
             "Key": "",
-            "Default": "current_timestamp()",
+            "Default": "current_timestamp",
             "Extra": ""
         }
     ],
@@ -150,10 +150,10 @@
         },
         {
             "Field": "created_at",
-            "Type": "date",
+            "Type": "TIMESTAMP",
             "Null": "NO",
             "Key": "",
-            "Default": "current_timestamp()",
+            "Default": "current_timestamp",
             "Extra": ""
         }
     ],
@@ -189,15 +189,15 @@
             "Type": "int(11)",
             "Null": "NO",
             "Key": "",
-            "Default": null,
+            "Default": 0,
             "Extra": ""
         },
         {
             "Field": "rental_date",
-            "Type": "date",
+            "Type": "TIMESTAMP",
             "Null": "NO",
             "Key": "",
-            "Default": "current_timestamp()",
+            "Default": "current_timestamp",
             "Extra": ""
         },
         {
@@ -205,7 +205,7 @@
             "Type": "int(11)",
             "Null": "NO",
             "Key": "",
-            "Default": null,
+            "Default": 0,
             "Extra": ""
         },
         {
@@ -213,13 +213,21 @@
             "Type": "int(11)",
             "Null": "NO",
             "Key": "",
-            "Default": null,
+            "Default": 0,
             "Extra": ""
         },
         {
             "Field": "price",
             "Type": "int(11)",
             "Null": "NO",
+            "Key": "",
+            "Default": 0,
+            "Extra": ""
+        },
+		{
+            "Field": "notes",
+            "Type": "varchar(255)",
+            "Null": "YES",
             "Key": "",
             "Default": null,
             "Extra": ""
@@ -252,10 +260,10 @@
         },
         {
             "Field": "date_created",
-            "Type": "date",
+            "Type": "TIMESTAMP",
             "Null": "NO",
             "Key": "",
-            "Default": "current_timestamp()",
+            "Default": "current_timestamp",
             "Extra": ""
         },
         {
@@ -268,10 +276,10 @@
         },
         {
             "Field": "last_login",
-            "Type": "date",
+            "Type": "TIMESTAMP",
             "Null": "NO",
             "Key": "",
-            "Default": "current_timestamp()",
+            "Default": "current_timestamp",
             "Extra": ""
         },
         {
