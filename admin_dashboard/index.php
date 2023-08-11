@@ -71,6 +71,10 @@
     $header = $twig->load('/assets/header.twig');
     $base = $twig->load('base.twig');
 
+	$messages = "SELECT * FROM messages WHERE archived != 0;";
+	$messages = $db->execute_query($messages);
+	$messages = mysqli_num_rows($messages);
+
     switch ($routeInfo[0]) {
         case FastRoute\Dispatcher::NOT_FOUND:
             echo $twig->render('/assets/404.twig');
@@ -146,7 +150,8 @@
                         'window_title' => sprintf('%s', strtoupper($property)),
                         'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => $_SESSION['user_role'],
-                        'user_name' => strtoupper($_SESSION['username'])
+                        'user_name' => strtoupper($_SESSION['username']),
+						'message_count' => $messages
                     ));
         
                     echo $base->render(array(
@@ -205,7 +210,8 @@
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => $_SESSION['user_role'],
-                        'user_name' => strtoupper($_SESSION['username'])
+                        'user_name' => strtoupper($_SESSION['username']),
+						'message_count' => $messages
                     ));
                     echo $base->render(array(
                             'window_title' => $handler,
@@ -241,7 +247,8 @@
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => $_SESSION['user_role'],
-                        'user_name' => strtoupper($_SESSION['username'])
+                        'user_name' => strtoupper($_SESSION['username']),
+						'message_count' => $messages
                     ));
                     echo $base->render(array(
                             'window_title' => $handler,
@@ -259,7 +266,8 @@
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => $_SESSION['user_role'],
-                        'user_name' => strtoupper($_SESSION['username'])
+                        'user_name' => strtoupper($_SESSION['username']),
+						'message_count' => $messages
                     ));
                     echo $base->render(array(
                             'window_title' => $handler,
@@ -295,7 +303,8 @@
                             'window_title' => $handler,
                             'user_logged_in' => $_SESSION['is_loggedin'],
                             'user_role' => $_SESSION['user_role'],
-                            'user_name' => strtoupper($_SESSION['username'])
+                            'user_name' => strtoupper($_SESSION['username']),
+							'message_count' => $messages
                         ));
                         echo $base->render(array(
                                 'window_title' => 'Add Order',
@@ -314,7 +323,8 @@
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => $_SESSION['user_role'],
-                        'user_name' => strtoupper($_SESSION['username'])
+                        'user_name' => strtoupper($_SESSION['username']),
+						'message_count' => $messages
                     ));
 
                     echo $base->render(array(
@@ -337,7 +347,8 @@
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
                         'user_role' => $_SESSION['user_role'],
-                        'user_name' => strtoupper($_SESSION['username'])
+                        'user_name' => strtoupper($_SESSION['username']),
+						'message_count' => $messages
                     ));
                     echo $base->render(array(
                             'window_title' => $handler,
@@ -360,7 +371,8 @@
 						'window_title' => $handler,
 						'user_logged_in' => $_SESSION['is_loggedin'],
 						'user_role' => $_SESSION['user_role'],
-						'user_name' => strtoupper($_SESSION['username'])
+						'user_name' => strtoupper($_SESSION['username']),
+						'message_count' => $messages
 					));
 
 					echo $base->render(array(
@@ -383,7 +395,8 @@
 						'window_title' => $handler,
 						'user_logged_in' => $_SESSION['is_loggedin'],
 						'user_role' => $_SESSION['user_role'],
-						'user_name' => strtoupper($_SESSION['username'])
+						'user_name' => strtoupper($_SESSION['username']),
+						'message_count' => $messages
 					));
 
 					echo $base->render(array(

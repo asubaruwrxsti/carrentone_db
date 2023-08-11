@@ -86,31 +86,35 @@
 		 * @return void
 		 */
 		public function alterTable($name, $columns) {
-			$query = "ALTER TABLE $name ";
 			foreach ($columns as $column) {
+				$query = "ALTER TABLE $name ";
+
 				$nullValue = $column['Null'] === 'NO' ? 'NOT NULL' : 'NULL';
+				if ($column['Key'] == "PRI") continue;
 
 				if ($column['Default'] !== null && $column['Type'] !== "varchar(255)") {
 					$defaultValue = "DEFAULT {$column['Default']}";
-					$query .= "MODIFY COLUMN ";
 				} else if ($column['Type'] == "varchar(255)") {
 					$defaultValue = "DEFAULT '{$column['Default']}'";
-					$query .= "MODIFY COLUMN ";
-				} else if ($column['Key'] == "PRI") {
-					continue;
 				} else {
-					$defaultValue = 'DEFAULT NULL';
-					$query .= "MODIFY COLUMN ";
+					$defaultValue = '';
 				}
 
-				$query .= "{$column['Field']} {$column['Type']} {$nullValue} {$defaultValue} {$column['Extra']},";
+				$res = $this->db->execute_query("SHOW COLUMNS FROM $name LIKE '{$column['Field']}'");
+				if ($res->num_rows == 0) {
+					$query .= "ADD COLUMN {$column['Field']} {$column['Type']} {$nullValue} {$defaultValue} {$column['Extra']},";
+					$this->db->execute_query($query);
+					continue;
+				}
+
+				$query .= "MODIFY COLUMN IF EXISTS {$column['Field']} {$column['Type']} {$nullValue} {$defaultValue} {$column['Extra']},";
 				if ($column['Key'] == "PRI") {
 					$query .= "PRIMARY KEY ({$column['Field']}),";
 				}
+				$query = rtrim($query, ',');
+				$query .= ";";
+				$this->db->execute_query($query);
 			}
-			$query = rtrim($query, ',');
-			$query .= ";";
-			$this->db->execute_query($query);
 		}
 
         /**

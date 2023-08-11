@@ -173,6 +173,14 @@
             "Key": "",
             "Default": null,
             "Extra": ""
+        },
+		{
+            "Field": "archieved",
+            "Type": "int(11)",
+            "Null": "YES",
+            "Key": "",
+            "Default": 0,
+            "Extra": ""
         }
     ],
     "revenue": [

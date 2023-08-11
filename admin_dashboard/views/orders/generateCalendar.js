@@ -85,7 +85,7 @@ function generateView(newDate = null) {
                 });
 
             } else {
-                /* BACKLOG: Utilize order overlap 
+                /* BACKLOG: Utilize order overlap, perhaps ?
                 var overlappingOrders = orders.filter(o => {
                     let sD = new Date(o.startDate);
                     let eD = new Date(o.endDate);
