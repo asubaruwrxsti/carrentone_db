@@ -117,3 +117,13 @@ td {
 .formContainer {
 	transition: all 0.3s ease-in-out;
 }
+
+.input-panel {
+	-webkit-mask: -webkit-gradient(
+		linear,
+		left 100%,
+		left 90%,
+		from(rgba(0, 0, 0, 0)),
+		to(rgba(0, 0, 0, 1))
+	  );
+}

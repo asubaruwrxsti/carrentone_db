@@ -78,11 +78,27 @@ function generateView(newDate = null) {
                 } else {
                     newDiv.style.borderRadius = '0';
                 }
-                
-                // BACKLOG: Add tooltip
-                newDiv.addEventListener('mouseover', function() {
-                    //console.log(order);
-                });
+				
+				newDiv.setAttribute('data-toggle', 'popover');
+				newDiv.setAttribute('title', 'Order Details');
+				// fill the popover template content
+				newDiv.setAttribute('data-content', `
+					<div class="row">
+						<div class="col-lg-12">
+							<p><b>Car:</b> ${order.car}</p>
+							<p><b>Customer:</b> ${order.renterName}</p>
+							<p><b>Date:</b> ${order.startDate} - ${order.endDate}</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<a href="" class="btn btn-primary btn-sm"> <i class="fas fa-edit"></i> Edit</a>
+						</div>
+						<div class="col">
+							<a href="" class="btn btn-danger btn-sm"> <i class="fas fa-trash"></i> Delete</a>
+						</div>
+					</div>
+				`);
 
             } else {
                 /* BACKLOG: Utilize order overlap, perhaps ?

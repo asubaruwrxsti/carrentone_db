@@ -124,6 +124,17 @@
     }
 
     window.onload = function () {
+		$('[data-toggle="popover"]').popover({
+			html: true,
+			trigger: 'click',
+			content: function () {
+				return $(this).attr("data-content");
+			},
+			template: '<div class="popover card" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body card-body"></div></div>',
+		}).on('shown.bs.popover', function () {
+			$('[data-toggle="popover"]').not(this).popover('hide');
+		});
+
         let searchBtn = document.getElementById("searchBtn");
         let datepicker = document.getElementById("datepicker");
         datepicker.style.transition = "width 0.1s ease-in-out"; 

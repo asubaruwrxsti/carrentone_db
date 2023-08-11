@@ -362,7 +362,6 @@
                     break;
 				
 				case 'Profile':
-					// BACKLOG: implement settings
 					$profile = "SELECT * FROM users WHERE username = '" . $_SESSION['username'] . "';";
 					$profile = $db->execute_query($profile);
 					$profile = $profile->fetch_all(MYSQLI_ASSOC);
