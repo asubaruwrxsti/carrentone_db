@@ -47,9 +47,8 @@ class Orders {
                 let orderRentalDate = new Date(order.rental_date);
                 let orderReturnDate = new Date(orderRentalDate.getTime() + order.rental_duration * 24 * 60 * 60 * 1000);
 
-                if (orderRentalDate <= new Date(rentalDate) && new Date(returnDate) <= orderReturnDate) {
+                if (orderRentalDate.getTime() <= new Date(returnDate).getTime() && orderReturnDate.getTime() >= new Date(rentalDate).getTime()) {
                     busy = true;
-                    return;
                 }
             }
         });
@@ -79,33 +78,31 @@ class Orders {
         });
         let data = await response.json();
 
-        let car = await fetch(`/admin_dashboard/index.php/api/cars/${JSON.parse(order).car_id}`, {
+        await fetch(`/admin_dashboard/index.php/api/cars/${JSON.parse(order).car_id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
+        }).then(response => response.json()).then(car => {
+            fetch(`/admin_dashboard/index.php/api/cars/edit/${JSON.parse(order).car_id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: car[0].name,
+                    price: car[0].price,
+                    description: car[0].description,
+                    travel_distance: car[0].travel_distance,
+                    transmission: car[0].transmission,
+                    available: car[0].available,
+                    next_order: new Date().toISOString().slice(0, 10),
+                    order_count: String(parseInt(car[0].order_count) + 1),
+                    created_at: car[0].created_at
+                })
+            });
         });
-        car = await car.json();
-        let update = await fetch(`/admin_dashboard/index.php/api/cars/edit/${JSON.parse(order).car_id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: car[0].name,
-                price: car[0].price,
-                description: car[0].description,
-                travel_distance: car[0].travel_distance,
-                transmission: car[0].transmission,
-                available: car[0].available,
-                next_order: new Date().getTime().setHours(0, 0, 0, 0),
-                order_count: String(parseInt(car[0].order_count) + 1),
-                created_at: car[0].created_at
-            })
-        });
-        update = await update.json();
-        console.log(update);
-        return;
+        return data;
     }
 
     async insertCustomer(customer) {

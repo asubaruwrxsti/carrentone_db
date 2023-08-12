@@ -138,8 +138,8 @@
                 orderTotalPrice.value = days * price;
             }
 
-            // gets carid, startdate, enddate
             orders.isCarBusy(document.getElementById("autoCompleteCar").dataset.id, orderStartDate.value, orderEndDate.value).then(function(response) {
+                console.log(response);
                 if(JSON.parse(response)) {
                     carMessage.style.display = "block";
                     carMessage.innerHTML = "Car is taken between these dates!";
