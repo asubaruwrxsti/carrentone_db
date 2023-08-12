@@ -137,6 +137,18 @@
                 let price = document.getElementById("autoCompleteCar").dataset.price;
                 orderTotalPrice.value = days * price;
             }
+
+            // gets carid, startdate, enddate
+            orders.isCarBusy(document.getElementById("autoCompleteCar").dataset.id, orderStartDate.value, orderEndDate.value).then(function(response) {
+                if(JSON.parse(response)) {
+                    carMessage.style.display = "block";
+                    carMessage.innerHTML = "Car is taken between these dates!";
+                    carMessage.style.color = "red";
+                } else {
+                    carMessage.innerHTML = "";
+                    carMessage.style.display = "none";
+                }
+            });
         }
     })
 
@@ -224,6 +236,17 @@
                         let price = document.getElementById("autoCompleteCar").dataset.price;
                         orderTotalPrice.value = days * price;
                     }
+
+                    orders.isCarBusy(document.getElementById("autoCompleteCar").dataset.id, orderStartDate.value, orderEndDate.value).then(function(response) {
+                        if(JSON.parse(response)) {
+                            carMessage.style.display = "block";
+                            carMessage.innerHTML = "Car is taken between these dates!";
+                            carMessage.style.color = "red";
+                        } else {
+                            carMessage.innerHTML = "";
+                            carMessage.style.display = "none";
+                        }
+                    });
                 },
             },
         },
@@ -245,7 +268,14 @@
             email: modalBody.querySelector('#email').value
         }];
         orders.insertCustomer(data).then(function (response) {
-            console.log(response);
+            if (response) {
+                alertify.success('Customer created successfully'); 
+                autoCompleteCustomers.input.dataset.id = response;
+                modal.querySelector('.btn-close').click();
+                document.getElementById("addOrder").click();
+            } else {
+                alertify.error('Something went wrong');
+            }
         });
     }
 
@@ -295,6 +325,10 @@
                 return;
             }
         } else {
+            if (carMessage.innerHTML != "" || orderStartDateMessage.innerHTML != "" || orderEndDateMessage.innerHTML != "") {
+                return;
+            } 
+
             let order = new FormData();
             order.append("customer_id", customer);
             order.append("rental_date", startDate);
