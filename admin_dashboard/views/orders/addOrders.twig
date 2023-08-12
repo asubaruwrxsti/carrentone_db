@@ -64,7 +64,6 @@
 		<div class="row mt-5">
 			<div class="col">
 				<div class="form">
-					{# BACKLOG: what to do if user if not exists #}
 					<button type="submit" class="btn btn-primary btn-sm" id="addOrder">Add Order</button>
 				</div>
 			</div>
@@ -336,9 +335,6 @@
             order.append("car_id", document.getElementById("autoCompleteCar").dataset.id);
             order.append("price", orderTotalPrice.value);
             order.append("notes", notes);
-
-            // BACKLOG: isCarBusy
-            // BACKLOG: update car order number
 
             orders.addOrder(order).then(function(response) {
                 if (JSON.parse(response).status) {
