@@ -75,4 +75,24 @@ class Orders {
         let data = await response.json();
         return data;
     }
+
+    async insertCustomer(customer) {
+        customer = JSON.stringify(Object.fromEntries(customer));
+
+        const response = await fetch(`/admin_dashboard/index.php/api/customers/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: customer
+        });
+        let data = await response.json();
+        
+        if (data.success) {
+            let customer = await this.searchCustomer(data.customer_id);
+            return customer;
+        } else {
+            return false;
+        }
+    }
 }

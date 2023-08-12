@@ -56,8 +56,8 @@
          * @return void
          */
         function create_session_id($uid) {
-            $this->conn->execute_query(sprintf("UPDATE users SET last_login = NOW() WHERE id = %d", $uid));
-            $this->conn->execute_query(sprintf("INSERT INTO `active_sessions` (uid, session_id) VALUES (%d, '%s')", $uid, session_id()));
+            $this->execute_query(sprintf("UPDATE users SET last_login = NOW() WHERE id = %d", $uid));
+            $this->execute_query(sprintf("INSERT INTO `active_sessions` (uid, session_id) VALUES (%d, '%s')", $uid, session_id()));
         }
 
         /**
@@ -65,7 +65,7 @@
          * @return void
          */
         function destroy_session_id($uid) {
-            $this->conn->execute_query(sprintf("DELETE FROM `active_sessions` WHERE uid = %d", $uid));
+            $this->execute_query(sprintf("DELETE FROM `active_sessions` WHERE uid = %d", $uid));
         }
 
     }

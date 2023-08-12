@@ -14,7 +14,9 @@
                         <div class="col">
                             <div class="form">
                                 <label class="form-label">Customer</label>
-                                <input name="form_name" id="autoCompleteCustomers" class="form-control" type="text" placeholder="Customer" required>
+                                <div class="list-group-item d-flex justify-content-between">
+                                    <input name="form_name" id="autoCompleteCustomers" class="form-control" type="text" placeholder="Customer" required>
+                                </div>
                                 <span style="display: none" class="form-text fade-in mt-2" id="customerMessage"></span>
                             </div>
                         </div>
@@ -126,7 +128,6 @@
         },
         resultsList: {
             element: (list, data) => {
-				console.log(data.results.length);
                 if (!data.results.length) {
                     customerMessage.style.display = "block";
 					customerMessage.innerHTML = "Customer doesnt exist!";
@@ -189,7 +190,14 @@
 
     document.getElementById("addOrderForm").addEventListener("submit", function(e) {
         e.preventDefault();
-        let customer = autoCompleteCustomers.input.dataset.id;
+        let customer = null;
+        if (autoCompleteCustomers.input.dataset.id != undefined) {
+            customer = autoCompleteCustomers.input.dataset.id;
+        } else {
+            // BACKLOG: open create customer modal
+            return;
+        }
+
         let car = autoCompleteCars.input.dataset.id;
         let startDate = orderStartDate.value;
         let endDate = orderEndDate.value;
