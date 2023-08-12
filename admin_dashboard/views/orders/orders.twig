@@ -128,6 +128,9 @@
 			html: true,
 			trigger: 'click',
 			content: function () {
+                let order = document.getElementById($(this).attr("id"));
+                console.log(order);
+                order.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
 				return $(this).attr("data-content");
 			},
 			template: '<div class="popover card" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body card-body"></div></div>',

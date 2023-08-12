@@ -72,6 +72,47 @@
     </form>
 </div>
 
+<div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCustomerModalLabel">Add Customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <!-- First Name -->
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Enter first name">
+          </div>
+          <div class="col-md-6">
+            <!-- Last Name -->
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Enter last name">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <!-- Phone Number -->
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
+          </div>
+          <div class="col-md-6">
+            <!-- Email -->
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="createCustomer()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
     let orders = new Orders();
     let orderStartDate = document.getElementById("orderStartDate");
@@ -188,13 +229,38 @@
         },
     });
 
+    function createCustomer() {
+        let modal = document.getElementById('addCustomerModal');
+        let modalBody = modal.querySelector('.modal-body');
+
+        if (modalBody.querySelector('#firstName').value === '' || modalBody.querySelector('#lastName').value === '') {
+            alertify.notify(`Please fill ${modalBody.querySelector('#firstName').value === '' ? 'first' : 'last'} name`, 'error', 5);
+            return;
+        }
+
+        let data = [{
+            firstname: modalBody.querySelector('#firstName').value,
+            lastname: modalBody.querySelector('#lastName').value,
+            phone_number: modalBody.querySelector('#phone').value,
+            email: modalBody.querySelector('#email').value
+        }];
+        orders.insertCustomer(data).then(function (response) {
+            console.log(response);
+        });
+    }
+
     document.getElementById("addOrderForm").addEventListener("submit", function(e) {
         e.preventDefault();
         let customer = null;
         if (autoCompleteCustomers.input.dataset.id != undefined) {
+            console.log("found");
             customer = autoCompleteCustomers.input.dataset.id;
         } else {
-            // BACKLOG: open create customer modal
+            console.log("not found");
+            $("#addCustomerModal").modal("show");
+            $("#modalLabel").html("Create Customer");
+            $("#firstName").val(autoCompleteCustomers.input.value.split(" ")[0]);
+            $("#lastName").val(autoCompleteCustomers.input.value.split(" ")[1]);
             return;
         }
 

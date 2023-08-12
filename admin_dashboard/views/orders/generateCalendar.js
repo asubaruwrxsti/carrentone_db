@@ -81,7 +81,6 @@ function generateView(newDate = null) {
 				
 				newDiv.setAttribute('data-toggle', 'popover');
 				newDiv.setAttribute('title', 'Order Details');
-				// fill the popover template content
 				newDiv.setAttribute('data-content', `
 					<div class="row">
 						<div class="col-lg-12">
