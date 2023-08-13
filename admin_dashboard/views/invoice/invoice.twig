@@ -61,15 +61,14 @@
 <body>
     <div class="container">
         <h1 style="font-size: 28px; margin-bottom: 20px;">CAR RENTAL CONTRACT</h1>
-
         <div class="row">
             <div class="col-md-6">
                 <div class="renter-info">
                     <h2>Renter:</h2>
                     <p>
-                        <strong>Name:</strong> [Renter's Full Name]<br>
-                        <strong>Address:</strong> [Renter's Address]<br>
-                        <strong>Contact Number:</strong> [Renter's Phone Number]
+                        <strong>Name:</strong> {{ data[0].firstname }} {{ data[0].lastname }}<br>
+                        <strong>Address:</strong> {{ data[0].address }}<br>
+                        <strong>Contact Number:</strong> {{ data[0].phone_number }}<br>
                     </p>
                 </div>
             </div>
@@ -77,9 +76,9 @@
                 <div class="company-info">
                     <h2>Car Rental Company:</h2>
                     <p>
-                        <strong>Name:</strong> [Car Rental Company Name]<br>
-                        <strong>Address:</strong> [Car Rental Company Address]<br>
-                        <strong>Contact Number:</strong> [Car Rental Company Phone Number]
+                        <strong>Name:</strong> One Rent Car<br>
+                        <strong>Address:</strong> Street Juba, Durres<br>
+                        <strong>NUIS:</strong> L12345678K<br>
                     </p>
                 </div>
             </div>
@@ -88,21 +87,21 @@
         <h2>Rental Vehicle Details:</h2>
         <div class="row">
             <div class="col-md-3">
-                <strong>Vehicle Make:</strong> [Make of the Car]
+                <strong>Vehicle Make:</strong> {{ data[0].make }}
             </div>
             <div class="col-md-3">
-                <strong>Vehicle Model:</strong> [Model of the Car]
+                <strong>Vehicle Model:</strong> {{ data[0].model }}
             </div>
             <div class="col-md-3">
-                <strong>Year:</strong> [Year of the Car]
+                <strong>Year:</strong> {{ data[0].year }}
             </div>
             <div class="col-md-3">
-                <strong>License Plate:</strong> [License Plate Number]
+                <strong>License Plate:</strong> {{ data[0].license_plate }}
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <strong>Color:</strong> [Color of the Car]
+            <div class="col-md-3">
+                <strong>Color:</strong> {{ data[0].color }}
             </div>
         </div>
 

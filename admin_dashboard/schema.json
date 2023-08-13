@@ -105,8 +105,48 @@
             "Key": "",
             "Default": "current_timestamp",
             "Extra": ""
+        },
+        {
+            "Field": "make",
+            "Type": "varchar(255)",
+            "Null": "YES",
+            "Key": "",
+            "Default": null,
+            "Extra": ""
+        },
+        {
+            "Field": "model",
+            "Type": "varchar(255)",
+            "Null": "YES",
+            "Key": "",
+            "Default": null,
+            "Extra": ""
+        },
+        {
+            "Field": "year",
+            "Type": "int(11)",
+            "Null": "YES",
+            "Key": "",
+            "Default": null,
+            "Extra": ""
+        },
+        {
+            "Field": "license_plate",
+            "Type": "varchar(255)",
+            "Null": "YES",
+            "Key": "",
+            "Default": null,
+            "Extra": ""
+        },
+        {
+            "Field": "color",
+            "Type": "varchar(255)",
+            "Null": "YES",
+            "Key": "",
+            "Default": null,
+            "Extra": ""
         }
-    ],
+    ],    
     "customers": [
         {
             "Field": "id",
@@ -149,6 +189,30 @@
             "Extra": ""
         },
         {
+            "Field": "birthdate",
+            "Type": "DATE",
+            "Null": "YES",
+            "Key": "",
+            "Default": null,
+            "Extra": ""
+        },
+        {
+            "Field": "address",
+            "Type": "varchar(255)",
+            "Null": "YES",
+            "Key": "",
+            "Default": null,
+            "Extra": ""
+        },
+        {
+            "Field": "id_number",
+            "Type": "varchar(255)",
+            "Null": "YES",
+            "Key": "",
+            "Default": null,
+            "Extra": ""
+        },
+        {
             "Field": "created_at",
             "Type": "TIMESTAMP",
             "Null": "NO",
@@ -156,7 +220,7 @@
             "Default": "current_timestamp",
             "Extra": ""
         }
-    ],
+    ],    
     "messages": [
         {
             "Field": "id",

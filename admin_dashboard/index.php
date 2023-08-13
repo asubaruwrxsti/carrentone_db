@@ -174,7 +174,9 @@
 
                     $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
 
-                    $sql = "SELECT revenue.id, customers.id AS customer_id, customers.firstname, customers.lastname, revenue.rental_date, revenue.rental_duration, revenue.price, cars.name AS car_name
+                    $sql = "SELECT customers.id AS customer_id, customers.firstname, customers.lastname, email, phone_number, birthdate, address, id_number,
+                         revenue.id, revenue.rental_date, revenue.rental_duration, revenue.price, 
+                         cars.name AS car_name, cars.make, cars.model, cars.year, cars.color, cars.license_plate
                         FROM revenue 
                         INNER JOIN customers ON revenue.customer_id = customers.id 
                         INNER JOIN cars ON revenue.car_id = cars.id 
@@ -182,18 +184,18 @@
                     $result = $db->execute_query($sql);
                     $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
                     
-                    $html = $twig->render('base.twig', array(
+                    echo $base->render(array(
                         'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                         'vars' => [
                             'currency' => $_SESSION['currency'],
-                            'data' => $result[0]
+                            'data' => $result
                         ]
                     ));
-
-                    $dompdf->loadHtml($html);
-                    $dompdf->setPaper('A4', 'portrait');
-                    $dompdf->render();
-                    $dompdf->stream();
+                    
+                    // $dompdf->loadHtml($html);
+                    // $dompdf->setPaper('A4', 'portrait');
+                    // $dompdf->render();
+                    // $dompdf->stream();
                     break;
 
                 case 'Dashboard':

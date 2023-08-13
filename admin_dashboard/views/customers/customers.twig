@@ -87,6 +87,21 @@
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" placeholder="Enter email">
           </div>
+            <!-- Birthdate -->
+          <div class="col-md-6">
+            <label for="birthdate" class="form-label">Birthdate</label>
+            <input type="date" class="form-control" id="birthdate" placeholder="Enter birthdate">
+          </div>
+            <!-- Address -->
+          <div class="col-md-6">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" id="address" placeholder="Enter address">
+          </div>
+            <!-- ID Number -->
+          <div class="col-md-6">
+            <label for="id_number" class="form-label">ID Number</label>
+            <input type="text" class="form-control" id="id_number" placeholder="Enter ID number">
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -113,7 +128,10 @@
                   <div class="d-flex flex-column">
                       <span class="mb-2 text-xs" id="userPhone-modal">Phone Number: <a href="tel:${c[0].phone_number}" class="text-dark font-weight-bold ms-sm-2">${c[0].phone_number}</a></span>  
                       <span class="mb-2 text-xs" id="userEmail-modal">Email Address: <a href="mailto:${c[0].email}" class="text-dark ms-sm-2 font-weight-bold">${c[0].email}</a></span>
-                      <span class="text-xs">Created at: <span class="text-dark ms-sm-2 font-weight-bold"></span>${c[0].created_at}</span>
+                      <span class="mb-2 text-xs" id="userBirthdate-modal">Birthdate: <span class="text-dark ms-sm-2 font-weight-bold">${c[0].birthdate}</span></span>
+                      <span class="mb-2 text-xs" id="userAddress-modal">Address: <span class="text-dark ms-sm-2 font-weight-bold">${c[0].address}</span></span>
+                      <span class="mb-2 text-xs" id="userID-modal">ID Number: <span class="text-dark ms-sm-2 font-weight-bold">${c[0].id_number}</span></span>
+                      <span class="mb-2 text-xs">Created at: <span class="text-dark ms-sm-2 font-weight-bold"></span>${c[0].created_at}</span>
                   </div>
                   <div class="ms-auto text-end">
                       <a class="btn btn-link text-dark px-3 mb-0" id="editButton" onclick="editCustomer(${c[0].id})"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
@@ -190,6 +208,9 @@
     function editCustomer(id) {
       let userPhone = document.getElementById('userPhone-modal');
       let userEmail = document.getElementById('userEmail-modal');
+      let userBirthdate = document.getElementById('userBirthdate-modal');
+      let userAddress = document.getElementById('userAddress-modal');
+      let userID = document.getElementById('userID-modal');
       let userCreds = document.getElementById('modalLabel');
 
       let firstname = userCreds.innerText.split(' ')[0].trim();
@@ -200,6 +221,9 @@
       userPhone.innerHTML = `<input type="text" class="form-control" id="phone" value="${userPhone.innerText.split(':')[1].trim()}">`;
       userEmail.innerHTML = `<input type="text" class="form-control" id="email" value="${userEmail.innerText.split(':')[1].trim()}">`;
       userCreds.innerHTML = `<input type="text" class="form-control" id="firstname" value="${firstname}">`;
+      userBirthdate.innerHTML = `<input type="date" class="form-control" id="birthdate" value="${userBirthdate.innerText.split(':')[1].trim()}">`;
+      userAddress.innerHTML = `<input type="text" class="form-control" id="address" value="${userAddress.innerText.split(':')[1].trim()}">`;
+      userID.innerHTML = `<input type="text" class="form-control" id="id_number" value="${userID.innerText.split(':')[1].trim()}">`;
       userCreds.insertAdjacentHTML('beforeend', `<input type="text" class="form-control" id="lastname" value="${lastname}">`);
 
       let editButton = document.getElementById('editButton');
@@ -217,7 +241,10 @@
         firstname: document.getElementById('firstname').value,
         lastname: document.getElementById('lastname').value,
         phone_number: document.getElementById('phone').value,
-        email: document.getElementById('email').value
+        email: document.getElementById('email').value,
+        birthdate: document.getElementById('birthdate').value,
+        address: document.getElementById('address').value,
+        id_number: document.getElementById('id_number').value
       };
 
       customer.updateCustomer(id, data).then(function (response) {
@@ -248,6 +275,9 @@
           ul.querySelector('#userIdents').innerHTML = `${data.firstname} ${data.lastname}`;
           ul.querySelector('#userEmail').innerHTML = `Email: <a href="mailto:${data.email}">${data.email}</a>`;
           ul.querySelector('#userPhone').innerHTML = `Phone: <a href="tel:${data.phone_number}">${data.phone_number}</a>`;
+          ul.querySelector('#userBirthdate').innerHTML = `Birthdate: ${data.birthdate}`;
+          ul.querySelector('#userAddress').innerHTML = `Address: ${data.address}`;
+          ul.querySelector('#userID').innerHTML = `ID Number: ${data.id_number}`;
           loading = '';
         }, 300);
     }
