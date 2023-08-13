@@ -33,6 +33,9 @@
 	<div class="row">
 		<div class="col">
 			<div class="card">
+        <div class="card-header pb-0">
+            <h6>Unread Messages</h6>
+        </div>
 				<div class="card-body pt-4 p-3">
 				<ul class="list-group" id="list-group">
 					<p class="text-center" id="noMessage">No messages</p>
@@ -45,9 +48,12 @@
     <div class="row mt-5">
 		<div class="col">
 			<div class="card">
+        <div class="card-header pb-0">
+            <h6>Archived Messages</h6>
+        </div>
 				<div class="card-body pt-4 p-3">
 				<ul class="list-group" id="message-archive">
-					<p class="text-center" id="noMessage">No archived messages</p>
+					<p class="text-center" id="noArchivedMessage">No archived messages</p>
 				</ul>
 				</div>
 			</div>
@@ -80,7 +86,7 @@
 <script src="/admin_dashboard/views/messages/messages.js"></script>
 <script>
   let messages = new Messages();
-  messages.fetchMessages().then(function(messages) {
+  messages.fetchUnreadMessages().then(function(messages) {
     if (Object.keys(messages).length != 0) document.getElementById('noMessage').style.display = 'none';
     Object.keys(messages).forEach(function(key) {
         let message = JSON.parse(messages[key].data);
@@ -103,6 +109,39 @@
                 <span class="text-xs">Sent at: <span class="text-dark ms-sm-2 font-weight-bold">${formattedDate}</span></span>
             </div>
             <div class="ms-auto text-end">
+                <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" onclick="messages.markAsRead(${messageID})"><i class="fas fa-check text-dark me-2" aria-hidden="true"></i>Mark as read</a>
+                <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#modal" onclick="loadMessage(${messageID})"><i class="fas fa-eye text-dark me-2" aria-hidden="true"></i>View</a>
+                <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;" onclick="deleteMessage(${messageID})"><i class="far fa-trash-alt me-2"></i>Delete</a>
+            </div>
+        `;
+        listGroup.appendChild(li);
+    });
+  });
+
+  messages.fetchArchivedMessages().then(function(messages) {
+    if (Object.keys(messages).length != 0) document.getElementById('noArchivedMessage').style.display = 'none';
+    Object.keys(messages).forEach(function(key) {
+        let message = JSON.parse(messages[key].data);
+        let messageID = messages[key].id;
+        let data = message.data[0];
+        let sender = message.senders[0];
+
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+        const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
+
+        let listGroup = document.getElementById('message-archive');
+
+        let li = document.createElement('li');
+        li.className = 'list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg';
+        li.innerHTML = `
+            <div class="d-flex flex-column">
+                <h6 class="mb-3 text-sm">${sender.name} ${sender.lastname}</h6>
+                <span class="mb-2 text-xs">Phone Number: <a href="tel:${sender.phone}" class="text-dark font-weight-bold ms-sm-2">${sender.phone}</a></span>  
+                <span class="mb-2 text-xs">Email Address: <a href="mailto:${sender.email}" class="text-dark ms-sm-2 font-weight-bold">${sender.email}</a></span>
+                <span class="text-xs">Sent at: <span class="text-dark ms-sm-2 font-weight-bold">${formattedDate}</span></span>
+            </div>
+            <div class="ms-auto text-end">
+                <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" onclick="messages.markAsUnread(${messageID})"><i class="fas fa-check text-dark me-2" aria-hidden="true"></i>Mark as unread</a>
                 <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#modal" onclick="loadMessage(${messageID})"><i class="fas fa-eye text-dark me-2" aria-hidden="true"></i>View</a>
                 <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;" onclick="deleteMessage(${messageID})"><i class="far fa-trash-alt me-2"></i>Delete</a>
             </div>

@@ -69,10 +69,9 @@ th[colspan="7"]::after {
     transition: all 0.6s ease;
 }
 
-/* BAVKLOG: evaluate */
-/* .calendar-table > tbody > tr.calendar-body > td {
+.calendar-table > tbody > tr.calendar-body > td {
     border: 1px solid #3447672e;
-} */
+}
 
 td {
     display: table-cell;

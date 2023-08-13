@@ -1,7 +1,7 @@
 class Messages {
     constructor() {}
 
-    async fetchMessages() {
+    async fetchUnreadMessages() {
         const response = await fetch(`/admin_dashboard/index.php/api/messages/`, {
             method: 'GET',
             headers: {
@@ -9,7 +9,48 @@ class Messages {
             }
         });
         const data = await response.json();
-        return data;
+        const unreadMessages = data.filter(message => message.archieved === '0');
+        return unreadMessages;
+    }
+
+    async fetchArchivedMessages() {
+        const response = await fetch(`/admin_dashboard/index.php/api/messages/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        const unreadMessages = data.filter(message => message.archieved === '1');
+        return unreadMessages;
+    }
+
+    async markAsRead(id) {
+        const response = await fetch(`/admin_dashboard/index.php/api/messages/edit/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                archieved: '1'
+            })
+        });
+        const data = await response.json();
+        window.location.reload();
+    }
+
+    async markAsUnread(id) {
+        const response = await fetch(`/admin_dashboard/index.php/api/messages/edit/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                archieved: '0'
+            })
+        });
+        const data = await response.json();
+        window.location.reload();
     }
 
     async fetchMessage(id) {

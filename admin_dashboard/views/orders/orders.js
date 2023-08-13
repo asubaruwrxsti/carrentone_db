@@ -90,19 +90,20 @@ class Orders {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: car[0].name,
-                    price: car[0].price,
-                    description: car[0].description,
-                    travel_distance: car[0].travel_distance,
-                    transmission: car[0].transmission,
-                    available: car[0].available,
-                    next_order: new Date().toISOString().slice(0, 10),
-                    order_count: String(parseInt(car[0].order_count) + 1),
-                    created_at: car[0].created_at
+                    order_count: String(parseInt(car[0].order_count) + 1)
                 })
             });
         });
-        return data;
+        
+        const latestOrder = await fetch(`/admin_dashboard/index.php/api/revenue/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        let latestOrderId = await latestOrder.json();
+        latestOrderId = latestOrderId[latestOrderId.length - 1].id;
+        return latestOrderId;
     }
 
     async insertCustomer(customer) {

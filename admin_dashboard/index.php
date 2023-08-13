@@ -71,7 +71,7 @@
     $header = $twig->load('/assets/header.twig');
     $base = $twig->load('base.twig');
 
-	$messages = "SELECT * FROM messages WHERE archieved != 0;";
+	$messages = "SELECT * FROM messages WHERE archieved != 1;";
 	$messages = $db->execute_query($messages);
 	$messages = mysqli_num_rows($messages);
 
