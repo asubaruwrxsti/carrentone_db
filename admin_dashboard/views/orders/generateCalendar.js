@@ -19,6 +19,16 @@ orders.forEach(order => {
     ]);
 });
 
+function deleteOrder(id) {
+    fetch(`/admin_dashboard/index.php/orders/edit/${id}`, {
+        method: 'DELETE',
+    }).then(response => {
+        if (response.status) {
+            location.reload();
+        }
+    });
+}
+
 let ordersThisMonth = new Orders();
 
 function generateView(newDate = null) {
@@ -91,10 +101,10 @@ function generateView(newDate = null) {
 					</div>
 					<div class="row">
 						<div class="col">
-							<a href="" class="btn btn-primary btn-sm"> <i class="fas fa-edit"></i> Edit</a>
+							<a href="/admin_dashboard/index.php/orders/edit/${order.orderId}" class="btn btn-primary btn-sm"> <i class="fas fa-edit"></i> Edit</a>
 						</div>
 						<div class="col">
-							<a href="" class="btn btn-danger btn-sm"> <i class="fas fa-trash"></i> Delete</a>
+							<a href='javascript:deleteOrder(${order.orderId})' class="btn btn-danger btn-sm"> <i class="fas fa-trash"></i> Delete</a>
 						</div>
 					</div>
 				`);

@@ -15,7 +15,7 @@
                             <div class="form">
                                 <label class="form-label">Customer</label>
                                 <div class="list-group-item d-flex justify-content-between">
-                                    <input name="form_name" id="autoCompleteCustomers" class="form-control" type="text" placeholder="Customer" required value="{{ orders[0].firstname }} {{ orders[0].lastname }}">
+                                    <input name="form_name" id="autoCompleteCustomers" class="form-control" type="text" placeholder="Customer" required value="{{ orders[0].firstname }} {{ orders[0].lastname }}" data-id="{{ orders[0].cId }}">
                                 </div>
                                 <span style="display: none" class="form-text fade-in mt-2" id="customerMessage"></span>
                             </div>
@@ -23,7 +23,7 @@
                         <div class="col">
                             <div class="form">
                                 <label class="form-label">Car</label>
-                                <input name="form_name" id="autoCompleteCar" class="form-control" type="text" placeholder="Car" required value="{{ orders[0].name }}">
+                                <input name="form_name" id="autoCompleteCar" class="form-control" type="text" placeholder="Car" required value="{{ orders[0].name }}" data-id="{{ orders[0].carId }}" data-price="{{ orders[0].carPrice }}">
                                 <span style="display: none" class="form-text fade-in mt-2" id="carMessage"></span>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
 		<div class="row mt-5">
 			<div class="col">
 				<div class="form">
-					<button type="submit" class="btn btn-primary btn-sm" id="addOrder">Edit Order</button>
+					<button type="submit" class="btn btn-primary btn-sm" id="addOrder">Save</button>
 				</div>
 			</div>
 		</div>
@@ -236,7 +236,7 @@
                         orderTotalPrice.value = days * price;
                     }
 
-                    orders.isCarBusy(document.getElementById("autoCompleteCar").dataset.id, orderStartDate.value, orderEndDate.value).then(function(response) {
+                    orders.isCarBusy(document.getElementById("autoCompleteCar").dataset.id, orderStartDate.value, orderEndDate.value, true, {{ orders[0].id }}).then(function(response) {
                         if(JSON.parse(response)) {
                             carMessage.style.display = "block";
                             carMessage.innerHTML = "Car is taken between these dates!";
@@ -329,6 +329,7 @@
             } 
 
             let order = new FormData();
+            order.append("id", "{{ orders[0].id }}");
             order.append("customer_id", customer);
             order.append("rental_date", startDate);
             order.append("rental_duration", Math.floor((new Date(endDate).setHours(0, 0, 0, 0) - new Date(startDate).setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24)));
@@ -336,24 +337,13 @@
             order.append("price", orderTotalPrice.value);
             order.append("notes", notes);
 
-            orders.addOrder(order).then(function(orderId) {
-                fetch(`/admin_dashboard/index.php/invoice/${orderId}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }).then(function(response) {
-                    response.blob().then(function(blob) {
-                        let link = document.createElement('a');
-                        link.target = '_blank';
-                        link.href = window.URL.createObjectURL(blob);
-                        link.click();
-                    });
-                    setTimeout(function() {
-                        window.location.href = "/admin_dashboard/index.php/orders";
-                    }, 1000);
-                });
+            orders.updateOrder(order).then(function(response) {
+                if (response) {
+                    alertify.success('Order updated successfully'); 
+                    window.location.href = "/admin_dashboard/index.php/orders";
+                } else {
+                    alertify.error('Something went wrong');
+                }
             });
         }
     })

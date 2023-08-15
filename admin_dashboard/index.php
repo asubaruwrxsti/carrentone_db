@@ -185,7 +185,7 @@
                     $result = $db->execute_query($sql);
                     $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
                     
-                    echo $base->render(array(
+                    $html = $base->render(array(
                         'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                         'vars' => [
                             'currency' => $_SESSION['currency'],
@@ -193,10 +193,10 @@
                         ]
                     ));
                     
-                    // $dompdf->loadHtml($html);
-                    // $dompdf->setPaper('A4', 'portrait');
-                    // $dompdf->render();
-                    // $dompdf->stream();
+                    $dompdf->loadHtml($html);
+                    $dompdf->setPaper('A4', 'portrait');
+                    $dompdf->render();
+                    $dompdf->stream();
                     break;
 
                 case 'Dashboard':
@@ -324,7 +324,7 @@
 
                     if (strpos($_SERVER['REQUEST_URI'], '/edit/')) {
                         $id = $purifier->purify($vars['id']);
-                        $sql = "SELECT revenue.id, customers.firstname, customers.lastname, customers.phone_number, cars.name, cars.id AS carId, revenue.rental_date, revenue.rental_duration, revenue.price, revenue.notes
+                        $sql = "SELECT revenue.id, customers.id as cId, customers.firstname, customers.lastname, customers.phone_number, cars.name, cars.id AS carId, cars.price as carPrice, revenue.rental_date, revenue.rental_duration, revenue.price, revenue.notes
                             FROM revenue 
                             JOIN customers 
                             ON customers.id = revenue.customer_id 

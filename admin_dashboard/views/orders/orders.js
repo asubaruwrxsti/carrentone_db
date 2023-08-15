@@ -32,7 +32,7 @@ class Orders {
         return data;
     }
 
-    async isCarBusy(carId, rentalDate, returnDate) {
+    async isCarBusy(carId, rentalDate, returnDate, isUpdate = false, orderId = null) {
         let busy = false;
 
         let revenue = await fetch(`/admin_dashboard/index.php/api/revenue/`, {
@@ -49,6 +49,13 @@ class Orders {
 
                 if (orderRentalDate.getTime() <= new Date(returnDate).getTime() && orderReturnDate.getTime() >= new Date(rentalDate).getTime()) {
                     busy = true;
+                }
+
+                // if its an update, ignore the set date of the order being updated
+                if (isUpdate && order.id == orderId) {
+                    if (orderRentalDate.getTime() <= new Date(returnDate).getTime() && orderReturnDate.getTime() >= new Date(rentalDate).getTime()) {
+                        busy = false;
+                    }
                 }
             }
         });
@@ -104,6 +111,31 @@ class Orders {
         let latestOrderId = await latestOrder.json();
         latestOrderId = latestOrderId[latestOrderId.length - 1].id;
         return latestOrderId;
+    }
+
+    async updateOrder(order) {
+        order = JSON.stringify(Object.fromEntries(order));
+
+        const response = await fetch(`/admin_dashboard/index.php/api/revenue/edit/${JSON.parse(order).id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: order
+        });
+        let data = await response.json();
+        return data;
+    }
+
+    async deleteOrder(orderId) {
+        const response = await fetch(`/admin_dashboard/index.php/api/revenue/edit/${orderId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        let data = await response.json();
+        return data;
     }
 
     async insertCustomer(customer) {
