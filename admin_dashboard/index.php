@@ -39,6 +39,7 @@
             // Orders
             $r->addRoute('GET', '/orders', 'Orders');
             $r->addRoute('GET', '/orders/add/', 'Orders');
+            $r->addRoute('GET', '/orders/edit/{id:\d+}', 'Orders');
 
             // API
             $r->addRoute('GET', '/api/{property}/', 'api');
@@ -315,6 +316,47 @@
                                     'currency' => $_SESSION['currency'],
                                     'customers' => $customers,
                                     'cars' => $cars
+                                ]
+                            )
+                        );
+                        break;
+                    }
+
+                    if (strpos($_SERVER['REQUEST_URI'], '/edit/')) {
+                        $id = $purifier->purify($vars['id']);
+                        $sql = "SELECT revenue.id, customers.firstname, customers.lastname, customers.phone_number, cars.name, cars.id AS carId, revenue.rental_date, revenue.rental_duration, revenue.price, revenue.notes
+                            FROM revenue 
+                            JOIN customers 
+                            ON customers.id = revenue.customer_id 
+                            JOIN cars ON cars.id = revenue.car_id
+                            WHERE revenue.id = $id;";
+                        $orders = $db->execute_query($sql);
+                        $orders = $orders->fetch_all(MYSQLI_ASSOC);
+
+                        $customers = "SELECT * FROM customers;";
+                        $customers = $db->execute_query($customers);
+                        $customers = $customers->fetch_all(MYSQLI_ASSOC);
+
+                        $cars = "SELECT * FROM cars;";
+                        $cars = $db->execute_query($cars);
+                        $cars = $cars->fetch_all(MYSQLI_ASSOC);
+
+                        echo $header->render(array(
+                            'window_title' => $handler,
+                            'user_logged_in' => $_SESSION['is_loggedin'],
+                            'user_role' => $_SESSION['user_role'],
+                            'user_name' => strtoupper($_SESSION['username']),
+                            'message_count' => $messages
+                        ));
+
+                        echo $base->render(array(
+                                'window_title' => 'Edit Order',
+                                'content' => sprintf('/%s/%s.twig', strtolower($handler), 'editOrders'),
+                                'vars' => [
+                                    'currency' => $_SESSION['currency'],
+                                    'customers' => $customers,
+                                    'cars' => $cars,
+                                    'orders' => $orders
                                 ]
                             )
                         );

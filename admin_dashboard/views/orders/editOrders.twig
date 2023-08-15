@@ -1,0 +1,360 @@
+<link rel="stylesheet" href="/admin_dashboard/views/orders/orders.css">
+<script src="/admin_dashboard/views/orders/orders.js"></script>
+<a class="text-sm font-weight-bold mb-0 icon-move-left ms-auto view-link" href="/admin_dashboard/index.php/orders">
+    <button class="btn btn-primary btn-sm" id="editCar"><i class="fas fa-arrow-left text-sm ms-1" aria-hidden="true"></i>&nbsp;Back</button>
+</a>
+
+<div class="container-fluid card mt-3">
+    <form class="form" id="addOrderForm">
+        <div class="row" class="formContainer">
+            <div class="col-lg-12 mb-3">
+                <div class="new_property_form">
+                    <h4 class="title mt-5">Order Details</h4>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form">
+                                <label class="form-label">Customer</label>
+                                <div class="list-group-item d-flex justify-content-between">
+                                    <input name="form_name" id="autoCompleteCustomers" class="form-control" type="text" placeholder="Customer" required value="{{ orders[0].firstname }} {{ orders[0].lastname }}">
+                                </div>
+                                <span style="display: none" class="form-text fade-in mt-2" id="customerMessage"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form">
+                                <label class="form-label">Car</label>
+                                <input name="form_name" id="autoCompleteCar" class="form-control" type="text" placeholder="Car" required value="{{ orders[0].name }}">
+                                <span style="display: none" class="form-text fade-in mt-2" id="carMessage"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <div class="form">
+                                <label class="form-label">Start Date</label>
+                                <input name="form_name" id="orderStartDate" class="form-control" type="date" required value="{{ orders[0].rental_date|date('Y-m-d') }}">
+                                <span style="display: none" class="form-text fade-in mt-2" id="startDateMessage"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form">
+                                <label class="form-label">End Date</label>
+                                <input name="form_name" id="orderEndDate" class="form-control" type="date" required value="{{ orders[0].rental_date|date_modify('+' ~ orders[0].rental_duration ~ ' day')|date('Y-m-d') }}">
+                                <span style="display: none" class="form-text fade-in mt-2" id="endDateMessage"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<div class="row mt-2">
+			<div class="col">
+				<div class="form">
+					<label class="form-label">Notes (optional)</label>
+					<input name="form_name" id="orderNotes" class="form-control" type="text" placeholder="Notes" value="{{ orders[0].notes }}">
+				</div>
+			</div>
+            <div class="col">
+				<div class="form">
+					<label class="form-label">Total Price (optional)</label>
+					<input name="form_name" id="orderTotalPrice" class="form-control" type="text" placeholder="Total Price" value="{{ orders[0].price }}">
+				</div>
+			</div>
+		</div>
+		<div class="row mt-5">
+			<div class="col">
+				<div class="form">
+					<button type="submit" class="btn btn-primary btn-sm" id="addOrder">Add Order</button>
+				</div>
+			</div>
+		</div>
+    </form>
+</div>
+
+<div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCustomerModalLabel">Add Customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <!-- First Name -->
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Enter first name">
+          </div>
+          <div class="col-md-6">
+            <!-- Last Name -->
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Enter last name">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <!-- Phone Number -->
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
+          </div>
+          <div class="col-md-6">
+            <!-- Email -->
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="createCustomer()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    let orders = new Orders();
+    let orderStartDate = document.getElementById("orderStartDate");
+    let orderEndDate = document.getElementById("orderEndDate");
+    let orderTotalPrice = document.getElementById("orderTotalPrice");
+
+    let orderStartDateMessage = document.getElementById("startDateMessage");
+    let orderEndDateMessage = document.getElementById("endDateMessage");
+    let customerMessage = document.getElementById("customerMessage");
+    let carMessage = document.getElementById("carMessage");
+
+    orderEndDate.addEventListener("change", function() {
+        if (orderStartDate.value != "" && orderEndDate.value != "" && new Date(orderStartDate.value).setHours(0, 0, 0, 0) > new Date(orderEndDate.value).setHours(0, 0, 0, 0)) {
+            document.getElementById("startDateMessage").innerHTML = "Start date must be before end date";
+            document.getElementById("startDateMessage").style.color = "red";
+            document.getElementById("startDateMessage").style.display = "block";
+        } else {
+            document.getElementById("startDateMessage").innerHTML = "";
+            document.getElementById("startDateMessage").style.display = "none";
+            if (orderStartDate.value != "" && orderEndDate.value != "") {
+                let days = Math.floor((new Date(orderEndDate.value).setHours(0, 0, 0, 0) - new Date(orderStartDate.value).setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24));
+                let price = document.getElementById("autoCompleteCar").dataset.price;
+                orderTotalPrice.value = days * price;
+            }
+
+            orders.isCarBusy(document.getElementById("autoCompleteCar").dataset.id, orderStartDate.value, orderEndDate.value).then(function(response) {
+                console.log(response);
+                if(JSON.parse(response)) {
+                    carMessage.style.display = "block";
+                    carMessage.innerHTML = "Car is taken between these dates!";
+                    carMessage.style.color = "red";
+                } else {
+                    carMessage.innerHTML = "";
+                    carMessage.style.display = "none";
+                }
+            });
+        }
+    })
+
+    let customers = [
+        {% for customer in customers %}
+            {
+                "name": "{{ customer.firstname }} {{ customer.lastname }}",
+                "id": "{{ customer.id }}",
+            } {% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+
+    let cars = [
+        {% for car in cars %}
+            {
+                "name": "{{ car.name }}",
+                "data": {
+                    "id": "{{ car.id }}",
+                    "price": "{{ car.price }}",
+                }
+            } {% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+
+    const autoCompleteCustomers = new autoComplete({
+        selector: "#autoCompleteCustomers",
+        data: {
+            src: customers,
+            keys: ["name"],
+        },
+        resultsList: {
+            element: (list, data) => {
+                if (!data.results.length) {
+                    customerMessage.style.display = "block";
+					customerMessage.innerHTML = "Customer doesnt exist!";
+					customerMessage.style.color = "red";
+				} else {
+					customerMessage.innerHTML = "";
+					customerMessage.style.display = "none";
+                }
+            },
+			noResults: true,
+        },
+        events: {
+            input: {
+                selection: (event) => {
+                    const selectionCustomer = event.detail.selection.value.name;
+                    autoCompleteCustomers.input.value = selectionCustomer;
+                    document.getElementById("autoCompleteCustomers").setAttribute("data-id", event.detail.selection.value.id);
+                },
+            },
+        },
+    });
+
+    const autoCompleteCars = new autoComplete({
+        selector: "#autoCompleteCar",
+        data: {
+            src: cars,
+            keys: ["name"],
+            cache: false,
+        },
+        resultsList: {
+            element: (list, data) => {
+                if (!data.results.length) {
+						carMessage.style.display = "block";
+						carMessage.innerHTML = "Car doesnt exist!";
+						carMessage.style.color = "red";
+				} else {
+					carMessage.innerHTML = "";
+					carMessage.style.display = "none";
+                }
+            },
+            noResults: true,
+        },
+        events: {
+            input: {
+                selection: (event) => {
+					const selectionCar = event.detail.selection.value.name;
+					autoCompleteCars.input.value = selectionCar;
+                    document.getElementById("autoCompleteCar").setAttribute("data-id", event.detail.selection.value.data.id);
+                    document.getElementById("autoCompleteCar").setAttribute("data-price", event.detail.selection.value.data.price);
+
+                    if (orderEndDate != "" && orderStartDate != "") {
+                        let days = Math.floor((new Date(orderEndDate.value).setHours(0, 0, 0, 0) - new Date(orderStartDate.value).setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24));
+                        let price = document.getElementById("autoCompleteCar").dataset.price;
+                        orderTotalPrice.value = days * price;
+                    }
+
+                    orders.isCarBusy(document.getElementById("autoCompleteCar").dataset.id, orderStartDate.value, orderEndDate.value).then(function(response) {
+                        if(JSON.parse(response)) {
+                            carMessage.style.display = "block";
+                            carMessage.innerHTML = "Car is taken between these dates!";
+                            carMessage.style.color = "red";
+                        } else {
+                            carMessage.innerHTML = "";
+                            carMessage.style.display = "none";
+                        }
+                    });
+                },
+            },
+        },
+    });
+
+    function createCustomer() {
+        let modal = document.getElementById('addCustomerModal');
+        let modalBody = modal.querySelector('.modal-body');
+
+        if (modalBody.querySelector('#firstName').value === '' || modalBody.querySelector('#lastName').value === '') {
+            alertify.notify(`Please fill ${modalBody.querySelector('#firstName').value === '' ? 'first' : 'last'} name`, 'error', 5);
+            return;
+        }
+
+        let data = [{
+            firstname: modalBody.querySelector('#firstName').value,
+            lastname: modalBody.querySelector('#lastName').value,
+            phone_number: modalBody.querySelector('#phone').value,
+            email: modalBody.querySelector('#email').value
+        }];
+        orders.insertCustomer(data).then(function (response) {
+            if (response) {
+                alertify.success('Customer created successfully'); 
+                autoCompleteCustomers.input.dataset.id = response;
+                modal.querySelector('.btn-close').click();
+                document.getElementById("addOrder").click();
+            } else {
+                alertify.error('Something went wrong');
+            }
+        });
+    }
+
+    document.getElementById("addOrderForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        let customer = null;
+        if (autoCompleteCustomers.input.dataset.id != undefined) {
+            console.log("found");
+            customer = autoCompleteCustomers.input.dataset.id;
+        } else {
+            console.log("not found");
+            $("#addCustomerModal").modal("show");
+            $("#modalLabel").html("Create Customer");
+            $("#firstName").val(autoCompleteCustomers.input.value.split(" ")[0]);
+            $("#lastName").val(autoCompleteCustomers.input.value.split(" ")[1]);
+            return;
+        }
+
+        let car = autoCompleteCars.input.dataset.id;
+        let startDate = orderStartDate.value;
+        let endDate = orderEndDate.value;
+        let notes = document.getElementById("orderNotes").value;
+
+        if (customer == "" || car == "" || startDate == "" || endDate == "") {
+            if (customer == "") {
+                customerMessage.innerHTML = "Customer is required!";
+                customerMessage.style.color = "red";
+                customerMessage.style.display = "block";
+                return;
+            }
+            if (car == "") {
+                carMessage.innerHTML = "Car is required!";
+                carMessage.style.color = "red";
+                carMessage.style.display = "block";
+                return;
+            }
+            if (startDate == "") {
+                orderStartDateMessage.innerHTML = "Start date is required!";
+                orderStartDateMessage.style.color = "red";
+                orderStartDateMessage.style.display = "block";
+                return;
+            }
+            if (endDate == "") {
+                orderEndDateMessage.innerHTML = "End date is required!";
+                orderEndDateMessage.style.color = "red";
+                orderEndDateMessage.style.display = "block";
+                return;
+            }
+        } else {
+            if (carMessage.innerHTML != "" || orderStartDateMessage.innerHTML != "" || orderEndDateMessage.innerHTML != "") {
+                return;
+            } 
+
+            let order = new FormData();
+            order.append("customer_id", customer);
+            order.append("rental_date", startDate);
+            order.append("rental_duration", Math.floor((new Date(endDate).setHours(0, 0, 0, 0) - new Date(startDate).setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24)));
+            order.append("car_id", document.getElementById("autoCompleteCar").dataset.id);
+            order.append("price", orderTotalPrice.value);
+            order.append("notes", notes);
+
+            orders.addOrder(order).then(function(orderId) {
+                fetch(`/admin_dashboard/index.php/invoice/${orderId}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }).then(function(response) {
+                    response.blob().then(function(blob) {
+                        let link = document.createElement('a');
+                        link.target = '_blank';
+                        link.href = window.URL.createObjectURL(blob);
+                        link.click();
+                    });
+                    setTimeout(function() {
+                        window.location.href = "/admin_dashboard/index.php/orders";
+                    }, 1000);
+                });
+            });
+        }
+    })
+</script>
