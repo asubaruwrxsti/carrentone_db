@@ -80,4 +80,24 @@ class Cars {
         });
         return filteredData.slice(0, 3);
     }
+
+    async hasNextOrder(id) {
+        const response = await fetch(`/admin_dashboard/index.php/api/revenue/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        const filteredData = data.filter((item) => {
+            return item.car_id == id;
+        }).sort((a, b) => {
+            return new Date(b.rental_date) - new Date(a.rental_date);
+        });
+        if (filteredData.length == 0) return false;
+        const latestRentalDate = new Date(filteredData[0].rental_date);
+        const rentalDuration = parseInt(filteredData[0].rental_duration);
+        const returnDate = new Date(latestRentalDate + rentalDuration);
+        return (returnDate > new Date()) ? latestRentalDate : false;
+    }
 }

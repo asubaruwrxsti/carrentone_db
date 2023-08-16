@@ -1,0 +1,80 @@
+.restrict-height {
+    height: 30%;
+    transition: height 0.3s ease-in-out;
+}
+
+    /* Add media queries for different screen sizes */
+@media screen and (max-width: 768px) {
+    /* For screens with a maximum width of 768px (e.g., tablets and smaller devices) */
+    .restrict-height {
+        height: 40%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    /* For screens with a maximum width of 480px (e.g., mobile phones) */
+    .restrict-height {
+        height: 40%;
+    }
+}
+
+.car-image {
+    .mask {
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    &:hover {
+        .mask {
+            opacity: 0.4;
+        }
+        animation: expandBackgroundSize 0.3s ease-in-out forwards;
+    }
+
+    &:not(:hover) {
+        animation: shrinkBackgroundSize 0.3s ease-in-out forwards;
+    }
+}
+
+@keyframes expandBackgroundSize {
+    0% {
+        background-size: 100% auto;
+    }
+    100% {
+        background-size: 105% auto;
+    }
+}
+
+@keyframes shrinkBackgroundSize {
+    0% {
+        background-size: 105% auto;
+    }
+    100% {
+        background-size: 100% auto;
+    }
+}
+
+.detail-container {
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    transition: transform 0.3s ease-in-out;
+}
+
+@keyframes fadeSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(0px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-200px);
+    }
+}
+
+.fade-slide-in {
+    animation: fadeSlideIn 0.3s ease-out;
+}
+
+.padding-left {
+    padding-left: 5px;
+}

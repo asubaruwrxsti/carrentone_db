@@ -29,7 +29,6 @@
 
             // Pages
             $r->addRoute('GET', '/', 'Dashboard');
-            $r->addRoute('GET', '/cars', 'Cars');
             $r->addRoute('GET', '/reports', 'Reports');
             $r->addRoute('GET', '/messages', 'Messages');
             $r->addRoute('GET', '/customers', 'Customers');
@@ -41,6 +40,10 @@
             $r->addRoute('GET', '/orders/add/', 'Orders');
             $r->addRoute('GET', '/orders/edit/{id:\d+}', 'Orders');
             $r->addRoute('GET', '/orders/delete/{id:\d+}', 'Orders'); // BACKLOG: this is workaround for delete
+
+            // Cars
+            $r->addRoute('GET', '/cars', 'Cars');
+            $r->addRoute('GET', '/cars/edit/{id:\d+}', 'Cars');
 
             // API
             $r->addRoute('GET', '/api/{property}/', 'api');
@@ -233,7 +236,7 @@
                     $cars = $db->execute_query($cars);
                     $cars = $cars->fetch_all(MYSQLI_ASSOC);
 
-                    $imagePath = "/admin_dashboard/views/cars/images/";
+                    $imagePath = "/admin_dashboard/views/assets/images/";
                     $rootPath = $_SERVER['DOCUMENT_ROOT'];
                     foreach ($cars as $key => $car) {
                         $car_id = $car['id'];
@@ -245,6 +248,32 @@
                             $car_images = array('/admin_dashboard/views/assets/img/noImg.jpg');
                         }
                         $cars[$key]['image'] = $car_images[0];
+                    }
+
+                    if (strpos($_SERVER['REQUEST_URI'], '/edit/')) {
+                        $id = $purifier->purify($vars['id']);
+                        $sql = "SELECT * FROM cars WHERE id = $id;";
+                        $cars = $db->execute_query($sql);
+                        $cars = $cars->fetch_all(MYSQLI_ASSOC);
+
+                        echo $header->render(array(
+                            'window_title' => $handler,
+                            'user_logged_in' => $_SESSION['is_loggedin'],
+                            'user_role' => $_SESSION['user_role'],
+                            'user_name' => strtoupper($_SESSION['username']),
+                            'message_count' => $messages
+                        ));
+
+                        echo $base->render(array(
+                                'window_title' => 'Edit Car',
+                                'content' => sprintf('/%s/%s.twig', strtolower($handler), 'editCars'),
+                                'vars' => [
+                                    'currency' => $_SESSION['currency'],
+                                    'cars' => $cars,
+                                ]
+                            )
+                        );
+                        break;
                     }
 
                     echo $header->render(array(
