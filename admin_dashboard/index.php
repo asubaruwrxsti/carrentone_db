@@ -40,6 +40,7 @@
             $r->addRoute('GET', '/orders', 'Orders');
             $r->addRoute('GET', '/orders/add/', 'Orders');
             $r->addRoute('GET', '/orders/edit/{id:\d+}', 'Orders');
+            $r->addRoute('GET', '/orders/delete/{id:\d+}', 'Orders'); // BACKLOG: this is workaround for delete
 
             // API
             $r->addRoute('GET', '/api/{property}/', 'api');
@@ -360,6 +361,14 @@
                                 ]
                             )
                         );
+                        break;
+                    }
+
+                    if (strpos($_SERVER['REQUEST_URI'], '/delete/')) {
+                        $id = $purifier->purify($vars['id']);
+                        $sql = "DELETE FROM revenue WHERE id = $id;";
+                        $db->execute_query($sql);
+                        header("Location: /admin_dashboard/index.php/orders");
                         break;
                     }
 

@@ -104,7 +104,7 @@ function generateView(newDate = null) {
 							<a href="/admin_dashboard/index.php/orders/edit/${order.orderId}" class="btn btn-primary btn-sm"> <i class="fas fa-edit"></i> Edit</a>
 						</div>
 						<div class="col">
-							<a href='javascript:deleteOrder(${order.orderId})' class="btn btn-danger btn-sm"> <i class="fas fa-trash"></i> Delete</a>
+							<a href="/admin_dashboard/index.php/orders/delete/${order.orderId}" class="btn btn-danger btn-sm"> <i class="fas fa-trash"></i> Delete</a>
 						</div>
 					</div>
 				`);
