@@ -1,0 +1,74 @@
+<style>
+	.grid-item { width: 25%; }
+	.grid-item--width2 { width: 50%; }
+	.grid-item.is-dragging,
+	/* Packery adds class while transitioning to drop position */
+	.grid-item.is-positioning-post-drag {
+		background: #EA0;
+		z-index: 2; /* keep dragged item on top */
+	}
+	.packery-drop-placeholder {
+		outline: 3px dashed #444;
+		outline-offset: -6px;
+		/* transition position changing */
+		-webkit-transition: -webkit-transform 0.2s;
+				transition: transform 0.2s;
+	}
+</style>
+<div class="col-md-12 mb-lg-0 mb-4">
+  <div class="card mt-4 mb-5">
+    <div class="card-header pb-0 p-3">
+      <div class="row">
+        <div class="col-6 d-flex align-items-center">
+          <h4 class="mb-0">{{cars.name}}</h4>
+        </div>
+        <div class="col-6 text-end">
+          	<a class="btn bg-gradient-dark mb-0" href="javascript:;">
+		  		<i class="fas fa-save opacity-8 text-white me-1"></i>
+				&nbsp;&nbsp;Save
+			</a>
+        </div>
+      </div>
+    </div>
+    <div class="card-body p-3">
+      <div class="row">
+        <div class="col-md-6 mb-md-0 mb-4">
+          <div class="card card-body border card-plain border-radius-lg d-flex align-items-center flex-row">
+		  asd
+          </div>
+        </div>
+        <div class="col-md-6">
+		  <div class="card card-body border card-plain border-radius-lg d-flex align-items-center flex-row">
+		  asd
+		  </div>
+        </div>
+      </div>
+    </div>
+	<hr class="horizontal dark mt-2 mb-2"></hr>
+	<div class="grid mb-2 mb-5">
+		{% for image in cars.image %}
+			<div class="grid-item mx-3 mt-2 special-list">
+				<img src="{{ image }}" class="img-fluid rounded shadow" alt="image">
+			</div>
+		{% endfor %}
+  	</div>
+</div>
+
+<script>
+  	let car = {{ cars|json_encode|raw }};
+	var $grid = $('.grid').packery({
+		// options
+		itemSelector: '.grid-item',
+		columnWidth: 120,
+		horizontal: false,
+		originLeft: true,
+		gutter: 10
+	});
+
+	$grid.find('.grid-item').each( function( i, gridItem ) {
+		var draggie = new Draggabilly( gridItem );
+		// bind drag events to Packery
+		$grid.packery( 'bindDraggabillyEvents', draggie );
+	});
+	$grid.packery();
+</script>

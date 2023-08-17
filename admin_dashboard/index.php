@@ -247,15 +247,11 @@
                         if (count($car_images) == 0) {
                             $car_images = array('/admin_dashboard/views/assets/img/noImg.jpg');
                         }
-                        $cars[$key]['image'] = $car_images[0];
+                        $cars[$key]['image'] = $car_images;
                     }
 
                     if (strpos($_SERVER['REQUEST_URI'], '/edit/')) {
                         $id = $purifier->purify($vars['id']);
-                        $sql = "SELECT * FROM cars WHERE id = $id;";
-                        $cars = $db->execute_query($sql);
-                        $cars = $cars->fetch_all(MYSQLI_ASSOC);
-
                         echo $header->render(array(
                             'window_title' => $handler,
                             'user_logged_in' => $_SESSION['is_loggedin'],
@@ -269,7 +265,7 @@
                                 'content' => sprintf('/%s/%s.twig', strtolower($handler), 'editCars'),
                                 'vars' => [
                                     'currency' => $_SESSION['currency'],
-                                    'cars' => $cars,
+                                    'cars' => $cars[$id - 1]
                                 ]
                             )
                         );
