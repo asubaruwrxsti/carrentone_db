@@ -34,7 +34,7 @@
 
             if (!$this->checkSid()) {
                 echo json_encode(array(
-                    'status' => 'error',
+                    'status' => false,
                     'message' => 'Not permitted'
                 ));
                 return;
@@ -109,6 +109,16 @@
                         'message' => 'Error deleting data'
                     ));
                 }
+            }
+        }
+
+        function uploadImage($data) {
+            if (!$this->checkSid()) {
+                echo json_encode(array(
+                    'status' => false,
+                    'message' => 'Not permitted'
+                ));
+                return;
             }
         }
     }

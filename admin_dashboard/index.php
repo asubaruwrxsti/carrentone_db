@@ -11,11 +11,13 @@
 
     require_once 'vendor/autoload.php';
     require_once 'database.php';
+    require_once 'api.php';
 
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->safeLoad();
 
     $db = new DB($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
+    $api = new API($db);
     $loader = new \Twig\Loader\FilesystemLoader('views');
     $twig = new \Twig\Environment($loader);
 
@@ -44,6 +46,7 @@
             // Cars
             $r->addRoute('GET', '/cars', 'Cars');
             $r->addRoute('GET', '/cars/edit/{id:\d+}', 'Cars');
+            $r->addRoute(['PUT', 'DELETE'], '/cars/images/edit/{id:\d+}', 'Cars');
 
             // API
             $r->addRoute('GET', '/api/{property}/', 'api');
@@ -174,11 +177,7 @@
                     break;
                 
                 case 'invoice':
-                    require_once 'api.php';
-                    $api = new API($db);
-
                     $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
-
                     $sql = "SELECT customers.id AS customer_id, customers.firstname, customers.lastname, email, phone_number, birthdate, address, id_number,
                          revenue.id, revenue.rental_date, revenue.rental_duration, revenue.price, 
                          cars.name AS car_name, cars.make, cars.model, cars.year, cars.color, cars.license_plate
@@ -232,10 +231,10 @@
                     break;
                 
                 case 'Cars':
-                    $cars = "SELECT * FROM cars;";
-                    $cars = $db->execute_query($cars);
-                    $cars = $cars->fetch_all(MYSQLI_ASSOC);
+                    require_once 'api.php';
+                    $api = new API($db);
 
+                    $cars = $api->fetch_data(['cars']);
                     $imagePath = "/admin_dashboard/views/assets/images/";
                     $rootPath = $_SERVER['DOCUMENT_ROOT'];
                     foreach ($cars as $key => $car) {
@@ -270,6 +269,13 @@
                             )
                         );
                         break;
+                    }
+
+                    if (strpos($_SERVER['REQUEST_URI'], '/images/edit/')) {
+
+                        $id = $purifier->purify($vars['id']);
+                        $data = json_decode(file_get_contents('php://input'), true);
+                        
                     }
 
                     echo $header->render(array(
@@ -417,10 +423,10 @@
                     break;
                 
                 case 'Customers':
-                    $customers = "SELECT * FROM customers;";
-                    $customers = $db->execute_query($customers);
-                    $customers = $customers->fetch_all(MYSQLI_ASSOC);
+                    require_once 'api.php';
+                    $api = new API($db);
 
+                    $customers = $api->fetch_data(['customers']);
                     echo $header->render(array(
                         'window_title' => $handler,
                         'user_logged_in' => $_SESSION['is_loggedin'],
