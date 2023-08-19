@@ -100,4 +100,32 @@ class Cars {
         const returnDate = new Date(latestRentalDate + rentalDuration);
         return (returnDate > new Date()) ? latestRentalDate : false;
     }
+
+    async updateData(car) {
+        car = Object.fromEntries(car);
+        console.log(car);
+        const response = await fetch(`/admin_dashboard/index.php/api/cars/edit/${car.id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(car)
+        });
+        const data = await response.json();
+        return data;
+    }
+
+    async deleteImage(image) {
+        image = Object.fromEntries(image);
+        console.log(image);
+        const response = await fetch(`/admin_dashboard/index.php/api/cars/images/edit/${image.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'id': image.id, 'image_index': image.image_index})
+        });
+        const data = await response.json();
+        return data;
+    }
 }

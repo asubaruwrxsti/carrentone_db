@@ -112,13 +112,30 @@
             }
         }
 
-        function uploadImage($data) {
-            if (!$this->checkSid()) {
+        function deleteImage($car_id, $img_index) {
+            if(!$this->checkSid()) {
                 echo json_encode(array(
                     'status' => false,
                     'message' => 'Not permitted'
                 ));
                 return;
+            }
+
+            $path = "/views/assets/images/$car_id/";
+            $files = scandir($_SERVER['DOCUMENT_ROOT'] . $path);
+            $file = $files[$img_index + 2];
+            $full_path = $_SERVER['DOCUMENT_ROOT'] . $path . $file;
+            if (file_exists($full_path)) {
+                unlink($full_path);
+                return array(
+                    'status' => true,
+                    'message' => 'Image deleted successfully'
+                );
+            } else {
+                return array(
+                    'status' => false,
+                    'message' => 'Error deleting image'
+                );
             }
         }
     }

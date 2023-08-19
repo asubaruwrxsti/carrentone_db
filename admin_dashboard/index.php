@@ -108,8 +108,6 @@
                     break;
                 
                 case 'api':
-                    require_once 'api.php';
-                    $api = new API($db);
                     $property = $purifier->purify($vars['property']);
                     $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
 
@@ -118,8 +116,6 @@
                     break;
                 
                 case 'upsertapi':
-                    require_once 'api.php';
-                    $api = new API($db);
                     $property = $purifier->purify($vars['property']);
                     $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
 
@@ -128,8 +124,6 @@
                     break;
 
                 case 'viewapi':
-                    require_once 'api.php';
-                    $api = new API($db);
                     $property = $purifier->purify($vars['property']);
                     $id = isset($vars['id']) ? $purifier->purify($vars['id']) : null;
 
@@ -231,9 +225,6 @@
                     break;
                 
                 case 'Cars':
-                    require_once 'api.php';
-                    $api = new API($db);
-
                     $cars = $api->fetch_data(['cars']);
                     $imagePath = "/admin_dashboard/views/assets/images/";
                     $rootPath = $_SERVER['DOCUMENT_ROOT'];
@@ -271,11 +262,29 @@
                         break;
                     }
 
-                    if (strpos($_SERVER['REQUEST_URI'], '/images/edit/')) {
-
-                        $id = $purifier->purify($vars['id']);
-                        $data = json_decode(file_get_contents('php://input'), true);
+                    if (strpos($_SERVER['REQUEST_URI'], '/cars/images/edit/')) {
+                        echo "here";
+                        // $id = $purifier->purify($vars['id']);
+                        // $data = json_decode(file_get_contents('php://input'), true);
+                        // $data = array_map(function ($value) use ($purifier) {
+                        //     return $purifier->purify($value);
+                        // }, $data);
                         
+                        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+                            var_dump($data);
+                            // $result = $api->deleteImage($id, $data['img_index']);
+                            // if ($result['status']) {
+                            //     echo json_encode(array(
+                            //         'status' => true,
+                            //         'message' => 'Image deleted successfully'
+                            //     ));
+                            // } else {
+                            //     echo json_encode(array(
+                            //         'status' => false,
+                            //         'message' => 'Error deleting image'
+                            //     ));
+                            // }
+                        }
                     }
 
                     echo $header->render(array(
@@ -423,9 +432,6 @@
                     break;
                 
                 case 'Customers':
-                    require_once 'api.php';
-                    $api = new API($db);
-
                     $customers = $api->fetch_data(['customers']);
                     echo $header->render(array(
                         'window_title' => $handler,
