@@ -46,7 +46,7 @@
             // Cars
             $r->addRoute('GET', '/cars', 'Cars');
             $r->addRoute('GET', '/cars/edit/{id:\d+}', 'Cars');
-            $r->addRoute(['PUT', 'DELETE'], '/cars/images/edit/{id:\d+}', 'Cars');
+            $r->addRoute(['PUT', 'DELETE'], '/cars/images/{id:\d+}', 'Cars');
 
             // API
             $r->addRoute('GET', '/api/{property}/', 'api');
@@ -225,6 +225,14 @@
                     break;
                 
                 case 'Cars':
+                    if (strpos($_SERVER['REQUEST_URI'], '/cars/images/')) {
+                        $id = $purifier->purify($vars['id']);
+                        $data = json_decode(file_get_contents('php://input'), true);
+                        $response = $api->deleteImage($id, $data['image_index']);
+                        echo json_encode($response);
+                        break;
+                    }
+
                     $cars = $api->fetch_data(['cars']);
                     $imagePath = "/admin_dashboard/views/assets/images/";
                     $rootPath = $_SERVER['DOCUMENT_ROOT'];
@@ -240,7 +248,7 @@
                         $cars[$key]['image'] = $car_images;
                     }
 
-                    if (strpos($_SERVER['REQUEST_URI'], '/edit/')) {
+                    if (strpos($_SERVER['REQUEST_URI'], '/cars/edit/')) {
                         $id = $purifier->purify($vars['id']);
                         echo $header->render(array(
                             'window_title' => $handler,
@@ -260,31 +268,6 @@
                             )
                         );
                         break;
-                    }
-
-                    if (strpos($_SERVER['REQUEST_URI'], '/cars/images/edit/')) {
-                        echo "here";
-                        // $id = $purifier->purify($vars['id']);
-                        // $data = json_decode(file_get_contents('php://input'), true);
-                        // $data = array_map(function ($value) use ($purifier) {
-                        //     return $purifier->purify($value);
-                        // }, $data);
-                        
-                        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
-                            var_dump($data);
-                            // $result = $api->deleteImage($id, $data['img_index']);
-                            // if ($result['status']) {
-                            //     echo json_encode(array(
-                            //         'status' => true,
-                            //         'message' => 'Image deleted successfully'
-                            //     ));
-                            // } else {
-                            //     echo json_encode(array(
-                            //         'status' => false,
-                            //         'message' => 'Error deleting image'
-                            //     ));
-                            // }
-                        }
                     }
 
                     echo $header->render(array(

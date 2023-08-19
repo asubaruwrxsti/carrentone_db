@@ -113,7 +113,7 @@
         }
 
         function deleteImage($car_id, $img_index) {
-            if(!$this->checkSid()) {
+            if(!$this->checkSid() && $_SERVER['REQUEST_METHOD'] != 'DELETE') {
                 echo json_encode(array(
                     'status' => false,
                     'message' => 'Not permitted'
@@ -121,12 +121,12 @@
                 return;
             }
 
-            $path = "/views/assets/images/$car_id/";
-            $files = scandir($_SERVER['DOCUMENT_ROOT'] . $path);
-            $file = $files[$img_index + 2];
-            $full_path = $_SERVER['DOCUMENT_ROOT'] . $path . $file;
-            if (file_exists($full_path)) {
-                unlink($full_path);
+            $path = "/admin_dashboard/views/assets/images/$car_id/";
+            $full_path = $_SERVER['DOCUMENT_ROOT'] . $path;
+            $files = glob($full_path . '/{*.jpg,*.jpeg,*.png}', GLOB_BRACE);
+            $file = $files[$img_index];
+
+            if (unlink($file)) {
                 return array(
                     'status' => true,
                     'message' => 'Image deleted successfully'

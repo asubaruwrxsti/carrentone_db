@@ -193,23 +193,26 @@
 	});
 
 	function confirmDelete(id) {
-		alertify.confirm('Are you sure you want to delete this image?', function() {
-			deleteImage(id);
-		}, function() {
-			alertify.error('Cancel');
+		swal({
+			title: "Are you sure?",
+			text: "Once deleted, you will not be able to recover this image!",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+		}).then((willDelete) => {
+			if (willDelete) deleteImage(id);
 		});
 	}
 
 	function deleteImage(id) {
-
 		let imageId = id.split('-');
 		let formData = new FormData();
 		formData.append('id', imageId[1]);
 		formData.append('image_index', imageId[2]);
 
 		Car.deleteImage(formData).then(function(response) {
-			if (JSON.parse(response).status) {
-				alertify.success(JSON.parse(response).message);
+			if(response.status) {
+				alertify.success(response.message);
 				setTimeout(function() {
 					window.location.reload();
 				}, 500);
