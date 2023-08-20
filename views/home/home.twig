@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<!-- Mirrored from creativelayers.net/themes/voiture-html/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Jul 2023 22:41:46 GMT -->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="auto, car, car dealer, car dealership, car listing, cars, classified, dealership, directory, listing, modern, motors, responsive">
+<!-- css file -->
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/style.css">
+<!-- Responsive stylesheet -->
+<link rel="stylesheet" href="css/responsive.css">
+<!-- Title -->
+<title>{{title}}</title>
+<!-- Favicon -->
+<link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" type="image/x-icon" />
+<link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" />
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<script>
+    var cars = {{cars|json_encode|raw}};
+    console.log(cars);
+</script>
+
+<body>
+<div class="wrapper ovh">
+  <div class="preloader"></div>
+  <!-- Sidebar Panel Start -->
+  <div class="listing_sidebar">
+    <div class="siderbar_left_home pt20">
+      <a class="sidebar_switch sidebar_close_btn float-end" href="#">X</a>
+      <div class="footer_contact_widget mt100">
+        <h3 class="title">Quick contact info</h3>
+        <p>RENTAL CAR , TAXY SERVICE , CAR EXPORT</p>
+      </div>
+      <div class="footer_contact_widget">
+        <h5 class="title">CONTACT</h5>
+        <div class="footer_phone">+355 69 573 8887 </div>
+        <p>onerentcar2022@gmail.com</p>
+      </div>
+      <div class="footer_about_widget">
+        <h5 class="title">OFFICE</h5>
+        <p>Albania —<br>"Juba" Street,<br>Durres</p>
+      </div>
+      <div class="footer_contact_widget">
+        <h5 class="title">OPENING HOURS</h5>
+        <p>Monday – Friday: 07:00AM – 11:00PM<br>Saturday: 07:00AM – 12:00PM<br>Sunday: 07:00AM – 12:00PM</p>
+      </div>
+    </div>
+  </div>
+  <!-- Sidebar Panel End -->
+  
+  <!-- header top -->
+  <div class="header_top dn-992">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-xl-7">
+          <div class="header_top_contact_opening_widget text-center text-md-start">
+            <ul class="mb0">
+              <li class="list-inline-item"><a href="#"><span class="flaticon-phone-call"></span>+355 69 573 8887</a></li>
+              <li class="list-inline-item"><a href="#"><span class="flaticon-map"></span>47 "Juba" Street, Durres, Albania</a></li>
+              <li class="list-inline-item"><a href="#"><span class="flaticon-clock"></span>Mon - Fri 7:00 - 23:00</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Header Nav -->
+  <header class="header-nav menu_style_home_one transparent main-menu">
+    <!-- Ace Responsive Menu -->
+    <nav> 
+      <div class="container posr"> 
+        <!-- Menu Toggle btn-->
+        <div class="menu-toggle">
+          <button type="button" id="menu-btn">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+        </div>
+				</a>
+        <!-- Responsive Menu Structure-->
+        {# TODO: FILL THE URLS #}
+        <ul id="respMenu" class="ace-responsive-menu text-end" data-menu-style="horizontal">
+          <li> <a href="#"><span class="title">Home</span></a></li>
+          <li> <a href="#"><span class="title">Explore</span></a></li>
+          <li> <a href="#"><span class="title">Contact</span></a></li>
+          <li class="sidebar_panel"><a class="sidebar_switch pt0" href="#"><span></span></a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  
+  <!-- Main Header Nav For Mobile -->
+  <div id="page" class="stylehome1 h0">
+    <div class="mobile-menu">
+      <div class="header stylehome1">
+        <div class="mobile_menu_bar">
+          <a class="menubar" href="#menu"><small>Menu</small><span></span></a>
+        </div>
+      </div>
+    </div>
+    <!-- /.mobile-menu -->
+    <nav id="menu" class="stylehome1">
+        <ul>
+            {# TODO: FILL THE URLS #}
+            <li> <a href="#"><span class="title">Home</span></a></li>
+            <li> <a href="#"><span class="title">Explore</span></a></li>
+            <li> <a href="#"><span class="title">Contact</span></a></li>
+        </ul>
+    </nav>
+  </div>
+  
+  <!-- Home Design -->
+  <section class="home-one bg-home1">
+    <div class="container">
+      <div class="row posr">
+        <div class="col-lg-10 m-auto">
+          <div class="home_content home1_style">
+            <div class="home-text text-center mb30">
+              <h2 class="title"><span class="aminated-object1"><img class="objects" src="images/home/title-bottom-border.svg" alt=""></span>ONE RENT CAR</h2>
+              <p class="para">Find the right price, dealer and advice.</p>
+            </div>
+            <div class="advance_search_panel">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="adss_bg_stylehome1">
+                    <div class="tab-content" id="pills-tabContent">
+                      <div class="tab-pane fade show active" id="pills-allstatus" role="tabpanel" aria-labelledby="pills-allstatus-tab">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="home1_advance_search_wrapper">
+                              <ul class="mb0 text-center">
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_brand">
+                                        <h6 class="title">Make</h6>
+                                        {# TODO: FIX MAKES #}
+                                        <select class="selectpicker">
+                                            <option>Select Makes</option>
+                                            {% set unique_makes = [] %}
+                                            {% for car in cars %}
+                                                {% if car.make not in unique_makes %}
+                                                    <option>{{ car.make }}</option>
+                                                    {% set _ = unique_makes.append(car.make) %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_models">
+                                      <h6 class="title">Models</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Models</option>
+                                        <option>A3 Sportback</option>
+                                        <option>A4</option>
+                                        <option>A6</option>
+                                        <option>Q5</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_prices">
+                                      <h6 class="title">Price</h6>
+                                      <select class="selectpicker">
+                                        <option>All Price</option>
+                                        <option>No max Price</option>
+                                        <option>$2,000</option>
+                                        <option>$5,000</option>
+                                        <option>$10,000</option>
+                                        <option>$15,000</option>
+                                        <option>$5,000</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="d-block">
+                                    <button class="btn btn-thm advnc_search_form_btn"><span class="flaticon-magnifiying-glass"></span>Search</button>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" id="pills-usedcar" role="tabpanel" aria-labelledby="pills-usedcar-tab">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="home1_advance_search_wrapper">
+                              <ul class="mb0 text-center">
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_brand">
+                                      <h6 class="title">Make</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Makes</option>
+                                        <option>Audi</option>
+                                        <option>Bentley</option>
+                                        <option>BMW</option>
+                                        <option>Ford</option>
+                                        <option>Honda</option>
+                                        <option>Mercedes</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_models">
+                                      <h6 class="title">Models</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Models</option>
+                                        <option>A3 Sportback</option>
+                                        <option>A4</option>
+                                        <option>A6</option>
+                                        <option>Q5</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_prices">
+                                      <h6 class="title">Price</h6>
+                                      <select class="selectpicker">
+                                        <option>All Price</option>
+                                        <option>No max Price</option>
+                                        <option>$2,000</option>
+                                        <option>$5,000</option>
+                                        <option>$10,000</option>
+                                        <option>$15,000</option>
+                                        <option>$5,000</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <button class="btn btn-thm advnc_search_form_btn"><span class="flaticon-magnifiying-glass"></span>Search</button>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" id="pills-newcar" role="tabpanel" aria-labelledby="pills-newcar-tab">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="home1_advance_search_wrapper">
+                              <ul class="mb0 text-center">
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_brand">
+                                      <h6 class="title">Make</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Makes</option>
+                                        <option>Audi</option>
+                                        <option>Bentley</option>
+                                        <option>BMW</option>
+                                        <option>Ford</option>
+                                        <option>Honda</option>
+                                        <option>Mercedes</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_models">
+                                      <h6 class="title">Models</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Models</option>
+                                        <option>A3 Sportback</option>
+                                        <option>A4</option>
+                                        <option>A6</option>
+                                        <option>Q5</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_prices">
+                                      <h6 class="title">Price</h6>
+                                      <select class="selectpicker">
+                                        <option>All Price</option>
+                                        <option>No max Price</option>
+                                        <option>$2,000</option>
+                                        <option>$5,000</option>
+                                        <option>$10,000</option>
+                                        <option>$15,000</option>
+                                        <option>$5,000</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <button class="btn btn-thm advnc_search_form_btn"><span class="flaticon-magnifiying-glass"></span>Search</button>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Car Category -->
+
+
+  <!-- Featured Product  -->
+
+  <!-- Why Chose us  -->
+  <section class="why-chose pt0 pb90" style="margin-top: 5%;">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="main-title text-center">
+            <h2>Why Choose Us?</h2>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s">
+          <div class="why_chose_us">
+            <div class="icon float-start"><span class="flaticon-price-tag"></span></div>
+            <div class="details">
+              <h5 class="title">Best Price</h5>
+              <p>We offer economical and comfortable cars for you.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s">
+          <div class="why_chose_us">
+            <div class="icon float-start style2"><span class="flaticon-car"></span></div>
+            <div class="details">
+              <h5 class="title">Help Center</h5>
+              <p>Contact our help center & support 24/7.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">
+          <div class="why_chose_us">
+            <div class="icon float-start style3"><span class="flaticon-trust"></span></div>
+            <div class="details">
+              <h5 class="title">Booking any Class Vehicles</h5>
+              <p>Choose between the different car models we offer.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Funfact -->
+  <section class="our-funfact pt50 pb30">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-lg-3 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s">
+          <div class="funfact_one text-center">
+            <div class="details">
+              <div class="timer">27600</div>
+              <p class="ff_title">CARS FOR SALE</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s">
+          <div class="funfact_one text-center">
+            <div class="details">
+              <div class="timer">6500</div>
+              <p class="ff_title">DEALER REVIEWS</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.5s">
+          <div class="funfact_one text-center">
+            <div class="details">
+              <div class="timer">8230</div>
+              <p class="ff_title">VISITORS PER DAY</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.7s">
+          <div class="funfact_one text-center">
+            <div class="details">
+              <div class="timer">5250</div>
+              <p class="ff_title">VERIFIED DEALERS</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Popular Listing -->
+  <section class="popular-listing pb80 bg-ptrn1 bgc-heading-color">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+          <div class="main-title text-center">
+            <h2 class="text-white">Popular Listings</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="home1_popular_listing">
+          <div class="listing_item_4grid_slider dots_none">
+            <div class="item">
+              <div class="car-listing">
+                <div class="thumb">
+                  <div class="tag">FEATURED</div>
+                  <img src="images/listing/1.jpg" alt="1.jpg">
+                  <div class="thmb_cntnt2">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-photo-camera mr3"></span> 22</a></li>
+                      <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-play-button mr3"></span> 3</a></li>
+                    </ul>
+                  </div>
+                  <div class="thmb_cntnt3">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-shuffle-arrows"></span></a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-heart"></span></a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="details">
+                  <div class="wrapper">
+                    <h5 class="price">$129</h5>
+                    <h6 class="title"><a href="page-car-single-v1.html">Volvo XC90 - 2020</a></h6>
+                    <div class="listign_review">
+                      <ul class="mb0">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#">4.7</a></li>
+                        <li class="list-inline-item">(684 reviews)</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="listing_footer">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span>77362</a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-gas-station me-2"></span>Diesel</a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span>Automatic</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="car-listing">
+                <div class="thumb">
+                  <div class="tag">FEATURED</div>
+                  <img src="images/listing/2.jpg" alt="2.jpg">
+                  <div class="thmb_cntnt2">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-photo-camera mr3"></span> 22</a></li>
+                      <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-play-button mr3"></span> 3</a></li>
+                    </ul>
+                  </div>
+                  <div class="thmb_cntnt3">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-shuffle-arrows"></span></a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-heart"></span></a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="details">
+                  <div class="wrapper">
+                    <h5 class="price">$56</h5>
+                    <h6 class="title"><a href="page-car-single-v1.html">Mercedes-Benz S 560 - 2021</a></h6>
+                    <div class="listign_review">
+                      <ul class="mb0">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#">4.7</a></li>
+                        <li class="list-inline-item">(684 reviews)</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="listing_footer">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span>77362</a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-gas-station me-2"></span>Diesel</a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span>Automatic</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="car-listing">
+                <div class="thumb">
+                  <div class="tag">FEATURED</div>
+                  <img src="images/listing/3.jpg" alt="3.jpg">
+                  <div class="thmb_cntnt2">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-photo-camera mr3"></span> 22</a></li>
+                      <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-play-button mr3"></span> 3</a></li>
+                    </ul>
+                  </div>
+                  <div class="thmb_cntnt3">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-shuffle-arrows"></span></a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-heart"></span></a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="details">
+                  <div class="wrapper">
+                    <h5 class="price">$230</h5>
+                    <h6 class="title"><a href="page-car-single-v1.html">BMW M8 Gran Coupe Base - 2021</a></h6>
+                    <div class="listign_review">
+                      <ul class="mb0">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#">4.7</a></li>
+                        <li class="list-inline-item">(684 reviews)</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="listing_footer">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span>77362</a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-gas-station me-2"></span>Diesel</a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span>Automatic</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="car-listing">
+                <div class="thumb">
+                  <div class="tag blue">SPECIAL</div>
+                  <img src="images/listing/4.jpg" alt="4.jpg">
+                  <div class="thmb_cntnt2">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-photo-camera mr3"></span> 22</a></li>
+                      <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-play-button mr3"></span> 3</a></li>
+                    </ul>
+                  </div>
+                  <div class="thmb_cntnt3">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-shuffle-arrows"></span></a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-heart"></span></a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="details">
+                  <div class="wrapper">
+                    <h5 class="price">$478</h5>
+                    <h6 class="title"><a href="page-car-single-v1.html">Nıssan Qasqai - Sky Pack</a></h6>
+                    <div class="listign_review">
+                      <ul class="mb0">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                        <li class="list-inline-item"><a href="#">4.7</a></li>
+                        <li class="list-inline-item">(684 reviews)</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="listing_footer">
+                    <ul class="mb0">
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span>77362</a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-gas-station me-2"></span>Diesel</a></li>
+                      <li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span>Automatic</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Delivery Divider -->
+  <section class="deliver-divider bg-img1">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="posr">
+            <div class="home1_divider_video_pop">
+              <div class="video_popup_icon">
+                <a class="video_popup_btn popup-img popup-youtube" href="https://www.youtube.com/watch?v=R7xbhKIiw4Y">
+                  <span class="flaticon-play"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 col-xl-5">
+          <div class="home1_divider_content">
+            <h2 class="title">WHO ARE WE </h2>
+            <p class="para">
+              We are a small company with a great passion for cars.
+               We started local but now we are well known on all 
+              Albanian territory</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+
+
+  <!-- Our Footer -->
+  <section class="footer_one pt50 pb25">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-xl-7">
+          <div class="footer_about_widget text-start">
+            <div class="logo mb40 mb0-sm"><img src="images/header-logo.svg" alt="header-logopng"></div>
+          </div>
+        </div>
+        <div class="col-md-8 col-xl-5">
+          <div class="footer_menu_widget text-start text-md-end mt15">
+            <ul>
+              <li class="list-inline-item"><a href="#">Home</a></li>
+              <li class="list-inline-item"><a href="#">Explore</a></li>
+              <li class="list-inline-item"><a href="#">Listings</a></li>
+              <li class="list-inline-item"><a href="#">Blog</a></li>
+              <li class="list-inline-item"><a href="#">Shop</a></li>
+              <li class="list-inline-item"><a href="#">Pages</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="container pt80 pt20-sm pb70 pb0-sm">
+      <div class="row">
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+          <div class="footer_about_widget">
+            <h5 class="title">OFFICE</h5>
+            <p>Albania —<br>Street "Juba"<br>Durres</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+          <div class="footer_contact_widget">
+            <h5 class="title">Contact us</h5>
+            <div class="footer_phone">+355 69 573 8887</div>
+            <p>onerentcar2022@gmail.com</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+          <div class="footer_contact_widget">
+            <h5 class="title">OPENING HOURS</h5>
+            <p>Monday – Friday: 07:00AM – 11:00PM<br>Saturday: 07:00AM – 12:00PM<br>Sunday: 07:00AM – 12:00PM</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
+          <div class="footer_contact_widget">
+            
+            <form class="footer_mailchimp_form">
+              <div class="wrapper">
+                <div class="col-auto">
+                  
+                
+              </div>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-lg-8 col-xl-9">
+          <div class="copyright-widget mt5 text-start mb20-sm">
+            <p>CreativeLayers © 2022. All Rights Reserved.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-3">
+          <div class="footer_social_widget text-start text-md-end">
+            <ul class="mb0">
+              <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+              <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
+              <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a></li>
+              <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <a class="scrollToHome" href="#"><i class="fas fa-arrow-up"></i></a>
+</div>
+<!-- Wrapper End --> 
+<script src="js/jquery-3.6.0.js"></script> 
+<script src="js/jquery-migrate-3.0.0.min.js"></script> 
+<script src="js/popper.min.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/bootstrap-select.min.js"></script>
+<script src="js/jquery.mmenu.all.js"></script> 
+<script src="js/ace-responsive-menu.js"></script> 
+<script src="js/isotop.js"></script> 
+<script src="js/snackbar.min.js"></script> 
+<script src="js/simplebar.js"></script> 
+<script src="js/parallax.js"></script> 
+<script src="js/scrollto.js"></script> 
+<script src="js/jquery-scrolltofixed-min.js"></script> 
+<script src="js/jquery.counterup.js"></script> 
+<script src="js/wow.min.js"></script> 
+<script src="js/progressbar.js"></script> 
+<script src="js/slider.js"></script>
+<script src="js/timepicker.js"></script> 
+<script src="js/wow.min.js"></script> 
+<!-- Custom script for all pages --> 
+<script src="js/script.js"></script>
+</body>
+
+<!-- Mirrored from creativelayers.net/themes/voiture-html/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Jul 2023 22:41:47 GMT -->
+</html>
