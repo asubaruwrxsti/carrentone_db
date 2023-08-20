@@ -138,4 +138,27 @@
                 );
             }
         }
+
+        function insertImage($car_id, $image) {
+            $basePath = "/admin_dashboard/views/assets/images/$car_id/";
+            $fullPath = $_SERVER['DOCUMENT_ROOT'] . $basePath;
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = uniqid() . '.png';
+            $imagePath = $fullPath . $imageName;
+            $imageBase64 = base64_decode($image);
+            $imageUpload = file_put_contents($imagePath, $imageBase64);
+            if ($imageUpload) {
+                return array(
+                    'status' => true,
+                    'message' => 'Image uploaded successfully',
+                    'path' => $basePath . $imageName
+                );
+            } else {
+                return array(
+                    'status' => false,
+                    'message' => 'Error uploading image'
+                );
+            }
+        }
     }

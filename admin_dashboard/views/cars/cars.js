@@ -103,7 +103,7 @@ class Cars {
 
     async updateData(car) {
         car = Object.fromEntries(car);
-        console.log(car);
+        delete car.image;
         const response = await fetch(`/admin_dashboard/index.php/api/cars/edit/${car.id}`, {
             method: 'POST',
             headers: {
@@ -127,5 +127,18 @@ class Cars {
         });
         const data = await response.json();
         return data;
+    }
+
+    async insertImage(data) {
+        data = Object.fromEntries(data);
+        const response = await fetch(`/admin_dashboard/index.php/cars/images/${data.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const res = await response.json();
+        return res;
     }
 }

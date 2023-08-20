@@ -225,10 +225,18 @@
                     break;
                 
                 case 'Cars':
-                    if (strpos($_SERVER['REQUEST_URI'], '/cars/images/')) {
+                    if (strpos($_SERVER['REQUEST_URI'], '/cars/images/') && $_SERVER['REQUEST_METHOD'] == 'DELETE') {
                         $id = $purifier->purify($vars['id']);
                         $data = json_decode(file_get_contents('php://input'), true);
                         $response = $api->deleteImage($id, $data['image_index']);
+                        echo json_encode($response);
+                        break;
+                    }
+
+                    if (strpos($_SERVER['REQUEST_URI'], '/cars/images/') && $_SERVER['REQUEST_METHOD'] == 'PUT') {
+                        $id = $purifier->purify($vars['id']);
+                        $data = json_decode(file_get_contents('php://input'), true);
+                        $response = $api->insertImage($id, $data['image']);
                         echo json_encode($response);
                         break;
                     }

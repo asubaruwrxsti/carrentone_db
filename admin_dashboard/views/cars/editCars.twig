@@ -61,6 +61,7 @@
 	.special-list-add {
 		transition: all 0.3s ease-in-out;
 	}
+
 </style>
 
 <a class="text-sm font-weight-bold mb-0 icon-move-left ms-auto view-link" href="/admin_dashboard/index.php/cars">
@@ -156,9 +157,13 @@
 						</div>
 					{% endfor %}
 					<div class="grid-item mx-3 mt-2 special-list-add" style="border: 1px dashed #000; display: flex; justify-content: center; align-items: center; border-radius: 10px;">
-						<i class="fa-solid fa-plus fa-2xl add-image"></i>
+						<form id="addImageForm">
+							<input type="file" name="image" id="image-{{cars.id}}" style="display: none;" onchange="addImage(this.id)">
+							<label for="image-{{cars.id}}" style="cursor: pointer;">
+								<i class="fa-solid fa-plus fa-2xl"></i> Add Image
+							</label>
+						</form>
 					</div>
-					</form>
 				</div>
 			</div>
 		</div>
@@ -222,6 +227,54 @@
 					window.location.reload();
 				}, 500);
 			}
+		});
+	}
+
+	function addImage(id) {
+		let image = document.getElementById(id).files[0];
+		getBase64(image).then(function(base64) {
+			let formData = new FormData();
+			formData.append('id', id.split('-')[1]);
+			formData.append('image', base64);
+
+			Car.insertImage(formData).then(function(response) {
+				if (response.status) {
+					// swal load for 300ms then reload page
+					swal({
+						title: "Uploading...",
+						text: "Please wait while we upload your image.",
+						buttons: false,
+						closeOnClickOutside: false,
+						closeOnEsc: false,
+						timer: 300,
+					}).then(function() {
+						swal({
+							title: "Success!",
+							text: "Image uploaded successfully.",
+							icon: "success",
+							button: "OK",
+						}).then(function() {
+							setTimeout(function() {
+								document.getElementById(id).value = '';
+								window.location.reload();
+							}, 300);
+						});
+					});
+				}
+			});
+		});
+	}
+
+	function getBase64(file) {
+		return new Promise(function(resolve, reject) {
+			var reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = function() {
+				resolve(reader.result);
+			};
+			reader.onerror = function(error) {
+				reject('Error: ', error);
+			};
 		});
 	}
 
