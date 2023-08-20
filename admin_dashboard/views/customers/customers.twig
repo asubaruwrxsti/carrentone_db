@@ -275,9 +275,6 @@
           ul.querySelector('#userIdents').innerHTML = `${data.firstname} ${data.lastname}`;
           ul.querySelector('#userEmail').innerHTML = `Email: <a href="mailto:${data.email}">${data.email}</a>`;
           ul.querySelector('#userPhone').innerHTML = `Phone: <a href="tel:${data.phone_number}">${data.phone_number}</a>`;
-          ul.querySelector('#userBirthdate').innerHTML = `Birthdate: ${data.birthdate}`;
-          ul.querySelector('#userAddress').innerHTML = `Address: ${data.address}`;
-          ul.querySelector('#userID').innerHTML = `ID Number: ${data.id_number}`;
           loading = '';
         }, 300);
     }
