@@ -150,13 +150,12 @@
 				<div class="grid mb-2 mb-5" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 20px;">
 					{% for index, image in cars.image %}
 						<div class="stacked-container">
-							<div class="grid-item mx-3 mt-2 special-list">
-								<img src="{{ image }}" id="car-{{cars.id}}-{{index}}" class="img-fluid rounded shadow" alt="image" onclick="viewImage(this.id)">
+							<div class="grid-item mx-3 mt-2 special-list" style="background-image: url('{{ image }}'); background-size: cover; background-position: center; border-radius: 10px; height: 200px;">
 								<i class="fa-solid fa-trash fa-2xl delete-image" id="delete-{{cars.id}}-{{index}}" onclick="confirmDelete(this.id)"></i>
 							</div>
 						</div>
 					{% endfor %}
-					<div class="grid-item mx-3 mt-2 special-list-add" style="border: 1px dashed #000; display: flex; justify-content: center; align-items: center; border-radius: 10px;">
+					<div class="grid-item mx-3 mt-2 special-list-add" style="border: 1px dashed #000; display: flex; justify-content: center; align-items: center; border-radius: 10px; height: 200px;">
 						<form id="addImageForm">
 							<input type="file" name="image" id="image-{{cars.id}}" style="display: none;" onchange="addImage(this.id)">
 							<label for="image-{{cars.id}}" style="cursor: pointer;">
