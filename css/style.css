@@ -22180,49 +22180,41 @@ canvas#myChart{
   opacity: 1;
 }
 .single_product_slider.owl-theme .owl-dots .owl-dot:first-child span{
-  background-image: url(../images/shop/ss1.jpg);
   background-position: center center;
   background-size: cover;
   margin-bottom: 12px;
 }
 .single_product_slider.owl-theme .owl-dots .owl-dot:nth-child(2) span{
-  background-image: url(../images/shop/ss2.jpg);
   background-position: center center;
   background-size: cover;
   margin-bottom: 12px;
 }
 .single_product_slider.owl-theme .owl-dots .owl-dot:nth-child(3) span{
-  background-image: url(../images/shop/ss3.jpg);
   background-position: center center;
   background-size: cover;
   margin-bottom: 12px;
 }
 .single_product_slider.owl-theme .owl-dots .owl-dot:nth-child(4) span{
-  background-image: url(../images/shop/ss4.jpg);
   background-position: center center;
   background-size: cover;
   margin-bottom: 12px;
 }
 .single_product_slider.owl-theme .owl-dots .owl-dot:nth-child(5) span{
-  background-image: url(../images/shop/ss5.jpg);
   background-position: center center;
   background-size: cover;
   margin-bottom: 12px;
 }
 .single_product_slider.owl-theme .owl-dots .owl-dot:nth-child(6) span{
-  background-image: url(../images/listing/12.jpg);
   background-position: center center;
   background-size: cover;
   margin-bottom: 12px;
 }
 .single_product_slider.owl-theme .owl-dots .owl-dot:nth-child(7) span{
-  background-image: url(../images/listing/9.jpg);
   background-position: center center;
   background-size: cover;
   margin-bottom: 12px;
 }
 .single_product_slider.owl-theme .owl-dots .owl-dot:nth-child(8) span{
-  background-image: url(../images/listing/sp5s6.jpg);
   background-position: center center;
   background-size: cover;
   margin-bottom: 12px;
