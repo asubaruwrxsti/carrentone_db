@@ -16,6 +16,7 @@
         $r->addRoute('GET', '/', 'home');
         $r->addRoute('GET', '/index.php/view/{id:\d+}', 'cars');
         $r->addRoute('POST', '/index.php/message/', 'messages');
+        $r->addRoute('GET', '/index.php/all', 'all');
     });
 
     $httpMethod = $_SERVER['REQUEST_METHOD'];
@@ -118,7 +119,6 @@
                     $phone_number = $purifier->purify($data['phone']);
                     $message = $purifier->purify($data['message']);
 
-                    // format the data like this {"senders":[{"name":"Alice","email":"alice@example.com","lastname":"Johnson"}],"data":[{"id":1,"sender":"userA","content":"Hello there!","timestamp":"2023-07-21T10:30:00"}]}
                     $message = json_encode([
                         'senders' => [
                             [
@@ -141,6 +141,33 @@
                     $db->execute_query($sql);
                     echo json_encode(['status' => true]);
                     break;
+				
+				case 'all':
+					$sql = "SELECT * FROM cars";
+					$allCars = $db->execute_query($sql);
+					$allCars = $allCars->fetch_all(MYSQLI_ASSOC);
+
+					$imagePath = "/admin_dashboard/views/assets/images/";
+					$rootPath = $_SERVER['DOCUMENT_ROOT'];
+					$allCars = array_map(function($car) use ($rootPath, $imagePath) {
+						$car_id = $car['id'];
+						$car_images = glob($rootPath . $imagePath . $car_id . "/{*.jpg,*.jpeg,*.png}", GLOB_BRACE);
+						$car_images = array_map(function($image) use ($rootPath) {
+							return str_replace($rootPath, '', $image);
+						}, $car_images);
+						if (count($car_images) == 0) {
+							$car_images = array('/admin_dashboard/views/assets/img/noImg.jpg');
+						}
+						$car['image'] = $car_images;
+						return $car;
+					}, $allCars);
+					
+					$view = $twig->load(sprintf('/%s/%s.twig', $handler, $handler));
+					echo $view->render([
+						'title' => strtoupper($handler),
+						'allCars' => $allCars
+					]);
+					break;
             }
         break;
     }
