@@ -115,6 +115,30 @@ class Cars {
         return data;
     }
 
+    async insertData(car) {
+        car = Object.fromEntries(car);
+        const response = await fetch(`/admin_dashboard/index.php/cars/add/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(car)
+        });
+        const data = await response.json();
+        return data;
+    }
+
+    async deleteData(id) {
+        const response = await fetch(`/admin_dashboard/index.php/api/cars/edit/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        return data;
+    }
+
     async deleteImage(image) {
         image = Object.fromEntries(image);
         const response = await fetch(`/admin_dashboard/index.php/cars/images/${image.id}`, {

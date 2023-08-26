@@ -64,6 +64,11 @@
 
 </style>
 
+<script>
+ let cars = {{cars | json_encode | raw}};
+ console.log(cars);
+</script>
+
 <a class="text-sm font-weight-bold mb-0 icon-move-left ms-auto view-link" href="/admin_dashboard/index.php/cars">
     <button class="btn btn-primary btn-sm"><i class="fas fa-arrow-left text-sm ms-1" aria-hidden="true"></i>&nbsp;Back</button>
 </a>
@@ -80,6 +85,10 @@
 					<button type="submit" class="btn bg-gradient-dark mb-0">
 						<i class="fas fa-save opacity-8 text-white me-1"></i>
 						&nbsp;&nbsp;Save
+					</button>
+					<button type="button" class="btn bg-gradient-dark mb-0" onclick="deleteCar({{cars.id}})">
+						<i class="fas fa-trash opacity-8 text-white me-1"></i>
+						&nbsp;&nbsp;Delete
 					</button>
 				</div>
 			</div>
@@ -274,6 +283,27 @@
 			reader.onerror = function(error) {
 				reject('Error: ', error);
 			};
+		});
+	}
+
+	function deleteCar(id) {
+		swal({
+			title: "Are you sure?",
+			text: "Once deleted, you will not be able to recover this car!",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+		}).then((willDelete) => {
+			if (willDelete) {
+				Car.deleteData(id).then(function(response) {
+					if (JSON.parse(response).status) {
+						alertify.success(JSON.parse(response).message);
+						setTimeout(function() {
+							window.location.href = '/admin_dashboard/index.php/cars';
+						}, 500);
+					}
+				});
+			}
 		});
 	}
 

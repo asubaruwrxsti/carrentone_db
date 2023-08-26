@@ -98,6 +98,17 @@
                 $id = isset($property[1]) ? $property[1] : null;
                 $query = "DELETE FROM $property_name WHERE id = $id";
                 $result = $this->db->execute_query($query);
+
+                if ($property_name == "cars") {
+                    $path = "/admin_dashboard/views/assets/images/$id/";
+                    $full_path = $_SERVER['DOCUMENT_ROOT'] . $path;
+                    $files = glob($full_path . '/{*.jpg,*.jpeg,*.png}', GLOB_BRACE);
+                    foreach ($files as $file) {
+                        unlink($file);
+                    }
+                    rmdir($full_path);
+                }
+
                 if ($result) {
                     return json_encode(array(
                         'status' => true,

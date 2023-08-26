@@ -1,0 +1,193 @@
+<style>
+	.grid-item:hover {
+		transform: scale(1.01);
+		opacity: 0.8;
+		cursor: pointer;
+
+		.delete-image {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+
+	.delete-image {
+		display: none;
+	}
+
+	.stacked-container {
+		position: relative;
+	}
+
+	.image-container {
+		position: relative;
+		display: inline-block;
+	}
+
+	.delete-image {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background-color: rgba(255, 255, 255, 0.5);
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		padding: 35px;
+		box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+	}
+
+	.grid-item:hover .delete-image {
+		animation: fadeIn 0.3s ease-in-out;
+	}
+
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	.grid-item {
+		transition: all 0.3s ease-in-out;
+	}
+
+	.special-list-add:hover {
+		background-color: #f1f1f1;
+	}
+
+	.special-list-add {
+		transition: all 0.3s ease-in-out;
+	}
+
+</style>
+
+<a class="text-sm font-weight-bold mb-0 icon-move-left ms-auto view-link" href="/admin_dashboard/index.php/cars">
+    <button class="btn btn-primary btn-sm"><i class="fas fa-arrow-left text-sm ms-1" aria-hidden="true"></i>&nbsp;Back</button>
+</a>
+
+<div class="col-md-12 mb-lg-0 mb-4">
+	<form class="form" id="editForm">
+		<div class="card mt-4 mb-5">
+			<div class="card-header pb-0 p-3">
+			<div class="row">
+				<div class="col-6 d-flex align-items-center">
+				<h4 class="mb-0"> Add Car </h4>
+				</div>
+				<div class="col-6 text-end">
+					<button type="submit" class="btn bg-gradient-dark mb-0">
+						<i class="fas fa-save opacity-8 text-white me-1"></i>
+						&nbsp;&nbsp;Save
+					</button>
+				</div>
+			</div>
+			</div>
+			<div class="card-body p-3">
+				<div class="row mb-3">
+					<div class="col mb-md-0 mb-4">
+							<div class="card card-body border card-plain border-radius-lg d-flex align-items-center flex-row">
+								<div class="row" style="flex: 1;">
+									<div class="col">
+										<div class="mb-3">
+											<label for="name" class="form-label">Name</label>
+											<input type="text" class="form-control" id="name" name="name">
+											<div class="invalid-feedback">Please enter a valid name.</div>
+										</div>
+										<div class="mb-3">
+											<label for="description" class="form-label">Description</label>
+											<textarea class="form-control" id="description" name="description" rows="3"></textarea>
+											<div class="invalid-feedback">Please enter a valid description.</div>
+										</div>
+										<div class="mb-3">
+											<label for="price" class="form-label">Price</label>
+											<input type="text" class="form-control" id="price" name="price">
+											<div class="invalid-feedback">Please enter a valid price.</div>
+										</div>
+										<div class="mb-3">
+											<label for="make" class="form-label">Make</label>
+											<input type="text" class="form-control" id="make" name="make">
+										</div>
+										<div class="mb-3">
+											<label for="model" class="form-label">Model</label>
+											<input type="text" class="form-control" id="model" name="model">
+										</div>
+									</div>
+									<div class="col">
+										<div class="mb-3">
+											<label for="travel_distance" class="form-label">Travel Distace</label>
+											<input type="text" class="form-control" id="travel_distance" name="travel_distance">
+											<div class="invalid-feedback">Please enter a valid number.</div>
+										</div>
+										<div class="mb-3">
+											<label for="transmission" class="form-label">Transmission</label>
+											<select class="form-select" id="transmission" aria-label="Select the car transmission">
+                                                <option value="0">Automatic</option>
+                                                <option value="1">Manual</option>
+											</select>
+										</div>
+										<div class="mb-3">
+											<label for="year" class="form-label">Year</label>
+											<input type="text" class="form-control" id="year" name="year">
+											<div class="invalid-feedback">Please enter a valid number.</div>
+										</div>
+										<div class="mb-3">
+											<label for="license_plate" class="form-label">License Plate</label>
+											<input type="text" class="form-control" id="license_plate" name="license_plate">
+										</div>
+										<div class="mb-3">
+											<label for="color" class="form-label">Color</label>
+											<input type="text" class="form-control" id="color" name="color">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr class="horizontal dark mt-2 mb-2"></hr>
+                <div class="container d-flex flex-column">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="mb-5 mt-5">Please insert the car, then add the images.</h6>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="/admin_dashboard/views/cars/cars.js"></script>
+<script>
+	let Car = new Cars();
+
+	document.addEventListener('DOMContentLoaded', function() {
+		document.getElementById('editForm').addEventListener('submit', function(e) {
+			e.preventDefault();
+
+			let formData = new FormData(this);
+			formData.append('name', document.getElementById('name').value);
+			formData.append('description', document.getElementById('description').value);
+			formData.append('price', document.getElementById('price').value);
+			formData.append('make', document.getElementById('make').value);
+			formData.append('model', document.getElementById('model').value);
+			formData.append('travel_distance', document.getElementById('travel_distance').value);
+			formData.append('transmission', document.getElementById('transmission').value);
+			formData.append('year', document.getElementById('year').value);
+			formData.append('license_plate', document.getElementById('license_plate').value);
+			formData.append('color', document.getElementById('color').value);
+
+			Car.insertData(formData).then(function(response) {
+				if (JSON.parse(response).status) {
+					alertify.success(JSON.parse(response).message);
+					setTimeout(function() {
+						window.location.href = '/admin_dashboard/index.php/cars';
+					}, 500);
+				}
+			});
+		});
+	});
+
+</script>

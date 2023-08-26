@@ -45,6 +45,7 @@
 
             // Cars
             $r->addRoute('GET', '/cars', 'Cars');
+            $r->addRoute(['GET', 'POST'], '/cars/add/', 'Cars');
             $r->addRoute('GET', '/cars/edit/{id:\d+}', 'Cars');
             $r->addRoute(['PUT', 'DELETE'], '/cars/images/{id:\d+}', 'Cars');
 
@@ -241,6 +242,50 @@
                         break;
                     }
 
+                    if (strpos($_SERVER['REQUEST_URI'], '/cars/add/') && $_SERVER['REQUEST_METHOD'] == 'GET') {
+                        echo $header->render(array(
+                            'window_title' => $handler,
+                            'user_logged_in' => $_SESSION['is_loggedin'],
+                            'user_role' => $_SESSION['user_role'],
+                            'user_name' => strtoupper($_SESSION['username']),
+                            'message_count' => $messages
+                        ));
+
+                        echo $base->render(array(
+                                'window_title' => 'Add Car',
+                                'content' => sprintf('/%s/%s.twig', strtolower($handler), 'addCars'),
+                                'vars' => [
+                                    'currency' => $_SESSION['currency'],
+                                ]
+                            )
+                        );
+                        break;
+                    }
+
+                    if (strpos($_SERVER['REQUEST_URI'], '/cars/add/') && $_SERVER['REQUEST_METHOD'] == 'POST') {
+                        $response = $api->fetch_data(['cars', null]);
+                        
+                        if (json_decode($response)->status) {
+                            $sql = "SELECT id FROM cars ORDER BY id DESC LIMIT 1;";
+                            $result = $db->execute_query($sql);
+
+                            if ($result->num_rows > 0) {
+                                $result = $result->fetch_all(MYSQLI_ASSOC);
+                                $id = $result[0]['id'];
+                                $imagePath = "/admin_dashboard/views/assets/images/";
+                                $rootPath = $_SERVER['DOCUMENT_ROOT'];
+                                if (mkdir($rootPath . $imagePath . $id)) {
+                                    echo json_encode($response);
+                                } else {
+                                    $sql = "DELETE FROM cars WHERE id = $id;";
+                                    $db->execute_query($sql);
+                                    echo json_encode(array('status' => 'error', 'message' => 'Failed to create directory'));
+                                }
+                            }
+                        }
+                        break;
+                    }
+
                     $cars = $api->fetch_data(['cars']);
                     $imagePath = "/admin_dashboard/views/assets/images/";
                     $rootPath = $_SERVER['DOCUMENT_ROOT'];
@@ -266,12 +311,16 @@
                             'message_count' => $messages
                         ));
 
+                        $car = array_filter($cars, function ($car) use ($id) {
+                            return $car['id'] == $id;
+                        });
+                        
                         echo $base->render(array(
-                                'window_title' => 'Edit Car',
-                                'content' => sprintf('/%s/%s.twig', strtolower($handler), 'editCars'),
-                                'vars' => [
-                                    'currency' => $_SESSION['currency'],
-                                    'cars' => $cars[$id - 1]
+                            'window_title' => 'Edit Car',
+                            'content' => sprintf('/%s/%s.twig', strtolower($handler), 'editCars'),
+                            'vars' => [
+                                'currency' => $_SESSION['currency'],
+                                'cars' => array_values($car)[0],
                                 ]
                             )
                         );

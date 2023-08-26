@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="/admin_dashboard/views/cars/cars.css">
 <div class="container">
+    <a href="/admin_dashboard/index.php/cars/add/" class="btn btn-primary mt-3"><span class="fas fa-plus"></span>&nbsp;Add Car</a>
     <div class="row">
         <div class="row mt-4 restrict-height" id="main-car-container">
             {% for car in cars %}
@@ -174,7 +175,7 @@
             document.getElementById('carPrice').innerHTML = car[0].price + " {{currency}}";
             document.getElementById('carCount').innerHTML = car[0].order_count + " time (s)";
             document.getElementById('carCreated').innerHTML = car[0].created_at;
-            document.getElementById('carTransmission').innerHTML = (car[0].transmission == 1) ? "Automatic" : "Manual";
+            document.getElementById('carTransmission').innerHTML = (car[0].transmission == 0) ? "Automatic" : "Manual";
             document.getElementById('carTravelDistance').innerHTML = (car[0].travel_distance == 'NULL') ? "0 Km" : car[0].travel_distance;
             
             // BACKLOG: Fix this
