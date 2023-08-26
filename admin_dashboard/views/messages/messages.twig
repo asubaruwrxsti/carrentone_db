@@ -158,6 +158,7 @@ function loadMessage(id) {
 
       const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
       const formattedDate = new Date(data.timestamp).toLocaleString('en-US', options);
+      console.log(data);
 
       document.getElementById('modalLabel').innerHTML = sender.name + ' ' + sender.lastname;
       document.getElementById('modalBody').innerHTML = `
@@ -167,7 +168,7 @@ function loadMessage(id) {
             <span class="text-xs">Sent at: <span class="text-dark ms-sm-2 font-weight-bold">${formattedDate}</span></span>
         </div>
         <hr>
-        <h6 class="mb-3 text-sm">Message</h6>
+        <h6 class="mb-3 text-sm">Message from: ${data.origin}</h6>
         <p>${data.content}</p>
       `;
 

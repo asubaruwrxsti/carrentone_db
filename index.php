@@ -17,6 +17,7 @@
         $r->addRoute('GET', '/index.php/view/{id:\d+}', 'cars');
         $r->addRoute('POST', '/index.php/message/', 'messages');
         $r->addRoute('GET', '/index.php/all', 'all');
+        $r->addRoute('GET', '/index.php/contact', 'contact');
     });
 
     $httpMethod = $_SERVER['REQUEST_METHOD'];
@@ -118,6 +119,26 @@
                     $email = $purifier->purify($data['email']);
                     $phone_number = $purifier->purify($data['phone']);
                     $message = $purifier->purify($data['message']);
+                    $origin = $purifier->purify($data['origin']);
+
+                    $sql = "SELECT * FROM messages WHERE JSON_EXTRACT(data, '$.senders[0].email') = '$email'
+                            AND JSON_EXTRACT(data, '$.senders[0].phone') = '$phone_number'
+                            AND JSON_EXTRACT(data, '$.senders[0].name') = '$name'
+                            AND JSON_EXTRACT(data, '$.senders[0].lastname') = '$lastname'
+                            ORDER BY id DESC LIMIT 1";
+                    $lastMessage = $db->execute_query($sql);
+                    $lastMessage = $lastMessage->fetch_assoc();
+                    if ($lastMessage) {
+                        $lastMessage = json_decode($lastMessage['data'], true);
+                        $lastMessage = $lastMessage['data'][0];
+                        $lastMessageTime = strtotime($lastMessage['timestamp']);
+                        $currentTime = strtotime(date('Y-m-d H:i:s'));
+                        $timeDifference = $currentTime - $lastMessageTime;
+                        if ($timeDifference < 300) {
+                            echo json_encode(['status' => false]);
+                            break;
+                        }
+                    }
 
                     $message = json_encode([
                         'senders' => [
@@ -132,7 +153,8 @@
                             [
                                 'sender' => $name,
                                 'content' => $message,
-                                'timestamp' => date('Y-m-d H:i:s')
+                                'timestamp' => date('Y-m-d H:i:s'),
+                                'origin' => $origin
                             ]
                         ]
                     ]);
@@ -168,6 +190,13 @@
 						'allCars' => $allCars
 					]);
 					break;
+                
+                case 'contact':
+                    $view = $twig->load(sprintf('/%s/%s.twig', $handler, $handler));
+                    echo $view->render([
+                        'title' => strtoupper($handler)
+                    ]);
+                    break;
             }
         break;
     }

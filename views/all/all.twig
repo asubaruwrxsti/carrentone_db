@@ -11,7 +11,7 @@
 		<!-- Responsive stylesheet -->
 		<link rel="stylesheet" href="/css/responsive.css">
 		<!-- Title -->
-		<title>{{car.name}}</title>
+		<title>All Listings</title>
 		<!-- Favicon -->
 		<link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" type="image/x-icon" />
 		<link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" />
@@ -69,28 +69,28 @@
 		</div>
 
 		<!-- Main Header Nav -->
-			<header class="header-nav menu_style_home_one home3_style main-menu">
-				<!-- Ace Responsive Menu -->
-				<nav> 
-					<div class="container posr"> 
-						<!-- Menu Toggle btn-->
-						<div class="menu-toggle">
-							<button type="button" id="menu-btn">
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-						</div>
-						<!-- Responsive Menu Structure-->
-						<ul id="respMenu" class="ace-responsive-menu text-end" data-menu-style="horizontal">
-							<li> <a href="/"><span class="title">Home</span></a></li>
-							<li> <a href="/index.php/all"><span class="title">Explore</span></a></li>
-							<li> <a href="/index.php/contact"><span class="title">Contact</span></a></li>
-							<li class="sidebar_panel"><a class="sidebar_switch pt0" href="#"><span></span></a></li>
-						</ul>
+		<header class="header-nav menu_style_home_one home3_style main-menu">
+			<!-- Ace Responsive Menu -->
+			<nav> 
+				<div class="container posr"> 
+					<!-- Menu Toggle btn-->
+					<div class="menu-toggle">
+						<button type="button" id="menu-btn">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
 					</div>
-				</nav>
-			</header>
+					<!-- Responsive Menu Structure-->
+					<ul id="respMenu" class="ace-responsive-menu text-end" data-menu-style="horizontal">
+						<li> <a href="/"><span class="title">Home</span></a></li>
+						<li> <a href="/index.php/all"><span class="title">Explore</span></a></li>
+						<li> <a href="/index.php/contact"><span class="title">Contact</span></a></li>
+						<li class="sidebar_panel"><a class="sidebar_switch pt0" href="#"><span></span></a></li>
+					</ul>
+				</div>
+			</nav>
+		</header>
 
 		<div id="page" class="stylehome1 h0">
 			<div class="mobile-menu">
@@ -117,7 +117,7 @@
 				<div class="row">
 					<div class="col col-sm-4 col-lg-2">
 						<div class="advance_search_style">
-							<select class="selectpicker show-tick">
+							<select class="selectpicker show-tick" id="makeSelect">
 							<option>Select Makes</option>
 							{% set carMakes = [] %}
 							{% for car in allCars %}
@@ -131,7 +131,7 @@
 					</div>
 					<div class="col col-sm-4 col-lg-2">
 						<div class="advance_search_style">
-							<select class="selectpicker show-tick">
+							<select class="selectpicker show-tick" id="modelSelect">
 							<option>Select Models</option>
 							{% set carModels = [] %}
 							{% for car in allCars %}
@@ -167,36 +167,34 @@
 		</section>
 
 		<!-- Listing Grid View -->
-		<section class="our-listing pt0 bgc-f9 pb30-991">
+		<section class="our-listing pt0 bgc-f9 pb30-991" style="display: flex; flex-wrap: wrap;">
 			<div class="container">
 				<div class="row">
-					<div class="row">
-						{% for car in allCars %}
-						<div class="col-sm-6 col-lg-4 col-xl-3">
-							<div class="car-listing {{car.make}}">
-								<div class="thumb">
-									<img src="{{car.image[0]}}" alt="1.jpg">
+					{% for car in allCars %}
+					<div class="col-sm-6 col-lg-4 col-xl-3" data-filter-make="{{car.make}}" data-filter-model="{{car.model}}" id="carListing">
+						<div class="car-listing">
+							<div class="thumb">
+								<img src="{{car.image[0]}}" alt="1.jpg">
+							</div>
+							<div class="details">
+								<div class="wrapper">
+									<h5 class="price">{{car.price}} Euro / Day</h5>
+									<h6 class="title"><a href="/index.php/view/{{car.id}}">{{car.name}}</a></h6>
+									<h6 class="available"><span class="flaticon-pin"></span>{% if car.availability == 0 %}Available{% else %}Not Available{% endif %}</h6>
+									<hr>
+									<h6 class="desc">{{car.description}}</h6>
 								</div>
-								<div class="details">
-									<div class="wrapper">
-										<h5 class="price">{{car.price}} Euro / Day</h5>
-										<h6 class="title"><a href="/index.php/view/{{car.id}}">{{car.name}}</a></h6>
-										<h6 class="available"><span class="flaticon-pin"></span>{% if car.availability == 0 %}Available{% else %}Not Available{% endif %}</h6>
-										<hr>
-										<h6 class="desc">{{car.description}}</h6>
-									</div>
-									<div class="listing_footer">
-										<ul class="mb0">
-										<li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span>{% if car.transmission == 0 %}Manual{% else %}Automatic{% endif %}</a></li>
-										<li class="list-inline-item"><a href="#"><span class="flaticon-calendar me-2"></span>{{car.year}}</a></li>
-										<li class="list-inline-item"><a href="#">Color: {{car.color}}</a></li>
-										</ul>
-									</div>
+								<div class="listing_footer">
+									<ul class="mb0">
+									<li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span>{% if car.transmission == 0 %}Manual{% else %}Automatic{% endif %}</a></li>
+									<li class="list-inline-item"><a href="#"><span class="flaticon-calendar me-2"></span>{{car.year}}</a></li>
+									<li class="list-inline-item"><a href="#">Color: {{car.color}}</a></li>
+									</ul>
 								</div>
 							</div>
 						</div>
-						{% endfor %}
 					</div>
+					{% endfor %}
 				</div>
 			</div>
 		</section>
@@ -245,29 +243,39 @@
 		<script src="/js/wow.min.js"></script>
 		<script src="/js/progressbar.js"></script>
 		<script src="/js/slider.js"></script>
-		<script src="/js/pricing-slider.js"></script>
 		<script src="/js/timepicker.js"></script>
 		<!-- Custom script for all pages --> 
 		<script src="/js/script.js"></script>
 
 		<script>
-		// filter cars by make and model on search button click using isotop
-		$('#searchBtn').click(function() {
-			var make = $('.bootstrap-select').find('.filter-option-inner-inner').text();
-			var model = $('.bootstrap-select').find('.filter-option-inner-inner').text();
-			var cars = $('.car-listing');
-
-			//use isotop to filter cars
-			var $grid = $('.car-listing').isotope({
-				itemSelector: '.car-listing',
-				layoutMode: 'fitRows'
+			$(document).ready(function() {
+				// init Isotope
+				var $grid = $('.our-listing').isotope({
+					itemSelector: '#carListing',
+					layoutMode: 'fitRows',
+				});
+				$grid.isotope({ filter: '*' });
 			});
 
-			// filter items on button click by make and model
-			$grid.isotope({ filter: make});
+			// filter cars by make and model on search button click using isotop
+			$('#searchBtn').click(function() {
+				var make = document.getElementById('makeSelect').value;
+				var model = document.getElementById('modelSelect').value;
+				var $grid = $('.our-listing').isotope({
+					itemSelector: '#carListing',
+					layoutMode: 'fitRows',
+				});
 
-		});
-
+				if(make == 'Select Makes' && model == 'Select Models') {
+					$grid.isotope({ filter: '*' });
+				} else if(make == 'Select Makes') {
+					$grid.isotope({ filter: '[data-filter-model="' + model + '"]' });
+				} else if(model == 'Select Models') {
+					$grid.isotope({ filter: '[data-filter-make="' + make + '"]' });
+				} else {
+					$grid.isotope({ filter: '[data-filter-make="' + make + '"][data-filter-model="' + model + '"]' });
+				}
+			});
 		</script>
 	</body>
 </html>

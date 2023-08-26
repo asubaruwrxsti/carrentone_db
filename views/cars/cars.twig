@@ -14,8 +14,8 @@
 <!-- Title -->
 <title>{{car.name}}</title>
 <!-- Favicon -->
-<link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" type="image/x-icon" />
-<link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" />
+<link href="/images/favicon.ico" sizes="128x128" rel="shortcut icon" type="image/x-icon" />
+<link href="/images/favicon.ico" sizes="128x128" rel="shortcut icon" />
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -346,39 +346,39 @@
       } catch (error) {
       }
     });
-  });
 
-  document.getElementById("contactForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    let firstname = document.getElementById("firstname").value;
-    let lastname = document.getElementById("lastname").value;
-    let phone = document.getElementById("phone").value;
-    let email = document.getElementById("email").value;
-    let message = document.getElementById("message").value;
-    let car = {{car.id}};
-    let data = {
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      phone: phone,
-      message: message,
-      car: car
-    };
+    document.getElementById("contactForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let firstname = document.getElementById("firstname").value;
+      let lastname = document.getElementById("lastname").value;
+      let phone = document.getElementById("phone").value;
+      let email = document.getElementById("email").value;
+      let message = document.getElementById("message").value;
+      let origin = '{{car.name}}';
+      let data = {
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        phone: phone,
+        message: message,
+        origin: origin,
+      };
 
-    fetch("/index.php/message/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data),
-    }).then(response => response.json()).then(data => {
-      if (data.status) {
-        alert("Message sent successfully!");
-      } else {
-        alert("Message not sent!");
-      }
+      fetch("/index.php/message/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data),
+      }).then(response => response.json()).then(data => {
+        if (data.status) {
+          alert("Message sent successfully!");
+        } else {
+          alert("Please wait a few minutes and try again!");
+        }
+      });
     });
-  });  
+  });
 </script>
 </body>
 </html>
