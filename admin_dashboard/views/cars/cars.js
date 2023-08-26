@@ -117,7 +117,6 @@ class Cars {
 
     async deleteImage(image) {
         image = Object.fromEntries(image);
-        console.log(image);
         const response = await fetch(`/admin_dashboard/index.php/cars/images/${image.id}`, {
             method: 'DELETE',
             headers: {

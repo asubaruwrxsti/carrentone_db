@@ -153,7 +153,6 @@
             }
 
             orders.isCarBusy(document.getElementById("autoCompleteCar").dataset.id, orderStartDate.value, orderEndDate.value).then(function(response) {
-                console.log(response);
                 if(JSON.parse(response)) {
                     carMessage.style.display = "block";
                     carMessage.innerHTML = "Car is taken between these dates!";
@@ -300,10 +299,8 @@
         e.preventDefault();
         let customer = null;
         if (autoCompleteCustomers.input.dataset.id != undefined) {
-            console.log("found");
             customer = autoCompleteCustomers.input.dataset.id;
         } else {
-            console.log("not found");
             $("#addCustomerModal").modal("show");
             $("#modalLabel").html("Create Customer");
             $("#firstName").val(autoCompleteCustomers.input.value.split(" ")[0]);

@@ -295,7 +295,6 @@
         email: modalBody.querySelector('#email').value
       };
       customer.addCustomer(data).then(function (response) {
-        console.log(response);
         if (JSON.parse(response).status) {
           alertify.notify(JSON.parse(response).message, 'success', 5);
           setTimeout(function() {
