@@ -153,12 +153,11 @@
         function insertImage($car_id, $image) {
             $basePath = "/admin_dashboard/views/assets/images/$car_id/";
             $fullPath = $_SERVER['DOCUMENT_ROOT'] . $basePath;
-            $image = str_replace('data:image/png;base64,', '', $image);
-            $image = str_replace(' ', '+', $image);
-            $imageName = uniqid() . '.png';
-            $imagePath = $fullPath . $imageName;
-            $imageBase64 = base64_decode($image);
-            $imageUpload = file_put_contents($imagePath, $imageBase64);
+			$fileExtension = explode('/', mime_content_type($image))[1];
+			$image = str_replace('data:image/' . $fileExtension . ';base64,', '', $image);
+			$image = str_replace(' ', '+', $image);
+			$imageName = uniqid() . '.' . $fileExtension;
+			$imageUpload = file_put_contents($fullPath . $imageName, base64_decode($image));
             if ($imageUpload) {
                 return array(
                     'status' => true,
