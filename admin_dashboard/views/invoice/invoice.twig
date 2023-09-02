@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script>
+let data = {{data | json_encode | raw}};
+console.log(data);
+</script>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -60,68 +64,254 @@
 </head>
 <body>
     <div class="container">
-        <h1 style="font-size: 28px; margin-bottom: 20px;">CAR RENTAL CONTRACT</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="renter-info">
-                    <h2>Renter:</h2>
-                    <p>
-                        <strong>Name:</strong> {{ data[0].firstname }} {{ data[0].lastname }}<br>
-                        <strong>Address:</strong> {{ data[0].address }}<br>
-                        <strong>Contact Number:</strong> {{ data[0].phone_number }}<br>
-                    </p>
-                </div>
+        <h1 style="font-size: 28px; margin-bottom: 20px;">ONE RENT A CAR</h1>
+		<div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">AUTORIZIM PËR DRËJTIMIN E AUTOMJETIT</p>
+			</div>
+		</div>
+		<div class="row">
+			"ONE RENT A CAR" sh.p.k me adresë : lagja nr.14, rruga JUBA, NUIS M21318501P, Nr tel                                  0695738887 përfaqësuar nga Administratori Z.Ledion Plaku , lëshon këtë autorizim për drejtimin e automjetit :
+			Qiradhënësi ”ONE RENT A CAR”sh.p.k jep me qira automjetin me të dhëna:
+		</div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="row">
+                <strong>Marka:</strong> {{ data[0].make }}
             </div>
-            <div class="col-md-6">
-                <div class="company-info">
-                    <h2>Car Rental Company:</h2>
-                    <p>
-                        <strong>Name:</strong> One Rent Car<br>
-                        <strong>Address:</strong> Street Juba, Durres<br>
-                        <strong>NUIS:</strong> L12345678K<br>
-                    </p>
-                </div>
+            <div class="row">
+                <strong>Emertimi Tregtar / Tip:</strong> {{ data[0].model }}
             </div>
-        </div>
-
-        <h2>Rental Vehicle Details:</h2>
-        <div class="row">
-            <div class="col-md-3">
-                <strong>Vehicle Make:</strong> {{ data[0].make }}
+            <div class="row">
+                <strong>Viti i prodhimit:</strong> {{ data[0].year }}
             </div>
-            <div class="col-md-3">
-                <strong>Vehicle Model:</strong> {{ data[0].model }}
+            <div class="row">
+                <strong>Paisur me targe:</strong> {{ data[0].license_plate }}
             </div>
-            <div class="col-md-3">
-                <strong>Year:</strong> {{ data[0].year }}
-            </div>
-            <div class="col-md-3">
-                <strong>License Plate:</strong> {{ data[0].license_plate }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                <strong>Color:</strong> {{ data[0].color }}
+			<div class="row">
+                <strong>Ngjyra:</strong> {{ data[0].color }}
             </div>
         </div>
 
-        <!-- Other sections of the contract (Rental Period, Rental Charges, Insurance, etc.) -->
+		<div class="row" style="margin-top: 20px;">
+			<p>
+				{{ data[0].firstname }} {{ data[0].lastname }} lindur me {{ data[0].birthdate }} me Pasaporte / Leternjoftim
+				{{ data[0].id_number }}, banues ne {{ data[0].address }} me nr. tel {{ data[0].phone_number }} qe me poshte 
+				do te quhet "Qiramarresi".
+
+				I autorizuari do të përdor automjetin sipas përshkrimit të mësiperm, së bashku me dokumentacionin 
+				e detyrueshëm të automjetit për qarkullim, brënda vendit, për periudhën prej {{data[0].rental_duration}} Dite(sh), periudhë e cila nis nga data
+				{{data[0].rental_date | date("d/m/Y")}} deri ne daten e dorezimit {{ data[0].rental_date|date_modify('+' ~ data[0].rental_duration ~ ' days')|date('d/m/Y') }} ORA 10:00. Cmimi total i qerase eshte  {{data[0].price}} EURO ( {{data[0].price // data[0].rental_duration}} EURO / Dite).
+
+				Automjeti duhet t kthehet me t njejten nivel karburanti, ne rast se klienti e kthene me shume karburant 
+				agjensia nuk kthen asnje leke mbrapsht. Shuma paraprake e garancis eshte 200 EURO.
+
+				Automjeti  në momentin e dorëzimit është në gjendje të rregullt e  pa  demtime
+			</p>
+
+            <div class="signature row">
+                <div class="col-md-6 italic">
+                    <p>ONE RENT CAR:</p>
+                    <p>__________________</p>
+                </div>
+                <div class="col-md-6 italic">
+                    <p>QIRAMARRESI:</p>
+                    <p> __________________</p>
+                </div>
+            </div>
+        </div>
 
         <div class="separator"></div>
 
-        <div class="signature row">
-            <div class="col-md-6 italic">
-                <p>Renter:</p>
-                <p><strong>Signature:</strong> __________________</p>
-                <p><strong>Name:</strong> [Renter's Full Name]</p>
-                <p><strong>Date:</strong> __________________</p>
-            </div>
-            <div class="col-md-6 italic">
-                <p>Car Rental Company:</p>
-                <p><strong>Signature:</strong> __________________</p>
-                <p><strong>Name:</strong> [Car Rental Company Name]</p>
-                <p><strong>Date:</strong> __________________</p>
-            </div>
+		<div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">KONTRATE QIRAJE</p>
+			</div>
+			<p>
+				Sot, në Durrës, në datën ---- nënshkruhet kjo kontratë qiraje midis palëve:1. “ONE RENT A CAR” sh.p.k me  të quhet “Qiradhënësi” 
+				Dhe:  
+				{{ data[0].firstname }} {{ data[0].lastname }} lindur me {{ data[0].birthdate }} me Pasaporte / Leternjoftim
+				{{ data[0].id_number }}, banues ne {{ data[0].address }} me nr. tel {{ data[0].phone_number }} qe me poshte 
+				do te quhet "Qiramarresi".
+			</p>
+		</div>
+
+		<div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">OBJEKTI:DHENIE ME QIRA AUTOMJETI</p>
+			</div>
+			<p>
+				Qiradhënësi ”ONE RENT A CAR”sh.p.k jep me qira automjetin me të dhënat e mesiperme
+			</p>
+		</div>
+
+		<div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">PERIUDHA E QIRADHENIES</p>
+			</div>
+			<p>
+				Qiradhënësi i dorëzon qiramarrësit automjetin sipas përshkrimit të mësiperm, së bashku me dokumentacionin e detyrueshëm të automjetit për qarkullim, si edhe një autorizim për përdorimin e automjetit 
+				Automjeti në momentin e dorëzimit është në gjendje të rregullt e pa dëmtime .Kufiri ditor eshte 200 kilometra per   24 ORE 
+			</p>
+		</div>
+
+		<div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">PERGJEGJSITE E QIRAMARRESIT</p>
+			</div>
+			<p>Bazuar në aktet ligjore dhe nënligjore në fuqi, Qiramarrësi e ka rreptësisht të ndaluar :</p>
+			<p style="font-size: 13px;">• Të përdorë atutomjetin e marrë me qira për transport udhëtarësh apo mallrash</p>
+			<p style="font-size: 13px;">• Të ngarkojë automjetin me pasagjerë apo me sende jashtë kapacitetit mbajtës të tij</p>
+			<p style="font-size: 13px;">• Të japë automjetin me nënqira</p>
+			<p style="font-size: 13px;">• Të tërheqë automjete apo sende të tjera pa marrë më parë autorizimin me shkrim të Qiradhënësit</p>
+			<p style="font-size: 13px;">• Ta përdore për gara</p>
+			<p style="font-size: 13px;">• Ta përdorë për qëllime të paligjshme</p>
+			<p style="font-size: 13px;">• Ta përdore në mënyrë të pakujdesshme</p>
+			<p style="font-size: 13px;">• Ta japë në përdorim, qoftë edhe përkohësisht, personave të tjerë, pa marrë më parë autorizimin me shkrim të Qiradhënësit</p>
+			<p style="font-size: 13px;">• Të pijë duhan në automjet gjatë periudhës së qiradhënies. Ne rast se konstatohet që brenda në automjet është konsumuar duhan, qiramarrësi detyrohet të paguaje një penalitet prej 50 Euro ( që do të shërbejnë për larjen e tapicerisë etj)</p>
+		</div>
+
+        <div class="row">
+            <p>Në rast aksidenti, Qiramarrësi është i detyruar të mos lëvizë automjetin nga vendngjarja, 
+            të marrë shënim targën e automjetit tjetër nëse ai largohet, të njoftojë urgjentisht policinë dhe Qiradhënësin, 
+            të përshkruajë ndodhinë, e të plotësojë dokumentacionin (formularët standartë ) e nevojshëm.</p>
+		</div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">KTHIMI I AUTOMJETIT</p>
+			</div>
+			<p>
+				Qiramarrësi merr përsipër t’i kthejë automjetin Qiradhënësit, në adresën e marrjes , jo më vonë se ora dhe datë e caktuar. Automjeti kthehet i pastër, i larë nga brenda dhe nga jashtë. Operatori ose përfaqësuesi i ONE RENT A CAR” SH.P.K kontrollon imtësisht automjetin, nga jashtë, brenda, nga poshtë, në motorr, pjesët xhenerike, teknike e mekanike, çdo aksesor të automjetit, gomën rezervë, bagazhin, frenat, etj.
+                Pasi operatori i autorizuar i “ONE RENT A CAR” SH.P.K konfirmon se automjeti është dorëzuar korrektësisht, Qiramarrësit i kthehet e plotë depozita e garancisë
+			</p>
+		</div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">DEPOZITA TE FUNDIT</p>
+			</div>
+			<p>
+				Në rast se Qiramarrësi vepron në kundërshtim me sa parashikohet më sipër, dhe Qiradhënësi vlerëson se ka rrezik që automjetit t’i shkaktohet ndonjë dëmtim, Qiradhënësi ka të drejtë të zgjidhë këtë kontratë në mënyrë të menjëhershme e të njëanëshme dhe të marrë automjetin pa paralajmërim. Qiradhënësi ka dhe ruan të pacënuar të drejtën që të kërkojë kompensim për dëmet, kurdoqoftë.
+                Adresat e palëve, të përcaktuara në këtë kontratë, konsiderohen të vlefshme dhe korrespondenca, nëse do të ketë të tillë, ndërmjet palëve do të mbahet në këto adresa. Derisa pala tjetër të marrë njoftimin përkatës për ndryshimin e adresës, të dyja palët do të konsiderojnë të vlefshme adresën e përmendur në këtë kontratë ose adresën e përcaktuar në njoftimet e mëparshme për ndryshim.
+                Kjo kontratë i nënshtrohet legjislacionit shqiptar në fuqi dhe do të interpretohet në përputhje me këtë legjislacion. Në rast mosmarrëveshjeje ndërmjet palëve në lidhje me interpretimin, zbatimin dhe zgjidhjen e kësaj kontrate, palët do t’i drejtohen Gjykatës së Rrethit Gjyqësor Durres.
+                Palët, pasi e lexojnë me kujdes dhe vëmendje, pranojnë se kanë kuptuar kushtet e kësaj kontrate dhe që automjeti është dorëzuar e marrë në dorëzim në kushtet e përshkruara në kontratë dhe me vullnet të lirë, e nënshkruajnë atë.
+            </p>
+		</div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">PERIUDHA MINIMALE E QIRAMARRJES</p>
+			</div>
+			<p>
+				Periudha minimale e qiramarrjes është 24 orë. Kur automjeti kthehet me vonesë zbatohen tarifat shtesë si më poshtë: 1/3 e çmimit ditor të qirasë deri ne 4 ore vonese çmimi ditor i qirasë për vonesa mbi 4 orë dyfishi i çmimit ditor të qirasë për çdo ditë vonesë
+            </p>
+		</div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">ZGJATJA E QIRAMARRJES</p>
+			</div>
+			<p>
+                Zgjatja e qiramarrjes përtej datës së përcaktuar në kontratë duhet të autorizohet me shkrim nga “ONE RENT A CAR ” sh.p.k. Në rast shtyrje të periudhës së qirasë, “ONE RENT A CAR” sh.p.k lëshon një autorizim të ri. Moskryerja e kësaj procedure sjell si pasojë përdorimin e paligjshëm të automjetit dhe drejtimin e tij pa mbulimin e Siguracionit KASKO.
+            </p>
+		</div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">ANULLIMI I QIRAMARRJES</p>
+			</div>
+			<p>
+                Për të gjitha rezervimet që anullohen pas dërgimit të konfirmimit të rezervimit nga “ONE RENT A CAR” sh.p.k mbahet një tarifë anullimi prej 10%. Një tarifë e mëtejshme e barabartë me çmimin e qirasë së një dite do të mbahet nëse “ONE RENT A CAR” sh.p.k nuk njoftohet për anullimin e rezervimit deri të paktën nje ditë (24 orë) më parë.            </p>
+		</div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">LEJA E DREJTIMIT TË AUTOMJETIT</p>
+			</div>
+			<p>
+                 Drejtuesit e automjetit duhet të kenë një Leje Drejtimi të vlefshme. Nga drejtuesit Qiramarrës kërkohet të mbajnë Lejen e Drejtimit me vete gjatë gjithë periudhës së qiramarrjes. Të gjithë shtetasit e huaj, me përjashtim të atyre të BE-së, SHBA-ve & Kanadasë, duhet patjetër të kenë Leje Drejtimi Ndërkombëtare.
+            </p>
+        </div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">SIGURACIONET</p>
+			</div>
+			<p>
+                Në rast aksidenti paraqitja e një kopjeje të vlefshme të raportit të Policisë mbi ngjarjen, apo të një vendimi Gjykate, është kusht i domosdoshëm për të përfituar mbulimin nga siguracionet. TPL – Siguracioni për Përgjegjësinë ndaj të Tretëve mbulon përgjegjësinë e Qiramarrësit për dëmet që mund t’i shkaktohen automjetit të palëve të treta, në rast përplasjeje.FCI – Siguracioni Full Kasko e kufizon përgjegjësinë e Qiramarrësit për dëmet e shkaktuara automjetit si pasojë e përplasjejs, përmbysjes, apo thyerjes së xhamave, për dëmtimin e automjetit si pasojë e zjarrit, shpërthimit, fatkeqësive natyrore dhe vjedhjes, në pagesën e pjesës së zbritshme, si më poshtë:Deri në 1500 Euro dëm ose humbje – 20% të vlerës.Mbi 1500 Euro dëm ose humbje – 15% të vlerës.Vjedhje e plotë ose e pjesshme – 20% të vlerës.Kthimi i çelësit me pult është kusht.
+            </p>
+        </div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">PERJASHTIME NGA MBULIMI KASK</p>
+			</div>
+			<p>
+                Qiramarrësi është përgjegjës për vlerën e plotë të dëmit ose humbjes kur automjeti përdoret nën efektin e alkoolit ose substancave të paligjshme. Dhe nëse punonjësi i policisë merr makinën për fajin e qiramarrësit, qiramarrësi duhet të paguajë tarifën ditore të qirasë për çdo ditë që makina nuk mund të funksionojë. Sigurimet nuk mbulojnë dëmtimin ose humbjen e gomave, disqeve dhe mbulesave të rrotave, pjesës së brendshme të automjetit dhe kostos së transportuesit të automjetit.Sigurimi nuk mbulon: dëmtimin e motorit si pasojë e karburantit të keq ose të gabuar, vjedhjen ose humbjen e çelësit të makinës, dëmtimin e grupit të tufës, pompën e tufës, disqet, kushinetat e tufës, dëmtimet e shkaktuara nga shpërthimet, zjarr, eksploziv ose nga djegia e sixhadesë së brendshme, humbja e çdo sendi të vlefshëm në kabinën e automjetit.Qiramarrësi duhet të rimbursojë vlerën e plotë të të gjitha dëmeve që nuk mbulohen nga policat e sigurimit, si dhe që nuk mbulohen nga garancia e prodhuesit të automjetit. Ky sigurim blihet veçmas, Sigurimi Ndërkombëtar i Motorit - sigurimi që mbulon dëmet e mundshme të palëve të treta jashtë vendit. . Gjërat personale nuk mbulohen nga sigurimi.
+            </p>
+        </div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">PAGESA SHTESË / TARIFA TË TJERA</p>
+			</div>
+			<p>
+                 Në rast humbjeje të çelësave paguhet një dëmshpërblim në masën 100% të vlerës së instalimit të kodeve të reja, bravës, çelësit start, pulteve, që blehen dhe montohen nga shitës të autorizuar nga prodhuesi i automjetit Ne rast te humbjes se dokumentacionit te mjetit Qiramarrësi duhet të deklarojë humbjen e tyre , të paguajë të gjitha shpenzimet për lëshimin e dokumentacionin e ri të mjetit ,
+            </p>
+        </div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">PAJISJE SHTESË</p>
+			</div>
+			<p>
+                Githashtu ONE RENT C CAR ka dhe paisje shtese si ,ndejse per t vegjel, naviator, zixhire. Ne rast mungese apo dëmtimit të paisjeve shtesë Qiramarrësi është i detyruar të paguajë vlerën e plotë të paisjes shtesë.
+            </p>
+        </div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">ÇFARË DUHET BËRË NË RAST DEFEKTI?</p>
+			</div>
+			<p>
+                 Njoftohet menjëherë “ONE RENT A CAR” sh.p.k .
+                Zëvendësimi dhe parimi i pjesëve të automjetit nga vetë Qiramarrësi është i ndaluar, ose në raste të caktuara mund të lejohet vetëm me autorizimin e “ONE RENT A CAR” sh.p.k. Nëse automjeti është i prishur, ONE RENT A CAR zëvendëson makinën me një makinë tjetër. Për këtë lloj situate:
+            </p>
+            <p> • Për sa kohë që ONE RENT A CAR mund të zëvendësojë makinën, klienti nuk do të ketë rimbursim për ditët e mbetura. </p>
+            <p> • Nuk do të ketë asnjë pagesë nga ONE RENT A CAR për karburantin që qiramarrësi blen për makinat.</p>
+        </div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">NDALIMET</p>
+			</div>
+			<p>
+                 Drejtimi i automjetit nga persona nën 18 vjeç dhe mbi 70 vjeç
+                Drejtimi i automjetit nga individë që kanë paaftësi fizike që mund të ndikojnë në drejtimin e automjetit.
+                Ngarja e automjetit nën efektin e substancave narkotike ose alkoolike, ose në gjendje jo të mirë fizike.
+            </p>
+        </div>
+
+        <div class="row">
+			<div style="display: flex; justify-content: center;">
+				<p style="font-weight: bold; font-size: 15px;">KUNDRAVAJTJET DHE GJOBAT:</p>
+			</div>
+			<p>
+                 Qiramarrësi është përgjigjës për të gjitha shkeljet dhe gjobat që i vihen automjetit gjatë peridhës së qiramarrjes. Qiramarrësi shlyen vlerën e plotë të gjobave të vëna gjatë periudhës së kontraktuar nëse ai i deklaron apo i shlyen vetë ato, dhe dyfishin e vlerës, në rast fshehje të tyre.
+            </p>
+        </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="signature row">
+        <div class="col-md-6 italic">
+            <p>ONE RENT CAR:</p>
+            <p>__________________</p>
+        </div>
+        <div class="col-md-6 italic">
+            <p>QIRAMARRESI:</p>
+            <p> __________________</p>
         </div>
     </div>
 </body>
