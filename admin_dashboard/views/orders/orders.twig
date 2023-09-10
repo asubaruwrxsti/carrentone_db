@@ -261,7 +261,6 @@
         function populateAvailableCars(startDate, endDate) {
             document.getElementById('availableCarMapping').innerHTML = '';
             ordersThisMonth.availableCars(startDate, endDate).then((result) => {
-                console.log(result);
                 document.getElementById('availableCars').innerHTML = result.length;
                 var carIds = [];
                 result.forEach(order => {
