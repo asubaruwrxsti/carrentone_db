@@ -81,18 +81,16 @@
         {% endfor %}
     ];
 
-    let cars = [];
-    // BACKLOG: add carId color
-    orders.forEach(order => {
-        if (!cars.includes(order.car)) {
-            cars.push(order.car);
-        }
+    let cars = {{ cars|json_encode|raw }};
+    let filteredCars = [];
+    cars.forEach(car => {
+        filteredCars.push(car.name);
     });
 
     const autoCompleteJS = new autoComplete({
         selector: "#autoComplete",
         data: {
-            src: cars,
+            src: filteredCars,
         },
         resultsList: {
             element: (list, data) => {

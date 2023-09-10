@@ -374,14 +374,14 @@
                     $orders = $db->execute_query($orders);
                     $orders = $orders->fetch_all(MYSQLI_ASSOC);
 
+                    $cars = "SELECT * FROM cars;";
+                    $cars = $db->execute_query($cars);
+                    $cars = $cars->fetch_all(MYSQLI_ASSOC);
+
                     if (strpos($_SERVER['REQUEST_URI'], '/add/') !== false) {
                         $customers = "SELECT * FROM customers;";
                         $customers = $db->execute_query($customers);
                         $customers = $customers->fetch_all(MYSQLI_ASSOC);
-
-                        $cars = "SELECT * FROM cars;";
-                        $cars = $db->execute_query($cars);
-                        $cars = $cars->fetch_all(MYSQLI_ASSOC);
 
                         echo $header->render(array(
                             'window_title' => $handler,
@@ -417,10 +417,6 @@
                         $customers = "SELECT * FROM customers;";
                         $customers = $db->execute_query($customers);
                         $customers = $customers->fetch_all(MYSQLI_ASSOC);
-
-                        $cars = "SELECT * FROM cars;";
-                        $cars = $db->execute_query($cars);
-                        $cars = $cars->fetch_all(MYSQLI_ASSOC);
 
                         echo $header->render(array(
                             'window_title' => $handler,
@@ -465,7 +461,8 @@
                             'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                             'vars' => [
                                 'currency' => $_SESSION['currency'],
-                                'orders' => $orders
+                                'orders' => $orders,
+                                'cars' => $cars
                             ]
                         )
                     );
