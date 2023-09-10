@@ -40,11 +40,11 @@ th[colspan="7"]::after {
 }
 
 .nav-tabs {
-    background-color: #EEF2F6;
+    /* background-color: #EEF2F6;
     border-radius: 60px;
-    height: 45px;
+    height: 45px; */
     line-height: 45px;
-    margin: 0 auto 50px;
+    margin: 0 auto 10px;
     max-width: 384px;
     padding: 0;
     width: 100%;

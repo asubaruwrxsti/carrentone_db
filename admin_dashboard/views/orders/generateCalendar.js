@@ -33,6 +33,7 @@ let ordersThisMonth = new Orders();
 
 function generateView(newDate = null) {
     document.getElementById('carMapping').innerHTML = '';
+    document.getElementById('availableCarMapping').innerHTML = '';
     if (newDate != null) {
         var active_date = '01 ' + newDate + new Date(document.querySelector("#calendar > div.calendar-sidebar > div.calendar-year > p").innerHTML).getFullYear();
     } else {
@@ -41,7 +42,7 @@ function generateView(newDate = null) {
     var active_date = new Date(active_date);
     ordersThisMonth.getOrders(active_date.getMonth(), active_date.getFullYear()).then((data) => {
         document.getElementById('ordersThisMonth').innerHTML = data.length;
-        let carIds = [];
+        var carIds = [];
         data.forEach(order => {
             if (!carIds.includes(order.car_id)) carIds.push(order.car_id);
         });
@@ -52,6 +53,28 @@ function generateView(newDate = null) {
             carIds.forEach(carId => {
                 ordersThisMonth.getCar(carId).then((car) => {
                     let newDiv = document.getElementById('carMapping').appendChild(document.createElement('div'));
+                    newDiv.innerHTML = `
+                        <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
+                        <span>${car[0].name}</span>
+                    `;
+                });
+            });
+        }
+    });
+
+    ordersThisMonth.availableCars().then((data) => {
+        document.getElementById('availableCars').innerHTML = data.length;
+        var carIds = [];
+        data.forEach(order => {
+            if (!carIds.includes(order.id)) carIds.push(order.id);
+        });
+
+        if (carIds.length == 0) {
+            document.getElementById('availableCarMapping').innerHTML = '<p>No data</p>';
+        } else {
+            carIds.forEach(carId => {
+                ordersThisMonth.getCar(carId).then((car) => {
+                    let newDiv = document.getElementById('availableCarMapping').appendChild(document.createElement('div'));
                     newDiv.innerHTML = `
                         <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
                         <span>${car[0].name}</span>

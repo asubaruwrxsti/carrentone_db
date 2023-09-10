@@ -1,18 +1,44 @@
 <link rel="stylesheet" href="/admin_dashboard/views/orders/orders.css">
 <div class="container mb-5">
-    <div class="row input-panel" style="position: sticky; top: 0; z-index: 99;" id="inputPanel">
+    <div class="row input-panel" style="position: sticky; top: 0; z-index: 99; padding-bottom: 30px" id="inputPanel">
         <div class="col-5" id="infoGroup">
             <a href="/admin_dashboard/index.php/orders/add/" class="btn btn-primary mt-3"><span class="fas fa-plus"></span>&nbsp;Add Order</a>
-            <ul class="card list-group">
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="badge bg-primary rounded-pill fade-in">Total Orders</span>
-                    <span class="badge bg-primary rounded-pill fade-in" id="ordersThisMonth"></span>
+
+            <ul class="nav nav-tabs mt-3" id="myTabs" role="tablist" style="margin-bottom: 0px !important">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tabItem1" data-bs-toggle="tab" data-bs-target="#tabContent1" type="button" role="tab" aria-controls="tabContent1" aria-selected="true">Orders</button>
                 </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="">Legend</span>
-                    <div id="carMapping"></div>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tabItem2" data-bs-toggle="tab" data-bs-target="#tabContent2" type="button" role="tab" aria-controls="tabContent2" aria-selected="false">Cars</button>
                 </li>
             </ul>
+
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="tabContent1" role="tabpanel" aria-labelledby="tabItem1">
+                    <ul class="card list-group">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="badge bg-primary rounded-pill fade-in">Total Orders</span>
+                            <span class="badge bg-primary rounded-pill fade-in" id="ordersThisMonth"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="">Legend</span>
+                            <div id="carMapping"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-pane fade" id="tabContent2" role="tabpanel" aria-labelledby="tabItem2">
+                    <ul class="card list-group">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="badge bg-primary rounded-pill fade-in">Available Cars</span>
+                            <span class="badge bg-primary rounded-pill fade-in" id="availableCars"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="">Legend</span>
+                            <div id="availableCarMapping"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="col-5 ms-auto" id="inputGroup">
             <ul class="card list-group">
@@ -23,7 +49,9 @@
                     <input type="date" id="datepicker" class="form-control fade-in">
                 </li>
             </ul>
-            <button class="btn btn-primary mt-3" id="searchBtn">Search</button>
+            <div class="d-flex mt-3">
+                <button class="btn btn-primary me-2" id="searchBtn">Search</button>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -130,10 +158,10 @@
             placement: 'bottom',
 			content: function () {
                 let order = document.getElementById($(this).attr("id"));
-                order.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                //order.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
 				return $(this).attr("data-content");
 			},
-			template: '<div class="popover card" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body card-body"></div></div>',
+			template: '<div class="popover card" style="z-index:99" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body card-body"></div></div>',
 		}).on('shown.bs.popover', function () {
 			$('[data-toggle="popover"]').not(this).popover('hide');
 		});
@@ -229,6 +257,32 @@
                 });
             } catch (error) {};
         }
+
+        function populateAvailableCars(startDate, endDate) {
+            document.getElementById('availableCarMapping').innerHTML = '';
+            ordersThisMonth.availableCars(startDate, endDate).then((result) => {
+                console.log(result);
+                document.getElementById('availableCars').innerHTML = result.length;
+                var carIds = [];
+                result.forEach(order => {
+                    if (!carIds.includes(order.id)) carIds.push(order.id);
+                });
+
+                if (carIds.length == 0) {
+                    document.getElementById('availableCarMapping').innerHTML = '<p>No data</p>';
+                } else {
+                    carIds.forEach(carId => {
+                        ordersThisMonth.getCar(carId).then((car) => {
+                            let newDiv = document.getElementById('availableCarMapping').appendChild(document.createElement('div'));
+                            newDiv.innerHTML = `
+                                <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
+                                <span>${car[0].name}</span>
+                            `;
+                        });
+                    });
+                }
+            });
+        }
         
         searchBtn.addEventListener("click", function() {
             undimOrders();
@@ -246,6 +300,12 @@
                 setTimeout(function() {
                     document.getElementById("autoComplete").style.border = "1px solid #ced4da";
                 }, 500);
+
+                if (filterStartDate != "") {
+                    populateAvailableCars(filterStartDate, filterEndDate);
+                    alertify.warning('No car name specified, filtering available cars instead')
+                }
+
                 return;
             }
             if (filterStartDate == "") {
@@ -253,6 +313,14 @@
                 setTimeout(function() {
                     datepicker.style.border = "1px solid #ced4da";
                 }, 500);
+                if (filterCar != "") {
+                    orders.forEach(order => {
+                        if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()))) {
+                            dimOrder(order.orderId);
+                        }
+                    })
+                    alertify.warning(`No date specified. Filtering for ${filterCar} instead.`);
+                }
                 return;
             }
 

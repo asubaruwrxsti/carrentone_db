@@ -159,4 +159,77 @@ class Orders {
         customerId = customerId[customerId.length - 1].id;
         return customerId;
     }
+
+    async availableCars(rentalDate = null, returnDate = null) {
+        let cars = await fetch(`/admin_dashboard/index.php/api/cars/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        cars = await cars.json();
+
+        let revenue = await fetch(`/admin_dashboard/index.php/api/revenue/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        revenue = await revenue.json();
+
+        let unusedCars = [];
+        if (rentalDate != null && returnDate != null) {
+            cars.forEach(car => {
+                let busy = false;
+                revenue.forEach(order => {
+                    if (order.car_id == car.id) {
+                        let orderRentalDate = new Date(order.rental_date);
+                        let orderReturnDate = new Date(orderRentalDate.getTime() + order.rental_duration * 24 * 60 * 60 * 1000);
+
+                        if (orderRentalDate.getTime() <= new Date(returnDate).getTime() && orderReturnDate.getTime() >= new Date(rentalDate).getTime()) {
+                            busy = true;
+                        }
+                    }
+                });
+                if (!busy) {
+                    unusedCars.push(car);
+                }
+            });
+        } else if (rentalDate !=null && returnDate == null) {
+            cars.forEach(car => {
+                let busy = false;
+                revenue.forEach(order => {
+                    if (order.car_id == car.id) {
+                        let orderRentalDate = new Date(order.rental_date);
+                        let orderReturnDate = new Date(orderRentalDate.getTime() + order.rental_duration * 24 * 60 * 60 * 1000);
+
+                        if (orderRentalDate.getTime() <= new Date(rentalDate).getTime() && orderReturnDate.getTime() >= new Date(rentalDate).getTime()) {
+                            busy = true;
+                        }
+                    }
+                });
+                if (!busy) {
+                    unusedCars.push(car);
+                }
+            });
+        } else {
+            let month =  new Date(document.querySelector("#calendar > div.calendar-inner > table > tbody > tr:nth-child(1) > th").innerHTML).getMonth();
+            let year = new Date(document.querySelector("#calendar > div.calendar-inner > table > tbody > tr:nth-child(1) > th").innerHTML).getFullYear();
+            cars.forEach(car => {
+                let busy = false;
+                revenue.forEach(order => {
+                    if (order.car_id == car.id) {
+                        let orderRentalDate = new Date(order.rental_date);
+                        if (orderRentalDate.getMonth() == month && orderRentalDate.getFullYear() == year) {
+                            busy = true;
+                        }
+                    }
+                });
+                if (!busy) {
+                    unusedCars.push(car);
+                }
+            });
+        }
+        return unusedCars;
+    }
 }
