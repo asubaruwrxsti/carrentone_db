@@ -187,7 +187,8 @@
                         'content' => sprintf('/%s/%s.twig', strtolower($handler), strtolower($handler)),
                         'vars' => [
                             'currency' => $_SESSION['currency'],
-                            'data' => $result
+                            'data' => $result,
+                            'today' => date('Y-m-d')
                         ]
                     ));
                     
