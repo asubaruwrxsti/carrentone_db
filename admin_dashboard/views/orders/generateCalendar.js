@@ -55,7 +55,7 @@ function generateView(newDate = null) {
                     let newDiv = document.getElementById('carMapping').appendChild(document.createElement('div'));
                     newDiv.innerHTML = `
                         <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
-                        <span>${car[0].name}</span>
+                        <span>${car[0].name} -- ${car[0].license_plate}</span>
                     `;
                 });
             });
@@ -77,7 +77,7 @@ function generateView(newDate = null) {
                     let newDiv = document.getElementById('availableCarMapping').appendChild(document.createElement('div'));
                     newDiv.innerHTML = `
                         <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
-                        <span>${car[0].name}</span>
+                        <span>${car[0].name} -- ${car[0].license_plate}</span>
                     `;
                 });
             });
