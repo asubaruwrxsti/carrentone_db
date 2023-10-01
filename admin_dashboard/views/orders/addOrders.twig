@@ -181,7 +181,8 @@
                 "data": {
                     "id": "{{ car.id }}",
                     "price": "{{ car.price }}",
-                }
+                },
+                "license_plate": "{{ car.license_plate }}",
             } {% if not loop.last %},{% endif %}
         {% endfor %}
     ]
@@ -220,7 +221,7 @@
         selector: "#autoCompleteCar",
         data: {
             src: cars,
-            keys: ["name"],
+            keys: ["name", "license_plate"],
             cache: false,
         },
         resultsList: {

@@ -21,7 +21,12 @@
                             <span class="badge bg-primary rounded-pill fade-in" id="ordersThisMonth"></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span class="">Legend</span>
+                            <span>Legend</span>
+                            <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" id="expandLegendOrders" style="width: 30px; height: 30px; padding: 0px; margin: 0px; font-size: 0.8rem; line-height: 0.8rem;">
+                                <i class="fa-solid fa-arrow-down"></i>
+                            </button>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
                             <div id="carMapping"></div>
                         </li>
                     </ul>
@@ -34,6 +39,11 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="">Legend</span>
+                            <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" id="expandLegendCars" style="width: 30px; height: 30px; padding: 0px; margin: 0px; font-size: 0.8rem; line-height: 0.8rem;">
+                                <i class="fa-solid fa-arrow-down"></i>
+                            </button>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
                             <div id="availableCarMapping"></div>
                         </li>
                     </ul>
@@ -84,13 +94,17 @@
     let cars = {{ cars|json_encode|raw }};
     let filteredCars = [];
     cars.forEach(car => {
-        filteredCars.push(car.name);
+        filteredCars.push({
+            name: car.name,
+            license_plate: car.license_plate,
+        });
     });
 
     const autoCompleteJS = new autoComplete({
         selector: "#autoComplete",
         data: {
             src: filteredCars,
+            keys: ["name", "license_plate"],
         },
         resultsList: {
             element: (list, data) => {
@@ -106,7 +120,7 @@
             input: {
                 selection: (event) => {
                     const selection = event.detail.selection.value;
-                    autoCompleteJS.input.value = selection;
+                    autoCompleteJS.input.value = selection.name;
                 },
             },
         },
@@ -313,6 +327,7 @@
                 if (filterCar != "") {
                     orders.forEach(order => {
                         if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()))) {
+                            console.log(order)
                             dimOrder(order.orderId);
                         }
                     })
@@ -337,6 +352,30 @@
                     }
                 }
             });
+        });
+
+        let expandLegendOrders = document.getElementById("expandLegendOrders");
+        expandLegendOrders.addEventListener("click", function() {
+            let legend = document.getElementById("carMapping");
+            if (legend.style.display == "none") {
+                legend.style.display = "block";
+                expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+            } else {
+                legend.style.display = "none";
+                expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+            }
+        });
+
+        let expandLegendCars = document.getElementById("expandLegendCars");
+        expandLegendCars.addEventListener("click", function() {
+            let legend = document.getElementById("availableCarMapping");
+            if (legend.style.display == "none") {
+                legend.style.display = "block";
+                expandLegendCars.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+            } else {
+                legend.style.display = "none";
+                expandLegendCars.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+            }
         });
     }
 </script>
