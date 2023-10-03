@@ -29,6 +29,9 @@
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addGroup('/admin_dashboard/index.php', function ($r) {
 
+			// TODO: add routes for settings and profile
+			// TODO: store routes dynamically in database
+
             // Pages
             $r->addRoute('GET', '/', 'Dashboard');
             $r->addRoute('GET', '/reports', 'Reports');
@@ -100,6 +103,11 @@
                 $handler = $vars['REQUEST_URI'];
             }
 
+			//TODO: make the switch case dynamic
+			// q: how can i make the switch case dynamic?
+			// a: use a database to store the routes and the corresponding handler
+			// q: describe the database structure
+			// a: table name: routes, columns: id, route, handler
             switch ($handler) {
                 case 'logout':
                     session_destroy();
