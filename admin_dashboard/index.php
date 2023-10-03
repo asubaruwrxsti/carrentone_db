@@ -31,6 +31,7 @@
 
 			// TODO: add routes for settings and profile
 			// TODO: store routes dynamically in database
+			// hello world
 
             // Pages
             $r->addRoute('GET', '/', 'Dashboard');
