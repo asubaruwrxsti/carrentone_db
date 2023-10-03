@@ -17,6 +17,8 @@
 
     $db = new DB($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     $schema = new Schema();
+
+	// TODO: Make the verification work
     // if (!$schema->verifySchema()) {
     //     $schema->restoreSchema();
     // }
