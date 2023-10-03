@@ -47,7 +47,7 @@ function generateView(newDate = null) {
             if (!carIds.includes(order.car_id)) carIds.push(order.car_id);
         });
 
-        if (carIds.length == 0) {
+        if (carIds.length === 0) {
             document.getElementById('carMapping').innerHTML = '<p>No data</p>';
         } else {
             carIds.forEach(carId => {
@@ -55,7 +55,7 @@ function generateView(newDate = null) {
                     let newDiv = document.getElementById('carMapping').appendChild(document.createElement('div'));
                     newDiv.innerHTML = `
                         <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
-                        <span>${car[0].name} -- ${car[0].license_plate}</span>
+                        <span>${car[0].name} (${car[0].license_plate})</span>
                     `;
                 });
             });
@@ -69,7 +69,7 @@ function generateView(newDate = null) {
             if (!carIds.includes(order.id)) carIds.push(order.id);
         });
 
-        if (carIds.length == 0) {
+        if (carIds.length === 0) {
             document.getElementById('availableCarMapping').innerHTML = '<p>No data</p>';
         } else {
             carIds.forEach(carId => {
@@ -77,7 +77,7 @@ function generateView(newDate = null) {
                     let newDiv = document.getElementById('availableCarMapping').appendChild(document.createElement('div'));
                     newDiv.innerHTML = `
                         <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
-                        <span>${car[0].name} -- ${car[0].license_plate}</span>
+                        <span>${car[0].name} (${car[0].license_plate})</span>
                     `;
                 });
             });
@@ -104,9 +104,9 @@ function generateView(newDate = null) {
                 newDiv.style.width = '100%';
                 newDiv.id = "order-" + order.orderId;
 
-                if (startDate.getTime() == date.getTime()) {
+                if (startDate.getTime() === date.getTime()) {
                     newDiv.style.borderRadius = '20px 0 0 20px';
-                } else if (endDate.getTime() == date.getTime()) {
+                } else if (endDate.getTime() === date.getTime()) {
                     newDiv.style.borderRadius = '0 20px 20px 0';
                 } else {
                     newDiv.style.borderRadius = '0';
@@ -147,7 +147,7 @@ function generateView(newDate = null) {
                 }
                 */
                
-                if (startDate.getMonth() == date.getMonth() && startDate.getFullYear() == date.getFullYear()) {
+                if (startDate.getMonth() === date.getMonth() && startDate.getFullYear() === date.getFullYear()) {
                     let newDiv = item.appendChild(document.createElement('div'));
                     newDiv.className = 'day no-event';
                     newDiv.style.margin = '5px 0';

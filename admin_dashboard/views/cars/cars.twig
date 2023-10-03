@@ -1,6 +1,15 @@
 <link rel="stylesheet" href="/admin_dashboard/views/cars/cars.css">
 <div class="container">
-    <a href="/admin_dashboard/index.php/cars/add/" class="btn btn-primary mt-3"><span class="fas fa-plus"></span>&nbsp;Add Car</a>
+    <div class="row">
+        <div class="col-sm-3" style="width: 160px">
+            <a href="/admin_dashboard/index.php/cars/add/" class="btn btn-primary mt-2">
+                <span class="fas fa-plus"></span>&nbsp;Add Car
+            </a>
+        </div>
+        <div class="col">
+            <label for="search"></label><input type="text" class="form-control w-30" id="searchCar" placeholder="Search">
+        </div>
+    </div>
     <div class="row">
         <div class="row mt-4 restrict-height" id="main-car-container">
             {% for car in cars %}
@@ -224,6 +233,43 @@
                 document.getElementById('isAvailable').classList.remove('bg-gradient-success');
                 document.getElementById('isAvailable').classList.add('bg-gradient-danger');
             }
+        });
+    }
+
+    window.onload = function () {
+        let cars = {{ cars|json_encode|raw }};
+        const autoCompleteJS = new autoComplete({
+            selector: "#searchCar",
+            data: {
+                src: cars,
+                keys: ["name", "license_plate"],
+            },
+            resultsList: {
+                element: (list, data) => {
+                    const message = document.createElement("div");
+                    // set max width of the results list
+                    list.setAttribute("style", "width: 25%;");
+                    if (!data.results.length) {
+                        message.setAttribute("class", "no_result");
+                        message.innerHTML = `<span>Found no results for "${data.query}"</span>`;
+                        list.prepend(message);
+                    }
+                },
+            },
+            events: {
+                input: {
+                    selection: (event) => {
+                        const selection = event.detail.selection.value;
+                        autoCompleteJS.input.value = selection.name;
+                        console.log(event.detail.selection.value.id)
+                        carCards.forEach(function (card) {
+                            if (card.id != "car-" + event.detail.selection.value.id) {
+                                card.style.display = 'none';
+                            }
+                        });
+                    },
+                },
+            },
         });
     }
 </script>

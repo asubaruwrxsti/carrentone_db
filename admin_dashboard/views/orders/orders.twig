@@ -4,7 +4,7 @@
         <div class="col-5" id="infoGroup">
             <a href="/admin_dashboard/index.php/orders/add/" class="btn btn-primary mt-3"><span class="fas fa-plus"></span>&nbsp;Add Order</a>
 
-            <ul class="nav nav-tabs mt-3" id="myTabs" role="tablist" style="margin-bottom: 0px !important">
+            <ul class="nav nav-tabs mt-3" id="myTabs" role="tablist" style="margin-bottom: 0 !important">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="tabItem1" data-bs-toggle="tab" data-bs-target="#tabContent1" type="button" role="tab" aria-controls="tabContent1" aria-selected="true">Orders</button>
                 </li>
@@ -22,7 +22,7 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span>Legend</span>
-                            <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" id="expandLegendOrders" style="width: 30px; height: 30px; padding: 0px; margin: 0px; font-size: 0.8rem; line-height: 0.8rem;">
+                            <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" id="expandLegendOrders" style="width: 30px; height: 30px; padding: 0; margin: 0; font-size: 0.8rem; line-height: 0.8rem;">
                                 <i class="fa-solid fa-arrow-down"></i>
                             </button>
                         </li>
@@ -39,7 +39,7 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="">Legend</span>
-                            <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" id="expandLegendCars" style="width: 30px; height: 30px; padding: 0px; margin: 0px; font-size: 0.8rem; line-height: 0.8rem;">
+                            <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" id="expandLegendCars" style="width: 30px; height: 30px; padding: 0; margin: 0; font-size: 0.8rem; line-height: 0.8rem;">
                                 <i class="fa-solid fa-arrow-down"></i>
                             </button>
                         </li>
@@ -53,10 +53,10 @@
         <div class="col-5 ms-auto" id="inputGroup">
             <ul class="card list-group">
                 <li class="list-group-item d-flex justify-content-between">
-                    <input type="text" id="autoComplete" class="form-control fade-in" placeholder="Search by car name">
+                    <label for="autoComplete"></label><input type="text" id="autoComplete" class="form-control fade-in" placeholder="Search by car name">
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <input type="date" id="datepicker" class="form-control fade-in">
+                    <label for="datepicker"></label><input type="date" id="datepicker" class="form-control fade-in">
                 </li>
             </ul>
             <div class="d-flex mt-3">
@@ -127,17 +127,14 @@
     });
     
     function generateUniqueColor(id) {
-        var hue = (id * 137.508) % 360;
-        var color = 'hsl(' + hue + ', 70%, 60%)';
-        return color;
+        const hue = (id * 137.508) % 360;
+        return 'hsl(' + hue + ', 70%, 60%)';
     }
 </script>
 <script src="/admin_dashboard/views/orders/generateCalendar.js"></script>
 <script>
     window.onscroll = function () {
         let inputPanel = document.getElementById('inputPanel');
-        let inputGroup = document.getElementById('inputGroup');
-        let infoGroup = document.getElementById('infoGroup');
 
         let goToTopBtn = document.getElementById('goToTopBtn');
         goToTopBtn.onclick = function () {
@@ -147,19 +144,19 @@
             });
         };
 
-        var threshold = 100;
-        if (window.pageYOffset > threshold) {
-            let opacity = (window.pageYOffset - threshold) / 100;
+        const threshold = 100;
+        if (window.scrollY > threshold) {
+            let opacity = (window.scrollY - threshold) / 100;
             if (opacity > 0.5) opacity = 0.5;
-            inputPanel.style.paddingTop = Math.min(window.pageYOffset - threshold, 20) + 'px';
+            inputPanel.style.paddingTop = Math.min(window.scrollY - threshold, 20) + 'px';
             inputPanel.style.backdropFilter = `blur(${opacity * 10}px)`;
-            goToTopBtn.style.opacity = 1;
-            goToTopBtn.style.transform = `translateY(-${Math.min(window.pageYOffset - threshold, 20)}px)`;
+            goToTopBtn.style.opacity = '1';
+            goToTopBtn.style.transform = `translateY(-${Math.min(window.scrollY - threshold, 20)}px)`;
         } else {
-            let opacity = (window.pageYOffset - threshold) / 100;
+            let opacity = (window.scrollY - threshold) / 100;
             inputPanel.style.paddingTop = '0px';
             inputPanel.style.backdropFilter = `blur(${opacity * 10}px)`;
-            goToTopBtn.style.opacity = 0;
+            goToTopBtn.style.opacity = '0';
         }
     }
 
@@ -169,7 +166,7 @@
 			trigger: 'click',
             placement: 'bottom',
 			content: function () {
-                let order = document.getElementById($(this).attr("id"));
+                //let order = document.getElementById($(this).attr("id"));
                 //order.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
 				return $(this).attr("data-content");
 			},
@@ -185,7 +182,6 @@
 
         datepicker.addEventListener("change", function () {
             if (!isNaN(Date.parse(datepicker.value)) && document.getElementById("addButton") === null) {
-                hasBeenSelected = true;
                 datepicker.style.width = "90%";
 
                 setTimeout(function () {
@@ -205,7 +201,7 @@
                     addButton.addEventListener("click", function () {
                         datepicker.style.width = "45%";
 
-                        if(document.getElementById("additionalDatepicker") !== null) {
+                        if (document.getElementById("additionalDatepicker") !== null) {
                             document.getElementById("additionalDatepicker").remove();
                             addButton.innerHTML = "+";
                             addButton.removeAttribute("class");
@@ -219,7 +215,7 @@
                             newDatepicker.style.width = "45%";
                             newDatepicker.style.marginLeft = "10px";
 
-                            newDatepicker.addEventListener("change", function() {
+                            newDatepicker.addEventListener("change", function () {
                                 if (Date.parse(newDatepicker.value) <= Date.parse(datepicker.value)) {
                                     newDatepicker.style.border = "1px solid red";
                                     searchBtn.setAttribute("disabled", "true");
@@ -244,7 +240,8 @@
                         document.getElementById("additionalDatepicker").remove();
                         datepicker.style.width = "100%";
                     }
-                } catch (error) {}
+                } catch (error) {
+                }
             }
         });
 
@@ -255,9 +252,7 @@
                     o.style.opacity = "0.2";
                     o.style.transition = "opacity 0.5s ease-in-out";
                 });
-            } catch (error) {
-                console.log(error);
-            };
+            } catch (error) {}
         }
 
         function undimOrders() {
@@ -267,7 +262,7 @@
                     o.style.opacity = "1";
                     o.style.transition = "opacity 0.5s ease-in-out";
                 });
-            } catch (error) {};
+            } catch (error) {}
         }
 
         function populateAvailableCars(startDate, endDate) {
@@ -279,7 +274,7 @@
                     if (!carIds.includes(order.id)) carIds.push(order.id);
                 });
 
-                if (carIds.length == 0) {
+                if (carIds.length === 0) {
                     document.getElementById('availableCarMapping').innerHTML = '<p>No data</p>';
                 } else {
                     carIds.forEach(carId => {
@@ -287,7 +282,7 @@
                             let newDiv = document.getElementById('availableCarMapping').appendChild(document.createElement('div'));
                             newDiv.innerHTML = `
                                 <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
-                                <span>${car[0].name}</span>
+                                <span>${car[0].name} -- ${car[0].license_plate}</span>
                             `;
                         });
                     });
@@ -306,25 +301,25 @@
                 filterEndDate = document.getElementById("additionalDatepicker") ? document.getElementById("additionalDatepicker").value : "";
             } catch (error) {}
 
-            if (filterCar == "") {
+            if (filterCar === "") {
                 document.getElementById("autoComplete").style.border = "1px solid red";
                 setTimeout(function() {
                     document.getElementById("autoComplete").style.border = "1px solid #ced4da";
                 }, 500);
 
-                if (filterStartDate != "") {
+                if (filterStartDate !== "") {
                     populateAvailableCars(filterStartDate, filterEndDate);
                     alertify.warning('No car name specified, filtering available cars instead')
                 }
 
                 return;
             }
-            if (filterStartDate == "") {
+            if (filterStartDate === "") {
                 datepicker.style.border = "1px solid red";
                 setTimeout(function() {
                     datepicker.style.border = "1px solid #ced4da";
                 }, 500);
-                if (filterCar != "") {
+                if (filterCar !== "") {
                     orders.forEach(order => {
                         if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()))) {
                             console.log(order)
@@ -343,7 +338,7 @@
                 let endDate = filterEndDate !== "" ? new Date(filterEndDate).setHours(0, 0, 0, 0) : false;
 
                 if (endDate === false) {
-                    if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate == startDate)) {
+                    if (!(order.car.toLowerCase().includes(filterCar.toLowerCase()) && orderStartDate === startDate)) {
                         dimOrder(order.orderId);
                     }
                 } else {
@@ -357,7 +352,7 @@
         let expandLegendOrders = document.getElementById("expandLegendOrders");
         expandLegendOrders.addEventListener("click", function() {
             let legend = document.getElementById("carMapping");
-            if (legend.style.display == "none") {
+            if (legend.style.display === "none") {
                 legend.style.display = "block";
                 expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
             } else {
@@ -366,10 +361,10 @@
             }
         });
 
-        let expandLegendCars = document.getElementById("expopulateAvailableCarspandLegendCars");
+        let expandLegendCars = document.getElementById("expandLegendCars");
         expandLegendCars.addEventListener("click", function() {
             let legend = document.getElementById("availableCarMapping");
-            if (legend.style.display == "none") {
+            if (legend.style.display === "none") {
                 legend.style.display = "block";
                 expandLegendCars.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
             } else {
