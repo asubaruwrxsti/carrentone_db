@@ -43,7 +43,7 @@
                                 <i class="fa-solid fa-arrow-down"></i>
                             </button>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between">
+                        <li class="list-group-item d-flex justify-content-between" style="transition: all 0.5s ease-in-out; transform: translateY(0);">
                             <div id="availableCarMapping"></div>
                         </li>
                     </ul>
@@ -352,25 +352,77 @@
         let expandLegendOrders = document.getElementById("expandLegendOrders");
         expandLegendOrders.addEventListener("click", function() {
             let legend = document.getElementById("carMapping");
+			let height = "45";
             if (legend.style.display === "none") {
-                legend.style.display = "block";
-                expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+				legend.style.display = 'block';
+				let animation = legend.animate([
+					{ height: '0px', opacity: 0 },
+					{ height: height + 'px', opacity: 1 }
+				], {
+					duration: 150,
+					easing: 'ease-in-out',
+					fill: 'forwards'
+				});
+
+				animation.onfinish = () => {
+					legend.classList.add('fade-in');
+                	expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+				}
             } else {
-                legend.style.display = "none";
-                expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+				legend.classList.remove('fade-in');
+				expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+
+				let animation = legend.animate([
+					{ height: height + 'px', opacity: 1 },
+					{ height: '0px', opacity: 0 }
+				], {
+					duration: 150,
+					easing: 'ease-in-out',
+					fill: 'forwards'
+				});
+
+				animation.onfinish = () => {
+					legend.style.display = 'none';
+				}
             }
         });
 
         let expandLegendCars = document.getElementById("expandLegendCars");
         expandLegendCars.addEventListener("click", function() {
             let legend = document.getElementById("availableCarMapping");
+			let height = "45";
             if (legend.style.display === "none") {
-                legend.style.display = "block";
-                expandLegendCars.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+				legend.style.display = 'block';
+				let animation = legend.animate([
+					{ height: '0px', opacity: 0 },
+					{ height: height + 'px', opacity: 1 }
+				], {
+					duration: 150,
+					easing: 'ease-in-out',
+					fill: 'forwards'
+				});
+
+				animation.onfinish = () => {
+					legend.classList.add('fade-in');
+                	expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+				}
             } else {
-                legend.style.display = "none";
-                expandLegendCars.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+				legend.classList.remove('fade-in');
+				expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+
+				let animation = legend.animate([
+					{ height: height + 'px', opacity: 1 },
+					{ height: '0px', opacity: 0 }
+				], {
+					duration: 150,
+					easing: 'ease-in-out',
+					fill: 'forwards'
+				});
+
+				animation.onfinish = () => {
+					legend.style.display = 'none';
+				}
             }
-        });
+		});
     }
 </script>
