@@ -13,7 +13,7 @@
     <div class="row">
         <div class="row mt-4 restrict-height" id="main-car-container">
             {% for car in cars %}
-                <div class="col-lg-5 mt-3 car-cards">
+                <div class="col-lg-5 mt-3 car-cards" id="main-car-{{ car.id }}">
                     <div class="card h-100 p-3 container-fluid">
                         <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100 car-image" id="car-{{car.id}}" style="background-image: linear-gradient(to bottom left, rgba(0,0,0,0), rgba(0,0,0,1)), url('{{car.image[0]}}'); background-position: center bottom ;">
                             <span class="mask bg-gradient-dark"></span>
@@ -238,6 +238,9 @@
 
     window.onload = function () {
         let cars = {{ cars|json_encode|raw }};
+        const grid = new Isotope(mainCarContainer, {
+            itemSelector: ".car-cards",
+        });
         const autoCompleteJS = new autoComplete({
             selector: "#searchCar",
             data: {
@@ -247,14 +250,22 @@
             resultsList: {
                 element: (list, data) => {
                     const message = document.createElement("div");
-                    // set max width of the results list
                     list.setAttribute("style", "width: 25%;");
                     if (!data.results.length) {
                         message.setAttribute("class", "no_result");
                         message.innerHTML = `<span>Found no results for "${data.query}"</span>`;
                         list.prepend(message);
+                        grid.arrange({
+                            filter: "*",
+                        });
+                    }
+                    if (data.query.length === 1) {
+                        grid.arrange({
+                            filter: "*",
+                        });
                     }
                 },
+                noResults: true,
             },
             events: {
                 input: {
@@ -263,8 +274,10 @@
                         autoCompleteJS.input.value = selection.name;
                         console.log(event.detail.selection.value.id)
                         carCards.forEach(function (card) {
-                            if (card.id != "car-" + event.detail.selection.value.id) {
-                                card.style.display = 'none';
+                            if (card.id === "main-car-" + event.detail.selection.value.id) {
+                                grid.arrange({
+                                    filter: ".car-cards#" + card.id,
+                                });
                             }
                         });
                     },
