@@ -92,37 +92,41 @@
 									<div class="col">
 										<div class="mb-3">
 											<label for="name" class="form-label">Name</label>
-											<input type="text" class="form-control" id="name" name="name">
-											<div class="invalid-feedback">Please enter a valid name.</div>
+											<input type="text" class="form-control" id="name" name="name" required
+												   oninvalid="this.setCustomValidity('Please enter a valid name.')"
+												   oninput="this.setCustomValidity('')">
 										</div>
 										<div class="mb-3">
 											<label for="description" class="form-label">Description</label>
 											<textarea class="form-control" id="description" name="description" rows="3"></textarea>
-											<div class="invalid-feedback">Please enter a valid description.</div>
 										</div>
 										<div class="mb-3">
 											<label for="price" class="form-label">Price</label>
-											<input type="text" class="form-control" id="price" name="price">
-											<div class="invalid-feedback">Please enter a valid price.</div>
+											<input type="text" class="form-control" id="price" name="price" required
+												   oninvalid="this.setCustomValidity('Please enter a valid price.')"
+												   oninput="this.setCustomValidity('')">
 										</div>
 										<div class="mb-3">
 											<label for="make" class="form-label">Make</label>
-											<input type="text" class="form-control" id="make" name="make">
+											<input type="text" class="form-control" id="make" name="make" required
+												   oninvalid="this.setCustomValidity('Please enter a valid make.')"
+												   oninput="this.setCustomValidity('')">
 										</div>
 										<div class="mb-3">
 											<label for="model" class="form-label">Model</label>
-											<input type="text" class="form-control" id="model" name="model">
+											<input type="text" class="form-control" id="model" name="model" required
+												   oninvalid="this.setCustomValidity('Please enter a valid model.')"
+												   oninput="this.setCustomValidity('')">
 										</div>
 									</div>
 									<div class="col">
 										<div class="mb-3">
 											<label for="travel_distance" class="form-label">Travel Distace</label>
 											<input type="text" class="form-control" id="travel_distance" name="travel_distance">
-											<div class="invalid-feedback">Please enter a valid number.</div>
 										</div>
 										<div class="mb-3">
 											<label for="transmission" class="form-label">Transmission</label>
-											<select class="form-select" id="transmission" aria-label="Select the car transmission">
+											<select class="form-select" id="transmission" aria-label="Select the car transmission" required>
                                                 <option value="0">Automatic</option>
                                                 <option value="1">Manual</option>
 											</select>
@@ -130,11 +134,12 @@
 										<div class="mb-3">
 											<label for="year" class="form-label">Year</label>
 											<input type="text" class="form-control" id="year" name="year">
-											<div class="invalid-feedback">Please enter a valid number.</div>
 										</div>
 										<div class="mb-3">
 											<label for="license_plate" class="form-label">License Plate</label>
-											<input type="text" class="form-control" id="license_plate" name="license_plate">
+											<input type="text" class="form-control" id="license_plate" name="license_plate" required
+												   oninvalid="this.setCustomValidity('Please enter a valid license plate.')"
+												   oninput="this.setCustomValidity('')">
 										</div>
 										<div class="mb-3">
 											<label for="color" class="form-label">Color</label>
@@ -169,15 +174,15 @@
 
 			let formData = new FormData(this);
 			formData.append('name', document.getElementById('name').value);
-			formData.append('description', document.getElementById('description').value);
+			formData.append('description', document.getElementById('description').value || '');
 			formData.append('price', document.getElementById('price').value);
 			formData.append('make', document.getElementById('make').value);
 			formData.append('model', document.getElementById('model').value);
-			formData.append('travel_distance', document.getElementById('travel_distance').value);
+			formData.append('travel_distance', document.getElementById('travel_distance').value || '');
 			formData.append('transmission', document.getElementById('transmission').value);
-			formData.append('year', document.getElementById('year').value);
+			formData.append('year', document.getElementById('year').value || '');
 			formData.append('license_plate', document.getElementById('license_plate').value);
-			formData.append('color', document.getElementById('color').value);
+			formData.append('color', document.getElementById('color').value || '');
 
 			Car.insertData(formData).then(function(response) {
 				if (JSON.parse(response).status) {

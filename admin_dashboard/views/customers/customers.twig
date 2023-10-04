@@ -68,12 +68,16 @@
           <div class="col-md-6">
             <!-- First Name -->
             <label for="firstName" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="firstName" placeholder="Enter first name">
+            <input type="text" class="form-control" id="firstName" placeholder="Enter first name" required
+                   oninvalid="this.setCustomValidity('Please fill this field')"
+                     oninput="this.setCustomValidity('')">
           </div>
           <div class="col-md-6">
             <!-- Last Name -->
             <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="lastName" placeholder="Enter last name">
+            <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required
+                   oninvalid="this.setCustomValidity('Please fill this field')"
+                   oninput="this.setCustomValidity('')">
           </div>
         </div>
         <div class="row mb-3">
@@ -100,7 +104,9 @@
             <!-- ID Number -->
           <div class="col-md-6">
             <label for="id_number" class="form-label">ID Number</label>
-            <input type="text" class="form-control" id="id_number" placeholder="Enter ID number">
+            <input type="text" class="form-control" id="id_number" placeholder="Enter ID number" required
+                     oninvalid="this.setCustomValidity('Please fill this field')"
+                     oninput="this.setCustomValidity('')">
           </div>
         </div>
       </div>
