@@ -252,9 +252,6 @@
                     const message = document.createElement("div");
                     list.setAttribute("style", "width: 25%;");
                     if (!data.results.length) {
-                        message.setAttribute("class", "no_result");
-                        message.innerHTML = `<span>Found no results for "${data.query}"</span>`;
-                        list.prepend(message);
                         grid.arrange({
                             filter: "*",
                         });
