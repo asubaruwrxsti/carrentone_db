@@ -117,21 +117,20 @@ function generateView(newDate = null) {
                 }
 				
 				newDiv.setAttribute('data-toggle', 'popover');
-				newDiv.setAttribute('title', 'Order Details');
 				newDiv.setAttribute('data-content', `
 					<div class="row">
 						<div class="col">
-							<p style="margin-bottom: 0px"><b>Car:</b> ${order.car}</p>
-							<p style="margin-bottom: 0px"><b>Customer:</b> ${order.renterName}</p>
-							<p style="margin-bottom: 0px"><b>Date:</b> ${order.startDate} - ${order.endDate}</p>
+							<p class="mb-0"><b>Car:</b> ${order.car}</p>
+							<p class="mb-0"><b>Customer:</b> ${order.renterName}</p>
+							<p class="mb-1"><b>Date:</b> ${order.startDate} - ${order.endDate}</p>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col">
-							<a href="/admin_dashboard/index.php/orders/edit/${order.orderId}" class="btn btn-primary btn-sm"> <i class="fas fa-edit"></i> Edit</a>
+							<a href="/admin_dashboard/index.php/orders/edit/${order.orderId}" class="btn btn-primary btn-sm"> <i class="fas fa-edit"></i></a>
 						</div>
 						<div class="col">
-							<a href="/admin_dashboard/index.php/orders/delete/${order.orderId}" class="btn btn-danger btn-sm"> <i class="fas fa-trash"></i> Delete</a>
+							<a href="/admin_dashboard/index.php/orders/delete/${order.orderId}" class="btn btn-danger btn-sm"> <i class="fas fa-trash"></i></a>
 						</div>
 					</div>
 				`);
