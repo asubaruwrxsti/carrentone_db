@@ -164,13 +164,18 @@
 		$('[data-toggle="popover"]').popover({
 			html: true,
 			trigger: 'click',
-            placement: 'bottom',
+            placement: 'auto',
 			content: function () {
                 //let order = document.getElementById($(this).attr("id"));
                 //order.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
 				return $(this).attr("data-content");
 			},
-			template: '<div class="popover card" style="z-index:99" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body card-body"></div></div>',
+			template: `
+                <div class="popover" role="tooltip">
+                    <div class="arrow"></div>
+                    <h3 class="popover-header"></h3>
+                    <div class="popover-body"></div>
+                </div>`,
 		}).on('shown.bs.popover', function () {
 			$('[data-toggle="popover"]').not(this).popover('hide');
 		});

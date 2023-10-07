@@ -53,6 +53,10 @@ function generateView(newDate = null) {
             carIds.forEach(carId => {
                 ordersThisMonth.getCar(carId).then((car) => {
                     let newDiv = document.getElementById('carMapping').appendChild(document.createElement('div'));
+                    if (car[0] === undefined) car[0] = {
+                        name: 'Deleted Car',
+                        license_plate: 'N/A'
+                    }
                     newDiv.innerHTML = `
                         <i class="fas fa-circle" style="color: ${generateUniqueColor(carId)}"></i>
                         <span>${car[0].name} (${car[0].license_plate})</span>
@@ -116,10 +120,10 @@ function generateView(newDate = null) {
 				newDiv.setAttribute('title', 'Order Details');
 				newDiv.setAttribute('data-content', `
 					<div class="row">
-						<div class="col-lg-12">
-							<p><b>Car:</b> ${order.car}</p>
-							<p><b>Customer:</b> ${order.renterName}</p>
-							<p><b>Date:</b> ${order.startDate} - ${order.endDate}</p>
+						<div class="col">
+							<p style="margin-bottom: 0px"><b>Car:</b> ${order.car}</p>
+							<p style="margin-bottom: 0px"><b>Customer:</b> ${order.renterName}</p>
+							<p style="margin-bottom: 0px"><b>Date:</b> ${order.startDate} - ${order.endDate}</p>
 						</div>
 					</div>
 					<div class="row">
