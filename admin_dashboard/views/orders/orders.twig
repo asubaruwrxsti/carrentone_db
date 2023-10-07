@@ -14,7 +14,7 @@
             </ul>
 
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="tabContent1" role="tabpanel" aria-labelledby="tabItem1">
+                <div class="tab-pane fade show active" id="tabContent1" role="tabpanel" aria-labelledby="tabItem1" style="height: 200px; overflow-y: scroll;">
                     <ul class="card list-group">
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="badge bg-primary rounded-pill fade-in">Total Orders</span>
@@ -31,7 +31,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="tab-pane fade" id="tabContent2" role="tabpanel" aria-labelledby="tabItem2">
+                <div class="tab-pane fade" id="tabContent2" role="tabpanel" aria-labelledby="tabItem2" style="height: 200px; overflow-y: scroll;">
                     <ul class="card list-group">
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="badge bg-primary rounded-pill fade-in">Available Cars</span>
@@ -352,12 +352,11 @@
         let expandLegendOrders = document.getElementById("expandLegendOrders");
         expandLegendOrders.addEventListener("click", function() {
             let legend = document.getElementById("carMapping");
-			let height = "45";
             if (legend.style.display === "none") {
 				legend.style.display = 'block';
 				let animation = legend.animate([
 					{ height: '0px', opacity: 0 },
-					{ height: height + 'px', opacity: 1 }
+					{ height: '100%', opacity: 1 }
 				], {
 					duration: 150,
 					easing: 'ease-in-out',
@@ -367,13 +366,14 @@
 				animation.onfinish = () => {
 					legend.classList.add('fade-in');
                 	expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+                    document.getElementById('tabContent1').style.overflowY = 'scroll';
 				}
             } else {
 				legend.classList.remove('fade-in');
 				expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
 
 				let animation = legend.animate([
-					{ height: height + 'px', opacity: 1 },
+					{ height: '100%', opacity: 1 },
 					{ height: '0px', opacity: 0 }
 				], {
 					duration: 150,
@@ -383,6 +383,7 @@
 
 				animation.onfinish = () => {
 					legend.style.display = 'none';
+                    document.getElementById('tabContent1').style.overflowY = 'hidden';
 				}
             }
         });
@@ -390,12 +391,11 @@
         let expandLegendCars = document.getElementById("expandLegendCars");
         expandLegendCars.addEventListener("click", function() {
             let legend = document.getElementById("availableCarMapping");
-			let height = "45";
             if (legend.style.display === "none") {
 				legend.style.display = 'block';
 				let animation = legend.animate([
 					{ height: '0px', opacity: 0 },
-					{ height: height + 'px', opacity: 1 }
+					{ height: '100%', opacity: 1 }
 				], {
 					duration: 150,
 					easing: 'ease-in-out',
@@ -405,13 +405,14 @@
 				animation.onfinish = () => {
 					legend.classList.add('fade-in');
                 	expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+                    document.getElementById('tabContent2').style.overflowY = 'scroll';
 				}
             } else {
 				legend.classList.remove('fade-in');
 				expandLegendOrders.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
 
 				let animation = legend.animate([
-					{ height: height + 'px', opacity: 1 },
+					{ height: '100%', opacity: 1 },
 					{ height: '0px', opacity: 0 }
 				], {
 					duration: 150,
@@ -421,6 +422,7 @@
 
 				animation.onfinish = () => {
 					legend.style.display = 'none';
+                    document.getElementById('tabContent2').style.overflowY = 'hidden';
 				}
             }
 		});

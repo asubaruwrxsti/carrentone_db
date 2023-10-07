@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
       base_car_data = await response.json();
+      base_car_data.sort((a, b) => b.order_count - a.order_count);
+      base_car_data = base_car_data.slice(0, 10);
+
       car_labels = Object.values(base_car_data).map((item) => item.name);
       order_count = Object.values(base_car_data).map((item) => item.order_count);
     } catch (error) {
